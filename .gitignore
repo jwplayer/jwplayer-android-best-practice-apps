@@ -2,3 +2,4 @@
 *.iml
 jwplayer-android-sdk*/
 .DS_Store
+.gradle/
