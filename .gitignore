@@ -4,3 +4,4 @@ jwplayer-android-sdk*/
 .DS_Store
 .gradle/
 build/
+local.properties
