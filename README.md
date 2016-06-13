@@ -7,8 +7,11 @@ See the README in the subdirectory for specific usage instructions.
 
 ## Sample Apps
 
-Currently this repository contains one single sample app, the 'Movable Player Demo', this demo showcases how you could use the JW Player SDK for Android to create an
+Currently this repository contains two sample apps:
+
+- Movable Player Demo: showcases how you could use the JW Player SDK for Android to create an
 app that allows you to display a video that can be dragged around within an Activity.
+- ListView / FullscreenHandler Demo: showcases how you could use the JWPlayerView within a ListView, and how you can use a custom FullscreenHandler to achieve proper fullscreen behavior in ListViews.
 
 ## Usage instructions
 
