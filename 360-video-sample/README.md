@@ -8,9 +8,8 @@ When using newer versions you may have to make minor changes to the code, as the
 
 ## Setting up the demo
 
-1. Open the app/libs/ directory.
-2. Copy the latest version of the JW Player Android SDK for Android to the app/libs/ directory, and rename it to: `jwplayer-android-sdk.aar`.
-3. Copy the latest version of the JW Player VR SDK for Android to the app/libs/ directory and rename it to: `jwplayer-vr-sdk.aar`.
-4. Copy base.aar and common.aar to the app/libs/ directory.
-5. Open this project in Android Studio and enter your license key in the app's AndroidManifest.xml file.
-6. You should now be able to build and run the project on your phone.
+1. Open the `app/libs/` directory.
+2. Copy the latest version of the JW Player VR SDK for Android to the app/libs/ directory and rename it to: `jwplayer-vr-sdk.aar`.
+3. Copy base.aar and common.aar to the app/libs/ directory.
+4. Open this project in Android Studio and enter your license key in the app's AndroidManifest.xml file.
+5. You should now be able to build and run the project on your phone.
