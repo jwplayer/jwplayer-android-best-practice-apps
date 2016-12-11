@@ -18,6 +18,9 @@ allprojects {
         flatDir {
             dirs 'libs'
         }
+        maven {
+            url 'https://mvn.jwplayer.com/content/repositories/releases/'
+        }
     }
 }
 
