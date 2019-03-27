@@ -1,0 +1,44 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+
+        minSdkVersion 16
+        targetSdkVersion 28
+
+        versionCode 1
+        versionName "1.0"
+
+        applicationId "com.jwplayer.opensourcedemo"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
+dependencies {
+
+    implementation('com.android.support:appcompat-v7:28.0.0') {
+        force = true
+    }
+    implementation('com.android.support:design:28.0.0') {
+        force = true
+    }
+
+    implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.5.0'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.5.0'
+
+    implementation 'com.conviva.sdk:conviva-core-sdk:2.145.1'
+
+    testImplementation 'junit:junit:4.12'
+}
