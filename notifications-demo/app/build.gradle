@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 27
 
     defaultConfig {
-        applicationId "com.jwplayer.demo.notificationsdemo"
-        minSdkVersion 21
-        targetSdkVersion 24
+        applicationId "com.jwplayer.demo.movableplayer"
+        minSdkVersion 23
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -17,11 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile(name: 'jwplayer-android-sdk', ext: 'aar')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-media-compat:27.1.1'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.5.2'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.5.2'
 }
