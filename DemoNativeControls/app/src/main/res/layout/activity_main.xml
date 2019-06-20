@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/touch_interceptor_relative_view">
+
+    </RelativeLayout>
+
+    <com.longtailvideo.jwplayer.JWPlayerView
+        android:id="@+id/jwplayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+    </com.longtailvideo.jwplayer.JWPlayerView>
+
+    <com.jwplayer.demo.nativecontrols.JWPlayerNativeControls
+        android:id="@+id/player_control_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        >
+
+    </com.jwplayer.demo.nativecontrols.JWPlayerNativeControls>
+
+</RelativeLayout>
