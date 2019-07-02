@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
+import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 
 public class VideoActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
@@ -125,7 +126,8 @@ public class VideoActivity extends AppCompatActivity implements VideoPlayerEvent
 	}
 
 	@Override
-	public void onFullscreen(boolean fullscreen) {
+	public void onFullscreen(FullscreenEvent fullscreenEvent) {
+		boolean fullscreen = fullscreenEvent.getFullscreen();
 		if (fullscreen) {
 			getSupportActionBar().hide();
 		} else {

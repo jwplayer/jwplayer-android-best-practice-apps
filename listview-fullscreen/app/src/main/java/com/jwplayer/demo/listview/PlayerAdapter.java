@@ -13,15 +13,12 @@ import android.widget.TextView;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.configuration.Skin;
 import com.longtailvideo.jwplayer.fullscreen.FullscreenHandler;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
 import java.util.HashSet;
 
 public class PlayerAdapter extends BaseAdapter {
-
-    private static final String SKIN_URL = "file:///android_asset/listview-skin.css";
 
     private Activity mActivity;
     private PlaylistItem[] mPlaylist;
@@ -105,7 +102,6 @@ public class PlayerAdapter extends BaseAdapter {
                     playerView = new JWPlayerView(mActivity, new PlayerConfig.Builder().build());
                     playerView.setFullscreenHandler(new ListViewFullscreenHandler(
                             playerContainer, playerView));
-                    playerView.setSkin(SKIN_URL);
                     mPlayerViews.add(playerView);
                     playerContainer.addView(playerView);
                 } else {
@@ -114,7 +110,7 @@ public class PlayerAdapter extends BaseAdapter {
                     playerView.setVisibility(View.VISIBLE);
                 }
                 playerView.load(playlistItem);
-                playerView.play(true);
+                playerView.play();
             }
         });
 
@@ -211,9 +207,6 @@ public class PlayerAdapter extends BaseAdapter {
             // Remove the JWPlayerView from the list item.
             mPlayerContainer.removeView(mPlayerView);
 
-            // Use the JW7 skin in fullscreen.
-            mPlayerView.setSkin(Skin.SEVEN);
-
             // Initialize a new rendering surface.
             mPlayerView.initializeSurface();
 
@@ -245,9 +238,6 @@ public class PlayerAdapter extends BaseAdapter {
 
             // After we've detached the JWPlayerView we can safely reinitialize the surface.
             mPlayerView.initializeSurface();
-
-            // Restore the listview-skin
-            mPlayerView.setSkin(SKIN_URL);
 
             // As soon as the UI thread has finished processing the current message queue it
             // should add the JWPlayerView back to the list item.

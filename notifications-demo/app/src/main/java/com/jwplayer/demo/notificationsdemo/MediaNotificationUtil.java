@@ -7,8 +7,9 @@ import android.content.Intent;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v7.app.NotificationCompat;
 import android.view.KeyEvent;
 
 /**
@@ -22,17 +23,16 @@ public class MediaNotificationUtil {
 	 * @param mediaSession
 	 * @return
 	 */
-	public static NotificationCompat.Builder from(Context context, MediaSessionCompat mediaSession) {
+	public static NotificationCompat.Builder from(Context context, MediaSessionCompat mediaSession, String notificationChannelId) {
 		MediaControllerCompat controller = mediaSession.getController();
 		MediaMetadataCompat mediaMetadata = controller.getMetadata();
 		MediaDescriptionCompat description = mediaMetadata.getDescription();
-
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(context,notificationChannelId);
 		builder.setContentTitle(description.getTitle())
 				.setContentText(description.getSubtitle())
 				.setSubText(description.getDescription())
 				.setLargeIcon(description.getIconBitmap())
-				.setStyle(new NotificationCompat.MediaStyle()
+				.setStyle(new MediaStyle()
 						.setMediaSession(mediaSession.getSessionToken()))
 				.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 				.setSmallIcon(R.drawable.ic_jw_developer)

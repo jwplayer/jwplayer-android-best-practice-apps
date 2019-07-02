@@ -18,6 +18,10 @@ import android.widget.RelativeLayout;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
 import com.longtailvideo.jwplayer.core.PlayerState;
+import com.longtailvideo.jwplayer.events.CompleteEvent;
+import com.longtailvideo.jwplayer.events.FullscreenEvent;
+import com.longtailvideo.jwplayer.events.PauseEvent;
+import com.longtailvideo.jwplayer.events.PlayEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 
 public class MainActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener, VideoPlayerEvents.OnPlayListener, VideoPlayerEvents.OnPauseListener, VideoPlayerEvents.OnCompleteListener {
@@ -254,13 +258,31 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
         super.onDestroy();
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // If we are in fullscreen mode, exit fullscreen mode when the user uses the back button.
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mPlayerView.getFullscreen()) {
+                mPlayerView.setFullscreen(false, true);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onComplete(CompleteEvent completeEvent) {
+        mPlayerState = PlayerState.IDLE;
+    }
+
     /**
      * Handles JW Player going to and returning from fullscreen by hiding the ActionBar
      *
-     * @param fullscreen true if the player is fullscreen
+     * @param fullscreenEvent has a getFullscreen which return s true if the player is fullscreen
      */
     @Override
-    public void onFullscreen(boolean fullscreen) {
+    public void onFullscreen(FullscreenEvent fullscreenEvent) {
+        boolean fullscreen = fullscreenEvent.getFullscreen();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             if (fullscreen) {
@@ -282,29 +304,12 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // If we are in fullscreen mode, exit fullscreen mode when the user uses the back button.
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mPlayerView.getFullscreen()) {
-                mPlayerView.setFullscreen(false, true);
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
+    public void onPause(PauseEvent pauseEvent) {
+        mPlayerState = pauseEvent.getOldState();
     }
 
     @Override
-    public void onPlay(PlayerState playerState) {
-        mPlayerState = playerState;
-    }
-
-    @Override
-    public void onComplete() {
-        mPlayerState = PlayerState.IDLE;
-    }
-
-    @Override
-    public void onPause(PlayerState playerState) {
-        mPlayerState = playerState;
+    public void onPlay(PlayEvent playEvent) {
+        mPlayerState = playEvent.getOldState();
     }
 }

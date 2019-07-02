@@ -1,20 +1,31 @@
 package com.jwplayer.demo.notificationsdemo;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.app.NotificationCompat;
 import android.view.KeyEvent;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.core.PlayerState;
 import com.longtailvideo.jwplayer.events.AdCompleteEvent;
+import com.longtailvideo.jwplayer.events.AdErrorEvent;
 import com.longtailvideo.jwplayer.events.AdPlayEvent;
 import com.longtailvideo.jwplayer.events.AdSkippedEvent;
+import com.longtailvideo.jwplayer.events.BufferEvent;
 import com.longtailvideo.jwplayer.events.ErrorEvent;
+import com.longtailvideo.jwplayer.events.PauseEvent;
+import com.longtailvideo.jwplayer.events.PlayEvent;
+import com.longtailvideo.jwplayer.events.PlaylistCompleteEvent;
+import com.longtailvideo.jwplayer.events.PlaylistEvent;
+import com.longtailvideo.jwplayer.events.PlaylistItemEvent;
 import com.longtailvideo.jwplayer.events.listeners.AdvertisingEvents;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
@@ -27,14 +38,14 @@ import java.util.List;
 public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		VideoPlayerEvents.OnPauseListener,
 		VideoPlayerEvents.OnBufferListener,
-		VideoPlayerEvents.OnErrorListenerV2,
+		VideoPlayerEvents.OnErrorListener,
 		VideoPlayerEvents.OnPlaylistListener,
 		VideoPlayerEvents.OnPlaylistItemListener,
 		VideoPlayerEvents.OnPlaylistCompleteListener,
-		AdvertisingEvents.OnAdPlayListenerV2,
+		AdvertisingEvents.OnAdPlayListener,
 		AdvertisingEvents.OnAdErrorListener,
-		AdvertisingEvents.OnAdSkippedListenerV2,
-		AdvertisingEvents.OnAdCompleteListenerV2 {
+		AdvertisingEvents.OnAdSkippedListener,
+		AdvertisingEvents.OnAdCompleteListener {
 
 	/**
 	 * Playback Rate for the JW Player is always 1.0.
@@ -75,6 +86,11 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	 * An {@link android.os.AsyncTask} used for downloading artwork.
 	 */
 	private DownloadImageTask mDownloadImageTask;
+
+	/**
+	 * The notification channel id we'll send notifcations too
+	 */
+	private final String mNotificationChannelId = "NotificationBarController";
 
 	/**
 	 * Initializes a new MediaSessionManager.
@@ -165,8 +181,11 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	}
 
 	private void updateNotification(long capabilities) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			createNotificationChannel();
+		}
 		NotificationCompat.Builder notificationBuilder = MediaNotificationUtil.from(
-				mPlayer.getContext(), mMediaSessionCompat);
+				mPlayer.getContext(), mMediaSessionCompat,mNotificationChannelId);
 		notificationBuilder = addActions(notificationBuilder, capabilities);
 
 		NotificationManager notificationManager = (NotificationManager)
@@ -206,29 +225,16 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 				}
 				break;
 		}
-		newPlaybackState.setState(playbackStateCompat, mPlayer.getPosition(), PLAYBACK_RATE);
+		newPlaybackState.setState(playbackStateCompat, (long) mPlayer.getPosition(), PLAYBACK_RATE);
 		mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
 		updateNotification(capabilities);
 	}
 
 	@Override
-	public void onPlay(PlayerState oldState) {
-		// Tell Android that we're playing media.
-		mMediaSessionCompat.setActive(true);
-		// Update the MediaSession
-		updatePlaybackState(PlayerState.PLAYING);
-	}
+	public void onPlaylistItem(PlaylistItemEvent playlistItemEvent) {
+		int index = playlistItemEvent.getIndex();
+		PlaylistItem playlistItem = playlistItemEvent.getPlaylistItem();
 
-	@Override
-	public void onPlaylistComplete() {
-		//updatePlaybackState(PlayerState.IDLE);
-		mMediaSessionCompat.setActive(false);
-		mMediaSessionCompat.release();
-		mPlaylistIndex = 0;
-	}
-
-	@Override
-	public void onPlaylistItem(int index, PlaylistItem playlistItem) {
 		mPlaylistIndex = index;
 
 		// Update Metadata
@@ -261,34 +267,12 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	}
 
 	@Override
-	public void onBuffer(PlayerState oldState) {
-		// Update the PlaybackState.
-		updatePlaybackState(PlayerState.BUFFERING);
-	}
-
-	@Override
-	public void onPause(PlayerState oldState) {
-		updatePlaybackState(PlayerState.PAUSED);
-	}
-
-	@Override
-	public void onPlaylist(List<PlaylistItem> list) {
-		mPlaylist = list;
-	}
-
-	@Override
 	public void onError(ErrorEvent errorEvent) {
 		mReceivedError = true;
 	}
 
 	@Override
 	public void onAdComplete(AdCompleteEvent adCompleteEvent) {
-		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-				| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
-	}
-
-	@Override
-	public void onAdError(String s, String s1) {
 		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
 				| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
 	}
@@ -339,6 +323,56 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		notificationManager.cancel(NOTIFICATION_ID);
 	}
 
+	@Override
+	public void onAdError(AdErrorEvent adErrorEvent) {
+		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+				| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+	}
+
+	@Override
+	public void onBuffer(BufferEvent bufferEvent) {
+		// Update the PlaybackState.
+		updatePlaybackState(PlayerState.BUFFERING);
+	}
+
+	@Override
+	public void onPause(PauseEvent pauseEvent) {
+		updatePlaybackState(PlayerState.PAUSED);
+	}
+
+	@Override
+	public void onPlay(PlayEvent playEvent) {
+		// Tell Android that we're playing media.
+		mMediaSessionCompat.setActive(true);
+		// Update the MediaSession
+		updatePlaybackState(PlayerState.PLAYING);
+	}
+
+	@Override
+	public void onPlaylistComplete(PlaylistCompleteEvent playlistCompleteEvent) {
+		mMediaSessionCompat.setActive(false);
+		mMediaSessionCompat.release();
+		mPlaylistIndex = 0;
+	}
+
+	@Override
+	public void onPlaylist(PlaylistEvent playlistEvent) {
+		mPlaylist = playlistEvent.getPlaylist();
+	}
+
+	@RequiresApi(Build.VERSION_CODES.O)
+	private void createNotificationChannel(){
+		NotificationManager notificationManager = (NotificationManager) mPlayer.getContext().getSystemService(mPlayer.getContext().NOTIFICATION_SERVICE);
+		String id = mNotificationChannelId;
+		CharSequence channelNameDisplayedToUser = "Notification Bar Video Controls";
+		int importance = NotificationManager.IMPORTANCE_LOW;
+		NotificationChannel newChannel = new NotificationChannel(id,channelNameDisplayedToUser,importance);
+		newChannel.setDescription("All notifications");
+		newChannel.setShowBadge(false);
+		newChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+		notificationManager.createNotificationChannel(newChannel);
+	}
+
 	/**
 	 * A {@link android.support.v4.media.session.MediaSessionCompat.Callback} implementation for JW Player.
 	 */
@@ -350,12 +384,12 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 		@Override
 		public void onPause() {
-			mPlayer.pause(true);
+			mPlayer.pause();
 		}
 
 		@Override
 		public void onPlay() {
-			mPlayer.play(true);
+			mPlayer.play();
 		}
 
 		@Override
