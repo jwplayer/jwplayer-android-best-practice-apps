@@ -163,4 +163,13 @@ public class MainActivity extends AppCompatActivity
         mTouchInterceptorView.setVisibility(View.VISIBLE);
         mTouchInterceptorView.bringToFront();
     }
+
+    @Override
+    public void onBackPressed() {
+        if(mPlayerView.getFullscreen()){
+            mPlayerView.setFullscreen(false,true);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
