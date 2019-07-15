@@ -53,9 +53,17 @@ public class MainActivity extends AppCompatActivity
         //by the mNativePlayerControls to automatically fade the mNativePlayerControls out during playback
         mNativePlayerControls.addControlsInteractionListener(this);
 
+
+        String streamFileName = "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8";
+        String videoFileName = "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8";
+
+        //You can demo stream functionality by using the other file url
+        String chosenFile = videoFileName;
+
+
         //Setup our player with a demo playlist item so it plays a video
         PlaylistItem playlistItem = new PlaylistItem.Builder()
-                .file("http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8")
+                .file(chosenFile)
                 .title("BipBop")
                 .description("A video player testing video.")
                 .build();

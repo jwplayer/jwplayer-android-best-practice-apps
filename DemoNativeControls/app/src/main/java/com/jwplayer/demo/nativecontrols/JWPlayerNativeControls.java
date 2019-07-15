@@ -142,7 +142,7 @@ public class JWPlayerNativeControls extends RelativeLayout
             case R.id.rewind_button:
                 double newPosition = mPlayerView.getPosition() - 10;
                 //We clamp to 0 because JWPlayer would use negative numbers to jump to <end of video> - seekPos
-                //so -10 is 10 seconds from the end of the video
+                //which would make -10, 10 seconds from the end of the video
                 if(newPosition < 0){
                     newPosition = 0;
                 }
@@ -179,7 +179,7 @@ public class JWPlayerNativeControls extends RelativeLayout
 
     @Override
     public void onComplete(CompleteEvent completeEvent) {
-        mPlayPauseButton.setImageResource(R.drawable.exo_controls_play);
+        mPlayPauseButton.setImageResource(R.mipmap.ic_replay);
     }
 
     private class JWProgressBar implements VideoPlayerEvents.OnTimeListener,
@@ -191,37 +191,35 @@ public class JWPlayerNativeControls extends RelativeLayout
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             //Convert from progress to a time stamp to display to the user
             double videoDuration = mPlayerView.getDuration();
-            double currentTime = mPlayerView.getDuration() * ((double)progress / 100);
-            int finalMinutes = (int)videoDuration / 60;
-            int finalSeconds = (int)videoDuration % 60;
-            int currentMinutes = (int)currentTime / 60;
-            int currentSeconds = (int)currentTime % 60;
-            mSeekBarText.setText(
-                    padNumber(currentMinutes) +
-                    ":" +
-                    padNumber(currentSeconds) +
-                    " / " +
-                    padNumber(finalMinutes) +
-                    ":" +
-                    padNumber(finalSeconds));
 
-            //If the user moved the scrubber jump to that timestamp in the video
-            //Convert that to seconds into the video and seek that far
-            if(fromUser){
-                //progress is a value between 1-100 for percentage of video
-                double secondsToJumpTo = videoDuration * (progress / 100.0);
-                //jump that deep in seconds into the video
-                mPlayerView.seek(secondsToJumpTo);
-            }
-        }
+            if(videoDuration > 0){
+                double currentTime = mPlayerView.getDuration() * ((double)progress / 100);
+                int currentMinutes = (int)currentTime / 60;
+                int currentSeconds = (int)currentTime % 60;
+                int finalMinutes = (int)videoDuration / 60;
+                int finalSeconds = (int)videoDuration % 60;
 
-        //Helper function to help format the numbers in the time bar
-        private String padNumber(int number){
-            String num = String.valueOf(number);
-            if(number < 10){
-                return "0" + num;
+                mSeekBarText.setText(
+                        String.format("%02d", currentMinutes) +
+                                ":" +
+                                String.format("%02d", currentSeconds) +
+                                " / " +
+                                String.format("%02d", finalMinutes) +
+                                ":" +
+                                String.format("%02d", finalSeconds));
+
+
+                //If the user moved the scrubber jump to that timestamp in the video
+                //Convert that to seconds into the video and seek that far
+                if(fromUser){
+                    //progress is a value between 1-100 for percentage of video
+                    double secondsToJumpTo = videoDuration * (progress / 100.0);
+                    //jump that deep in seconds into the video
+                    mPlayerView.seek(secondsToJumpTo);
+                }
+            } else { // if videoDuration is < 0 we have a live stream so disable the scrubber
+                mSeekBarText.setText("Streaming");
             }
-            return num;
         }
 
         @Override
@@ -248,6 +246,15 @@ public class JWPlayerNativeControls extends RelativeLayout
             }
             double position = timeEvent.getPosition();
             mSeekBar.setProgress((int)position);
+
+            int UIVisibility = VISIBLE;
+            if(timeEvent.getDuration() < 0){
+                UIVisibility = INVISIBLE;
+            }
+            mRewindButton.setVisibility(UIVisibility);
+            mFastForwardButton.setVisibility(UIVisibility);
+            mSeekBar.setVisibility(UIVisibility);
+
         }
     }
 }
