@@ -1,4 +1,4 @@
-/**
+/*
  * Author: Efrain Gonzalez
  * c-egonzalez@jwplayer.com
  */
@@ -15,23 +15,33 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.widget.Toast;
-
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.core.PlayerState;
 import com.longtailvideo.jwplayer.events.PauseEvent;
 import com.longtailvideo.jwplayer.events.PlayEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
-
+/**
+ *
+ * This class holds the core functionality for background playback. Represents a Service that
+ * binds to an activity to allow interaction trough a Binder interface, can also be started to live
+ * detached from the launching activity, and is able to run in the foreground (Showing a
+ * persistent notification to the user). This class makes use of a MediaSession to handle
+ * transport controls and media notifications.
+ */
 public class BackgroundAudioService extends Service {
 
     private static final float PLAYBACK_SPEED = 1.0f;
+    
+    public static final String ACTION = "ACTION";
+    public static final String ACTION_START = "ACTION_START";
+    public static final String ACTION_PLAY = "ACTION_PLAY";
+    public static final String ACTION_PAUSE = "ACTION_PAUSE";
+    public static final String ACTION_STOP = "ACTION_STOP";
 
     private JWPlayerView mPlayer;
 
@@ -40,58 +50,93 @@ public class BackgroundAudioService extends Service {
     private PlayerEventHandler eventHandler = new PlayerEventHandler();
 
     private PlaybackStateCompat.Builder mPlaybackStateBuilder = new PlaybackStateCompat.Builder();
-    private MediaMetadataCompat.Builder mMediaMetadataBuilder = new MediaMetadataCompat.Builder();
 
     private ServiceBinder mBinder = new ServiceBinder();
-
-
+    
+    
+    /**
+     * When the service is created, create and prepare a MediaSession
+     */
     @Override
     public void onCreate() {
         mMediaSessionCompat = new MediaSessionCompat(this, getClass().getSimpleName());
         mMediaSessionCompat.setCallback(new MediaSessionCallback());
         mMediaSessionCompat.setActive(true);
     }
-
+    
+    /**
+     * This method gets called each time a call to this service is made
+     * we use the {@param intent} to determine the action to be performed.
+     *
+     * When the service is first bound, an intent with ACTION_START is launched, and the
+     * startForeground method gets called, this creates the notification and also promotes the
+     * service from background to foreground and prevents the system from killing it.
+     *
+     * Please note that startForeground() should be called within 5 seconds of calling
+     * startForegroundService() in the activity, otherwise the service will be killed and the app
+     * will crash with an error.
+     *
+     * When an ACTION intent is received, we call the TransportControls method to tell the media
+     * session an event occurred and invoke it's callback that will forward the event to the
+     * player. We also set the PlaybackState to keep the mediaSession and the JWPlayerView in
+     * sync.
+     *
+     * Finally, the notification gets updated every time the Service receives an Intent.
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getStringExtra("ACTION");
+        String action = intent.getStringExtra(ACTION);
+        MediaControllerCompat.TransportControls transportControls =
+                mMediaSessionCompat.getController().getTransportControls();
+        PlaylistItem item = mPlayer.getPlaylistItem();
         switch (action) {
-            case "ACTION_START": {
-                //START FOREGROUND SERVICE
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, App.CHANNEL_ID);
-                builder.setContentTitle(mPlayer.getPlaylistItem().getTitle())
-                .setContentText(mPlayer.getPlaylistItem().getDescription())
+            case ACTION_START: {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
+                                                                                    App.CHANNEL_ID)
+                .setContentTitle(item.getTitle())
+                .setContentText(item.getDescription())
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentText(mPlayer.getPlaylistItem().getDescription());
+                .setContentText(item.getDescription());
+                
                 startForeground(App.NOTIFICATION_ID, builder.build());
                 setPlaybackState(PlaybackStateCompat.STATE_PAUSED);
                 break;
             }
-            case "ACTION_PLAY": {
-                mMediaSessionCompat.getController().getTransportControls().play();
+            case ACTION_PLAY: {
+                transportControls.play();
                 setPlaybackState(PlaybackStateCompat.STATE_PLAYING);
                 break;
             }
-            case "ACTION_PAUSE": {
-                mMediaSessionCompat.getController().getTransportControls().pause();
+            case ACTION_PAUSE: {
+                transportControls.pause();
                 setPlaybackState(PlaybackStateCompat.STATE_PAUSED);
                 break;
             }
-            case "ACTION_STOP": {
-                mMediaSessionCompat.getController().getTransportControls().stop();
+            case ACTION_STOP: {
+                transportControls.stop();
                 setPlaybackState(PlaybackStateCompat.STATE_STOPPED);
+                break;
             }
         }
         showNotification();
         return START_NOT_STICKY;
     }
-
+    
+    /**
+     * When an Activity bind to this service, an instance of the Binder interface is returned to
+     * allow interaction.
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
-
+    
+    /**
+     * Free resources when the service is destroyed.
+     * Clear the service's notification.
+     * Stop the service.
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -102,19 +147,28 @@ public class BackgroundAudioService extends Service {
         NotificationManagerCompat.from(this).cancel(App.NOTIFICATION_ID);
         stopSelf();
     }
-
+    
+    /**
+     * Stop the service when the user swipes away the app from the recent app view
+     */
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         stopSelf();
     }
-
+    
+    /**
+     * Updates the current payback state
+     */
     private void setPlaybackState(int state) {
         mPlaybackStateBuilder.setState(state, (long) mPlayer.getPosition(), PLAYBACK_SPEED);
         setActions(state);
         mMediaSessionCompat.setPlaybackState(mPlaybackStateBuilder.build());
     }
-
+    
+    /**
+     * Sets the available actions for the current state.
+     */
     private void setActions(int state) {
         switch (state) {
             case PlaybackStateCompat.STATE_PLAYING: {
@@ -127,7 +181,13 @@ public class BackgroundAudioService extends Service {
             }
         }
     }
-
+    
+    /**
+     * Updates the notification to be shown. We use a notification builder to create a whole new
+     * notification but we use the notify() method and the same notification id to update it. It
+     * is important to use the same id so the system knows that the foreground service still has
+     * a notification (created in startForeground).
+     */
     private void showNotification() {
         //Sets the common parameters for all notifications
         NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this, App.CHANNEL_ID);
@@ -136,24 +196,34 @@ public class BackgroundAudioService extends Service {
         //Add Actions to the notification
         if(mMediaSessionCompat.getController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
             Intent pauseIntent = new Intent(this, BackgroundAudioService.class);
-            pauseIntent.putExtra("ACTION", "ACTION_PAUSE");
+            pauseIntent.putExtra(ACTION, ACTION_PAUSE);
             PendingIntent pendingIntent = PendingIntent.getService(this, 2, pauseIntent,
                                                                     PendingIntent.FLAG_UPDATE_CURRENT);
             mNotificationBuilder.addAction(R.drawable.ic_pause, "Pause", pendingIntent);
         }
         if(mMediaSessionCompat.getController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PAUSED) {
             Intent playIntent = new Intent(this, BackgroundAudioService.class);
-            playIntent.putExtra("ACTION", "ACTION_PLAY");
+            playIntent.putExtra(ACTION, ACTION_PLAY);
             PendingIntent pendingIntent = PendingIntent.getService(this, 3, playIntent,
                                                                     PendingIntent.FLAG_UPDATE_CURRENT);
             mNotificationBuilder.addAction(R.drawable.ic_play, "Play", pendingIntent);
         }
         NotificationManagerCompat.from(this).notify(App.NOTIFICATION_ID, mNotificationBuilder.build());
     }
+    
+    /**
+     * This Binder interface provides interaction between the service and the binding activity by
+     * returning an instance of this Binder and allowing the activity to call its methods.
+     *
+     * Other custom methods can be defined here.
+     *
+     * Instead of defining several custom methods, the Binder interface can return an instance of
+     * this service to allow the activity to call the service methods directly, but this approach
+     * is more dangerous.
+     */
+    class ServiceBinder extends Binder {
 
-    public class ServiceBinder extends Binder {
-
-        public void createPLayer(Context context) {
+        public void createPlayer(Context context) {
             if(context instanceof Activity){
                 PlayerConfig config = new PlayerConfig.Builder().playlist(SampleMedia.SAMPLE).build();
                 mPlayer = new JWPlayerView(context, config);
@@ -166,7 +236,17 @@ public class BackgroundAudioService extends Service {
             return mPlayer;
         }
     }
-
+    
+    /**
+     * This class must override all the methods of the actions supported by each
+     * application.
+     * As minimum, it should override onPlay() and onPause().
+     * If the application supports skipping tracks, this class should also implement onSkipToNext
+     * () and onSkipToPrevious().
+     *
+     * Every method should forward the behavior to the JWPlayerView instance to keep sync between
+     * itself and the mediaSession.
+     */
     private class MediaSessionCallback extends MediaSessionCompat.Callback {
 
         @Override
@@ -180,8 +260,16 @@ public class BackgroundAudioService extends Service {
             mPlayer.pause();
             super.onPause();
         }
+        
+        
     }
-
+    
+    /**
+     * This class must implement all the player event listeners needed for each application.
+     * As minimum, it should implement onPLayListener and onPauseListener and update the
+     * playbackState and the notification, to keep sync between the JWPlayerView instance and the
+     * mediaSession.
+     */
     private class PlayerEventHandler implements VideoPlayerEvents.OnPlayListener,
                                                 VideoPlayerEvents.OnPauseListener {
 

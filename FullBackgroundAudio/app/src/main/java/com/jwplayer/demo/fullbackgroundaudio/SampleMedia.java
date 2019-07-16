@@ -4,6 +4,11 @@ import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
 import java.util.LinkedList;
 
+/**
+ * Defines a sample playlist to use for our example.
+ * Used as parameter for the PlayerConfig builder.setPlaylist() method.
+ *
+ */
 public class SampleMedia {
 
     public static final LinkedList<PlaylistItem> SAMPLE = new LinkedList<PlaylistItem>(){

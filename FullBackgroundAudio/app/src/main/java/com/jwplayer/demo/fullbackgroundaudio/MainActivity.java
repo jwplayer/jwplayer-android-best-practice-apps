@@ -1,4 +1,4 @@
-/**
+/*
  * Author: Efrain Gonzalez
  * c-egonzalez@jwplayer.com
  */
@@ -16,6 +16,11 @@ import android.widget.RelativeLayout;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 
+/**
+ * A simple activity that holds a JWPlayer view. This activity connects to the background
+ * service, binds to it to get the player instance and then it starts the service so it can keep
+ * running independently from the activity's life cycle.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout mContainer;
@@ -27,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = (BackgroundAudioService.ServiceBinder) service;
-            mService.createPLayer(MainActivity.this);
+            mService.createPlayer(MainActivity.this);
             mPlayer = mService.getPlayer();
             mContainer.addView(mPlayer, new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             Intent startIntent = new Intent(MainActivity.this, BackgroundAudioService.class);
-            startIntent.putExtra("ACTION", "ACTION_START");
+            startIntent.putExtra(BackgroundAudioService.ACTION, BackgroundAudioService.ACTION_START);
             startForegroundService(startIntent);
             mIsBound = true;
         }

@@ -7,10 +7,17 @@ import android.support.v4.app.NotificationCompat;
 
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
+/**
+ * Helper class to create a base notification with the default actions.
+ *
+ * ContentIntent defines the action to perform when the user clicks the notification.
+ * DeleteIntent defines the action to perform when the user explicitly dismisses the notification.
+ */
 public class MediaStyleHelper {
-    public static NotificationCompat.Builder prepareNotification(NotificationCompat.Builder builder, Context context, PlaylistItem item) {
+    public static void prepareNotification(NotificationCompat.Builder builder, Context context,
+                                        PlaylistItem item) {
         Intent deleteIntent = new Intent(context, BackgroundAudioService.class);
-        deleteIntent.putExtra("ACTION", "ACTION_STOP");
+        deleteIntent.putExtra(BackgroundAudioService.ACTION, BackgroundAudioService.ACTION_STOP);
         PendingIntent pendingIntentDelete = PendingIntent.getService(context, 0, deleteIntent,
                                                                       PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -21,11 +28,9 @@ public class MediaStyleHelper {
         builder.setContentTitle(item.getTitle())
                 .setContentText(item.getDescription())
                 .setSubText(item.getDescription())
-                //.setLargeIcon(item.getImage())
                 .setSmallIcon(R.drawable.ic_notification)
                 .setContentIntent(pendingIntentContent)
                 .setDeleteIntent(pendingIntentDelete)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        return builder;
     }
 }
