@@ -3,6 +3,8 @@ package com.jwplayer.demo.nativecontrols;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity
 
     final Handler mHideControlsHandler = new Handler();
     final long mDelayBeforeControlsAreHidden = 3000;
+    final String videoFileName = "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest(format=m3u8-aapl-v3)";
+    final String streamFileName = "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8";
 
     //The runnable that will be responsible for hiding mNativePlayerControls
     //This will trigger if the video is playing and the user doesn't interact with the screen
@@ -54,8 +58,6 @@ public class MainActivity extends AppCompatActivity
         mNativePlayerControls.addControlsInteractionListener(this);
 
 
-        String streamFileName = "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8";
-        String videoFileName = "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8";
 
         //You can demo stream functionality by using the other file url
         String chosenFile = videoFileName;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         //Setup our player with a demo playlist item so it plays a video
         PlaylistItem playlistItem = new PlaylistItem.Builder()
                 .file(chosenFile)
-                .title("BipBop")
+                .title("Demo Video")
                 .description("A video player testing video.")
                 .build();
         List<PlaylistItem> playlist = new ArrayList<>();
@@ -128,6 +130,46 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String chosenFile = "";
+        switch (item.getItemId()) {
+            case R.id.menu_swap_to_stream: {
+                chosenFile = streamFileName;
+                break;
+            }
+            case R.id.menu_swap_to_video: {
+                chosenFile = videoFileName;
+                break;
+            }
+        }
+        //Setup our player with a demo playlist item so it plays a video
+        PlaylistItem playlistItem = new PlaylistItem.Builder()
+                .file(chosenFile)
+                .title("Demo Video")
+                .description("A video player testing video.")
+                .build();
+        List<PlaylistItem> playlist = new ArrayList<>();
+        playlist.add(playlistItem);
+        PlayerConfig config = new PlayerConfig.Builder().playlist(playlist).build();
+        mPlayerView.stop();
+        mNativePlayerControls.resetVideoPlaybackUI();
+
+        //Cancel Timer to hide mNativePlayerControls altogether
+        mHideControlsHandler.removeCallbacks(mHideControlsRunnable);
+        mTouchInterceptorView.setClickable(false);
+        mTouchInterceptorView.setVisibility(View.INVISIBLE);
+        mPlayerView.setup(config);
+        mPlayerView.setControls(false);
+        return true;
+    }
     //Controls Interaction Listener Events
 
     //When mNativePlayerControls are interacted with we want to handle them

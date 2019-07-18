@@ -78,7 +78,7 @@ public class JWPlayerNativeControls extends RelativeLayout
         resetVideoPlaybackUI();
     }
 
-    private void resetVideoPlaybackUI(){
+    public void resetVideoPlaybackUI(){
         mPlayPauseButton.setImageResource(R.drawable.exo_controls_play);
         mSeekBar.setProgress(0);
         mSeekBarText.setText("00:00 / 00:00");
@@ -126,6 +126,7 @@ public class JWPlayerNativeControls extends RelativeLayout
                 break;
             case R.id.stop_button:
                 //Cancel playback ASAP and reset the UI back to the pre video starts
+                stoppedPlayback = true;
                 mPlayerView.stop();
                 resetVideoPlaybackUI();
                 break;
@@ -186,6 +187,7 @@ public class JWPlayerNativeControls extends RelativeLayout
             SeekBar.OnSeekBarChangeListener {
         //Ignore time events when the user is using the scrub to navigate the video otherwise the scrubber will jump erratically
         private boolean ignoreTimeEvents = false;
+        private boolean isLiveStreaming = false;
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -193,7 +195,7 @@ public class JWPlayerNativeControls extends RelativeLayout
             double videoDuration = mPlayerView.getDuration();
 
             if(videoDuration > 0){
-                double currentTime = mPlayerView.getDuration() * ((double)progress / 100);
+                double currentTime = progress;
                 int currentMinutes = (int)currentTime / 60;
                 int currentSeconds = (int)currentTime % 60;
                 int finalMinutes = (int)videoDuration / 60;
@@ -213,12 +215,16 @@ public class JWPlayerNativeControls extends RelativeLayout
                 //Convert that to seconds into the video and seek that far
                 if(fromUser){
                     //progress is a value between 1-100 for percentage of video
-                    double secondsToJumpTo = videoDuration * (progress / 100.0);
+                    //double secondsToJumpTo = videoDuration * (progress / 100.0);
                     //jump that deep in seconds into the video
-                    mPlayerView.seek(secondsToJumpTo);
+                    mPlayerView.seek(progress);
                 }
             } else { // if videoDuration is < 0 we have a live stream so disable the scrubber
-                mSeekBarText.setText("Streaming");
+                String streamingMessage = "Streaming";
+                if(isLiveStreaming){
+                    streamingMessage = "Live";
+                }
+                mSeekBarText.setText(streamingMessage);
             }
         }
 
@@ -240,21 +246,27 @@ public class JWPlayerNativeControls extends RelativeLayout
 
         @Override
         public void onTime(TimeEvent timeEvent) {
-            //Whenever we get an time update from the player move the seek bar forward in lock step
             if(ignoreTimeEvents){
                 return;
             }
             double position = timeEvent.getPosition();
-            mSeekBar.setProgress((int)position);
-
+            double duration = timeEvent.getDuration();
+            //Time events will have a negative position if we're streaming
+            //and if we're streaming we should disable several UI elements like rewind, seek forward, and scrubber
             int UIVisibility = VISIBLE;
             if(timeEvent.getDuration() < 0){
                 UIVisibility = INVISIBLE;
+                if(position < 0){
+                    isLiveStreaming = true;
+                }
             }
             mRewindButton.setVisibility(UIVisibility);
             mFastForwardButton.setVisibility(UIVisibility);
             mSeekBar.setVisibility(UIVisibility);
 
+            mSeekBar.setMax((int)duration);
+            //Whenever we get an time update from the player move the seek bar forward in lock step
+            mSeekBar.setProgress((int)position);
         }
     }
 }
