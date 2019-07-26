@@ -187,13 +187,12 @@ public class JWPlayerNativeControls extends RelativeLayout
             SeekBar.OnSeekBarChangeListener {
         //Ignore time events when the user is using the scrub to navigate the video otherwise the scrubber will jump erratically
         private boolean ignoreTimeEvents = false;
-        private boolean isLiveStreaming = false;
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             //Convert from progress to a time stamp to display to the user
             double videoDuration = mPlayerView.getDuration();
-
+            String seekbarMessage = "";
             if(videoDuration > 0){
                 double currentTime = progress;
                 int currentMinutes = (int)currentTime / 60;
@@ -201,30 +200,47 @@ public class JWPlayerNativeControls extends RelativeLayout
                 int finalMinutes = (int)videoDuration / 60;
                 int finalSeconds = (int)videoDuration % 60;
 
-                mSeekBarText.setText(
-                        String.format("%02d", currentMinutes) +
+
+                seekbarMessage = String.format("%02d", currentMinutes) +
                                 ":" +
                                 String.format("%02d", currentSeconds) +
                                 " / " +
                                 String.format("%02d", finalMinutes) +
                                 ":" +
-                                String.format("%02d", finalSeconds));
+                                String.format("%02d", finalSeconds);
+            } else { // if videoDuration is < 0 we have a live stream so disable the scrubber
+                //seekbarMessage = "Streaming";
+                double currentTime = Math.abs(videoDuration + progress);
+                if(progress > 0 && videoDuration == 0){
+                    seekbarMessage = "LIVE";
+                } else {
+                    int currentMinutes = (int)currentTime / 60;
+                    int currentSeconds = (int)currentTime % 60;
 
-
-                //If the user moved the scrubber jump to that timestamp in the video
-                //Convert that to seconds into the video and seek that far
-                if(fromUser){
-                    //progress is a value between 1-100 for percentage of video
-                    //double secondsToJumpTo = videoDuration * (progress / 100.0);
-                    //jump that deep in seconds into the video
+                    if(videoDuration < 0){
+                        seekbarMessage += "-";
+                    }
+                    //Manually add the negative sign so this plays nice with -00:02s
+                    seekbarMessage +=
+                            String.format("%02d", currentMinutes) +
+                                    ":" +
+                                    String.format("%02d", currentSeconds);
+                }
+            }
+            mSeekBarText.setText(seekbarMessage);
+            //If the user moved the scrubber jump to that timestamp in the video
+            //Convert that to seconds into the video and seek that far
+            if(fromUser){
+                if(videoDuration < 0){
+                    //To get the bar to look right, if we jump to live we set the seek to -1 instead of 0
+                    double seekValue = videoDuration + progress;
+                    if(seekValue == 0){
+                        seekValue = -1;
+                    }
+                    mPlayerView.seek(seekValue);
+                } else {
                     mPlayerView.seek(progress);
                 }
-            } else { // if videoDuration is < 0 we have a live stream so disable the scrubber
-                String streamingMessage = "Streaming";
-                if(isLiveStreaming){
-                    streamingMessage = "Live";
-                }
-                mSeekBarText.setText(streamingMessage);
             }
         }
 
@@ -256,15 +272,23 @@ public class JWPlayerNativeControls extends RelativeLayout
             int UIVisibility = VISIBLE;
             if(timeEvent.getDuration() < 0){
                 UIVisibility = INVISIBLE;
-                if(position < 0){
-                    isLiveStreaming = true;
-                }
             }
             mRewindButton.setVisibility(UIVisibility);
             mFastForwardButton.setVisibility(UIVisibility);
-            mSeekBar.setVisibility(UIVisibility);
+            mSeekBar.setVisibility(VISIBLE);
 
-            mSeekBar.setMax((int)duration);
+            //if theres a negative duration then it's a stream
+            //if theres a positive position then it's a live stream you can't scrub through
+            //if theres a negative position it's a stream you CAN scrub through
+            int absDuration = (int)Math.abs(duration);
+            mSeekBar.setMax(absDuration);
+            if(duration < 0){
+                if(position < 0){
+                    position = absDuration - (int)Math.abs(position);
+                } else {
+                    mSeekBarText.setText("LIVE");
+                }
+            }
             //Whenever we get an time update from the player move the seek bar forward in lock step
             mSeekBar.setProgress((int)position);
         }

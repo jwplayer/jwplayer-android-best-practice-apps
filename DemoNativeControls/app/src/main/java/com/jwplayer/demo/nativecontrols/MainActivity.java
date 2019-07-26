@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity
     final long mDelayBeforeControlsAreHidden = 3000;
     final String videoFileName = "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest(format=m3u8-aapl-v3)";
     final String streamFileName = "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8";
+    final String scrubbaleStreamFileName = "http://playertest.longtailvideo.com/hls/hockey/new_master.m3u8";
 
     //The runnable that will be responsible for hiding mNativePlayerControls
     //This will trigger if the video is playing and the user doesn't interact with the screen
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         //Setup our player with a demo playlist item so it plays a video
         PlaylistItem playlistItem = new PlaylistItem.Builder()
                 .file(chosenFile)
-                .title("Demo Video")
+                .title(getString(R.string.demo_video_title))
                 .description("A video player testing video.")
                 .build();
         List<PlaylistItem> playlist = new ArrayList<>();
@@ -140,21 +141,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         String chosenFile = "";
+        String video_title = getString(R.string.demo_video_title);
         switch (item.getItemId()) {
-            case R.id.menu_swap_to_stream: {
+            case R.id.menu_swap_to_live_stream: {
                 chosenFile = streamFileName;
+                video_title = getString(R.string.demo_live_stream_title);
+                break;
+            }
+            case R.id.menu_swap_to_scrubbale_stream: {
+                chosenFile = scrubbaleStreamFileName;
+                video_title = getString(R.string.demo_archived_stream_title);
                 break;
             }
             case R.id.menu_swap_to_video: {
                 chosenFile = videoFileName;
+                video_title = getString(R.string.demo_video_title);
                 break;
             }
         }
         //Setup our player with a demo playlist item so it plays a video
         PlaylistItem playlistItem = new PlaylistItem.Builder()
                 .file(chosenFile)
-                .title("Demo Video")
-                .description("A video player testing video.")
+                .title(video_title)
+                .description("Demonstration of playback")
                 .build();
         List<PlaylistItem> playlist = new ArrayList<>();
         playlist.add(playlistItem);
