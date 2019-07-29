@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_swap_to_video"
+        android:title="Load Video"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_swap_to_live_stream"
+        android:title="Load Live Stream"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_swap_to_scrubbale_stream"
+        android:title="Load Archived Stream"
+        app:showAsAction="never" />
+</menu>
