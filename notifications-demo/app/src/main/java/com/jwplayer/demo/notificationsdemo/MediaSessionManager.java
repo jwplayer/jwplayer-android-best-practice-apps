@@ -1,17 +1,10 @@
 package com.jwplayer.demo.notificationsdemo;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.KeyEvent;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.core.PlayerState;
@@ -36,26 +29,22 @@ import java.util.List;
  * Manages a {@link MediaSessionCompat}.
  */
 public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
-		VideoPlayerEvents.OnPauseListener,
-		VideoPlayerEvents.OnBufferListener,
-		VideoPlayerEvents.OnErrorListener,
-		VideoPlayerEvents.OnPlaylistListener,
-		VideoPlayerEvents.OnPlaylistItemListener,
-		VideoPlayerEvents.OnPlaylistCompleteListener,
-		AdvertisingEvents.OnAdPlayListener,
-		AdvertisingEvents.OnAdErrorListener,
-		AdvertisingEvents.OnAdSkippedListener,
-		AdvertisingEvents.OnAdCompleteListener {
+											VideoPlayerEvents.OnPauseListener,
+											VideoPlayerEvents.OnBufferListener,
+											VideoPlayerEvents.OnErrorListener,
+											VideoPlayerEvents.OnPlaylistListener,
+											VideoPlayerEvents.OnPlaylistItemListener,
+											VideoPlayerEvents.OnPlaylistCompleteListener,
+											AdvertisingEvents.OnAdPlayListener,
+											AdvertisingEvents.OnAdErrorListener,
+											AdvertisingEvents.OnAdSkippedListener,
+											AdvertisingEvents.OnAdCompleteListener,
+											DownloadImageTask.ImageDownloadListener {
 
 	/**
 	 * Playback Rate for the JW Player is always 1.0.
 	 */
 	private static final float PLAYBACK_RATE = 1.0f;
-
-	/**
-	 * The notification id.
-	 */
-	private static final int NOTIFICATION_ID = 0;
 
 	/**
 	 * The Player we're managing the media session of.
@@ -87,10 +76,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	 */
 	private DownloadImageTask mDownloadImageTask;
 
-	/**
-	 * The notification channel id we'll send notifcations too
-	 */
-	private final String mNotificationChannelId = "NotificationBarController";
+
+	private NotificationWrapper mNotificationWrapper;
 
 	/**
 	 * Initializes a new MediaSessionManager.
@@ -98,13 +85,17 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	 * @param context
 	 * @param playerView
 	 */
-	public MediaSessionManager(Context context, JWPlayerView playerView) {
+	public MediaSessionManager(Context context,
+							   JWPlayerView playerView,
+							   NotificationWrapper notificationWrapper) {
 		mPlayer = playerView;
+		mNotificationWrapper = notificationWrapper;
 
 		// Create a new MediaSession
-		mMediaSessionCompat = new MediaSessionCompat(context, MediaSessionManager.class.getSimpleName());
+		mMediaSessionCompat = new MediaSessionCompat(context,
+													 MediaSessionManager.class.getSimpleName());
 		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-				| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+											 | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
 		mMediaSessionCompat.setCallback(new MediaSessionCallback(mPlayer));
 
 		// Register listeners.
@@ -121,7 +112,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		mPlayer.addOnAdCompleteListener(this);
 	}
 
-	private @PlaybackStateCompat.Actions long getCapabilities(PlayerState playerState) {
+	public @PlaybackStateCompat.Actions
+	long getCapabilities(PlayerState playerState) {
 		long capabilities = 0;
 
 		switch (playerState) {
@@ -132,13 +124,13 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 				break;
 			case PAUSED:
 				capabilities |= PlaybackStateCompat.ACTION_PLAY
-					| PlaybackStateCompat.ACTION_STOP
-					| PlaybackStateCompat.ACTION_SEEK_TO;
+						| PlaybackStateCompat.ACTION_STOP
+						| PlaybackStateCompat.ACTION_SEEK_TO;
 				break;
 			case BUFFERING:
 				capabilities |= PlaybackStateCompat.ACTION_PAUSE
-					| PlaybackStateCompat.ACTION_STOP
-					| PlaybackStateCompat.ACTION_SEEK_TO;
+						| PlaybackStateCompat.ACTION_STOP
+						| PlaybackStateCompat.ACTION_SEEK_TO;
 				break;
 			case IDLE:
 				if (!mReceivedError && mPlaylist != null && mPlaylist.size() >= 1) {
@@ -158,40 +150,10 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		return capabilities;
 	}
 
-	private NotificationCompat.Builder addActions(NotificationCompat.Builder notification,
-												 long capabilities) {
-		// Attach actions to the notification.
-		if ((capabilities & PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS) != 0) {
-			notification.addAction(R.drawable.ic_previous, "Previous",
-					MediaNotificationUtil.getActionIntent(mPlayer.getContext(), KeyEvent.KEYCODE_MEDIA_PREVIOUS));
-		}
-		if ((capabilities & PlaybackStateCompat.ACTION_PAUSE) != 0) {
-			notification.addAction(R.drawable.ic_pause, "Pause",
-					MediaNotificationUtil.getActionIntent(mPlayer.getContext(), KeyEvent.KEYCODE_MEDIA_PAUSE));
-		}
-		if ((capabilities & PlaybackStateCompat.ACTION_PLAY) != 0) {
-			notification.addAction(R.drawable.ic_play, "Play",
-					MediaNotificationUtil.getActionIntent(mPlayer.getContext(), KeyEvent.KEYCODE_MEDIA_PLAY));
-		}
-		if ((capabilities & PlaybackStateCompat.ACTION_SKIP_TO_NEXT) != 0) {
-			notification.addAction(R.drawable.ic_next, "Next",
-					MediaNotificationUtil.getActionIntent(mPlayer.getContext(), KeyEvent.KEYCODE_MEDIA_NEXT));
-		}
-		return notification;
+	public JWPlayerView getPlayer() {
+		return mPlayer;
 	}
 
-	private void updateNotification(long capabilities) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			createNotificationChannel();
-		}
-		NotificationCompat.Builder notificationBuilder = MediaNotificationUtil.from(
-				mPlayer.getContext(), mMediaSessionCompat,mNotificationChannelId);
-		notificationBuilder = addActions(notificationBuilder, capabilities);
-
-		NotificationManager notificationManager = (NotificationManager)
-				mPlayer.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-	}
 
 	private PlaybackStateCompat.Builder getPlaybackStateBuilder() {
 		PlaybackStateCompat playbackState = mMediaSessionCompat.getController().getPlaybackState();
@@ -225,9 +187,11 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 				}
 				break;
 		}
-		newPlaybackState.setState(playbackStateCompat, (long) mPlayer.getPosition(), PLAYBACK_RATE);
+
+		newPlaybackState.setState(playbackStateCompat, (long)mPlayer.getPosition(), PLAYBACK_RATE);
 		mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
-		updateNotification(capabilities);
+		mNotificationWrapper
+				.createNotification(mPlayer.getContext(), mMediaSessionCompat, capabilities);
 	}
 
 	@Override
@@ -240,7 +204,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		// Update Metadata
 		MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
 				.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, playlistItem.getTitle())
-				.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, playlistItem.getDescription())
+				.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE,
+						   playlistItem.getDescription())
 				.putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, playlistItem.getMediaId())
 				.build();
 		mMediaSessionCompat.setMetadata(metadata);
@@ -249,22 +214,10 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		if (mDownloadImageTask != null) {
 			mDownloadImageTask.cancel(true);
 		}
-		mDownloadImageTask = new DownloadImageTask() {
-			@Override
-			protected void onPostExecute(Bitmap bitmap) {
-				if (mMediaSessionCompat != null) {
-					MediaMetadataCompat currentMetadata = mMediaSessionCompat.getController().getMetadata();
-					MediaMetadataCompat.Builder newBuilder = currentMetadata == null
-							? new MediaMetadataCompat.Builder()
-							: new MediaMetadataCompat.Builder(currentMetadata);
-					mMediaSessionCompat.setMetadata(newBuilder
-							.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, bitmap)
-							.build());
-				}
-			}
-		};
+		mDownloadImageTask = new DownloadImageTask(this);
 		mDownloadImageTask.execute(playlistItem.getImage());
 	}
+
 
 	@Override
 	public void onError(ErrorEvent errorEvent) {
@@ -274,26 +227,24 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	@Override
 	public void onAdComplete(AdCompleteEvent adCompleteEvent) {
 		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-				| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+											 | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
 	}
 
 	@Override
 	public void onAdSkipped(AdSkippedEvent adSkippedEvent) {
 		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-				| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+											 | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
 	}
 
 	@Override
 	public void onAdPlay(AdPlayEvent adPlayEvent) {
 		// We don't want to show the notification during ad playback.
-		NotificationManager notificationManager = (NotificationManager)
-				mPlayer.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel(NOTIFICATION_ID);
 		mMediaSessionCompat.setFlags(0);
 	}
 
 	/**
 	 * Returns the underlying media session.
+	 *
 	 * @return
 	 */
 	public MediaSessionCompat getMediaSession() {
@@ -318,15 +269,13 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		mPlayer.removeOnAdCompleteListener(this);
 
 		// Remove any notifications
-		NotificationManager notificationManager = (NotificationManager)
-				mPlayer.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.cancel(NOTIFICATION_ID);
+		mNotificationWrapper.cancelNotification();
 	}
 
 	@Override
 	public void onAdError(AdErrorEvent adErrorEvent) {
 		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
-				| MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+											 | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
 	}
 
 	@Override
@@ -360,18 +309,21 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		mPlaylist = playlistEvent.getPlaylist();
 	}
 
-	@RequiresApi(Build.VERSION_CODES.O)
-	private void createNotificationChannel(){
-		NotificationManager notificationManager = (NotificationManager) mPlayer.getContext().getSystemService(mPlayer.getContext().NOTIFICATION_SERVICE);
-		String id = mNotificationChannelId;
-		CharSequence channelNameDisplayedToUser = "Notification Bar Video Controls";
-		int importance = NotificationManager.IMPORTANCE_LOW;
-		NotificationChannel newChannel = new NotificationChannel(id,channelNameDisplayedToUser,importance);
-		newChannel.setDescription("All notifications");
-		newChannel.setShowBadge(false);
-		newChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-		notificationManager.createNotificationChannel(newChannel);
+	@Override
+	public void onBitmapReady(Bitmap bitmap) {
+		if (mMediaSessionCompat != null) {
+			MediaMetadataCompat currentMetadata = mMediaSessionCompat.getController()
+																	 .getMetadata();
+			MediaMetadataCompat.Builder newBuilder = currentMetadata == null
+					? new MediaMetadataCompat.Builder()
+					: new MediaMetadataCompat.Builder(currentMetadata);
+			mMediaSessionCompat.setMetadata(newBuilder
+													.putBitmap(MediaMetadataCompat.METADATA_KEY_ART,
+															   bitmap)
+													.build());
+		}
 	}
+
 
 	/**
 	 * A {@link android.support.v4.media.session.MediaSessionCompat.Callback} implementation for JW Player.
