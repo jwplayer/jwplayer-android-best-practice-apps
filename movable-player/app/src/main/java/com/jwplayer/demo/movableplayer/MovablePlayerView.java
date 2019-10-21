@@ -6,20 +6,16 @@ import android.view.MotionEvent;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.ControlBarVisibilityEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 
 import androidx.core.view.MotionEventCompat;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 
-public class MovablePlayerView extends JWPlayerView implements
-													   VideoPlayerEvents.OnControlBarVisibilityListener {
+public class MovablePlayerView extends JWPlayerView {
 
 
 	private boolean mAllowDrag = false;
-	private boolean mControlsVisible = false;
 
 	private SpringAnimation mSpringAnimationY;
 	private SpringAnimation mSpringAnimationX;
@@ -68,9 +64,6 @@ public class MovablePlayerView extends JWPlayerView implements
 		mSpringAnimationX.getSpring().setStiffness(SpringForce.STIFFNESS_MEDIUM);
 		mSpringAnimationX.getSpring().setDampingRatio(SpringForce.DAMPING_RATIO_LOW_BOUNCY
 		);
-
-		this.addOnControlBarVisibilityListener(this);
-
 	}
 
 	private void resetToZero() {
@@ -80,7 +73,7 @@ public class MovablePlayerView extends JWPlayerView implements
 
 
 	private void handleDragMotion(MotionEvent ev) {
-		if (mAllowDrag && !mControlsVisible) {
+		if (mAllowDrag) {
 			final int action = ev.getActionMasked();
 
 			switch (action) {
@@ -112,7 +105,7 @@ public class MovablePlayerView extends JWPlayerView implements
 					mPosY += dy;
 					mSpringAnimationY.animateToFinalPosition(mPosY);
 					mSpringAnimationX.animateToFinalPosition(mPosX);
-					//				invalidate();
+					invalidate();
 
 					// Remember this touch position for the next move event
 					mLastTouchX = x;
@@ -153,9 +146,4 @@ public class MovablePlayerView extends JWPlayerView implements
 		return super.onInterceptTouchEvent(ev);
 	}
 
-
-	@Override
-	public void onControlBarVisibilityChanged(ControlBarVisibilityEvent controlBarVisibilityEvent) {
-		mControlsVisible = controlBarVisibilityEvent.isVisible();
-	}
 }
