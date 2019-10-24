@@ -26,18 +26,11 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-//    implementation 'com.android.support:appcompat-v7:27.1.1'
-    // https://mvnrepository.com/artifact/androidx.appcompat/appcompat
+
     implementation'androidx.appcompat:appcompat:1.1.0'
-
-//    implementation 'com.android.support:design:27.1.1'
-    // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation'com.google.android.material:material:1.0.0'
-
-//    implementation 'com.android.support:support-media-compat:27.1.1'
-    // https://mvnrepository.com/artifact/androidx.media/media
     implementation 'androidx.media:media:1.1.0'
 
-    implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.7.0'
-    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.7.0'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.8.0'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.8.0'
 }

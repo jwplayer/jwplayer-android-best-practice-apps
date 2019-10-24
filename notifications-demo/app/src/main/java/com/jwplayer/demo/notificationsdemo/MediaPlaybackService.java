@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.media.session.MediaButtonReceiver;
@@ -28,7 +27,6 @@ public class MediaPlaybackService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.d("GEORGE", "MediaPlaybackService onStartCommand");
 		if (mMediaSessionManager != null) {
 			MediaButtonReceiver.handleIntent(mMediaSessionManager.getMediaSession(), intent);
 		}
@@ -43,7 +41,6 @@ public class MediaPlaybackService extends Service {
 
 	@Override
 	public void onDestroy() {
-		Log.d("GEORGE", "MediaPlaybackService onDestroy");
 		if (mMediaSessionManager != null) {
 			mMediaSessionManager.release();
 		}
@@ -61,7 +58,6 @@ public class MediaPlaybackService extends Service {
 
 	public void setupMediaSession(MediaSessionManager mediaSessionManager,
 								  NotificationWrapper notificationWrapper) {
-		Log.d("GEORGE", "MediaPlaybackService setupMediaSession");
 
 		if (mMediaSessionManager != null) {
 			mMediaSessionManager.release();
@@ -87,7 +83,6 @@ public class MediaPlaybackService extends Service {
 	 */
 	public class MediaPlaybackServiceBinder extends Binder {
 		MediaPlaybackService getService() {
-			Log.d("GEORGE", "MediaPlaybackServiceBinder getService");
 			return MediaPlaybackService.this;
 		}
 	}
