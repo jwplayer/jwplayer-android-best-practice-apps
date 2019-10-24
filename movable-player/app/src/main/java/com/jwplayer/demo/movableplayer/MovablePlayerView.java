@@ -106,6 +106,7 @@ public class MovablePlayerView extends JWPlayerView {
 					mSpringAnimationY.animateToFinalPosition(mPosY);
 					mSpringAnimationX.animateToFinalPosition(mPosX);
 
+
 					// Remember this touch position for the next move event
 					mLastTouchX = x;
 					mLastTouchY = y;
