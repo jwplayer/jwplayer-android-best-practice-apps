@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.jwplayer.demo.movableplayer">
 
     <application
@@ -7,12 +8,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,9 +22,9 @@
             </intent-filter>
         </activity>
         <!-- Uncomment and enter your license key -->
-<!--        <meta-data
+        <meta-data
             android:name="JW_LICENSE_KEY"
-            android:value="{YOUR_LICENSE_KEY}"/> -->
+            android:value="YOUR_LICENSE_KEY" />
     </application>
 
 </manifest>
