@@ -49,7 +49,9 @@ public class MediaPlaybackService extends Service {
 	@Override
 	public boolean onUnbind(Intent intent) {
 		// Stop this service when all clients have been unbound.
-		mMediaSessionManager.release();
+		if (mMediaSessionManager != null) {
+			mMediaSessionManager.release();
+		}
 		stopForeground(true);
 		stopSelf();
 		return false;

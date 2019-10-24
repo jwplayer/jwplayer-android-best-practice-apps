@@ -238,7 +238,6 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 	@Override
 	public void onAdPlay(AdPlayEvent adPlayEvent) {
-		// We don't want to show the notification during ad playback.
 		mMediaSessionCompat.setFlags(0);
 	}
 
