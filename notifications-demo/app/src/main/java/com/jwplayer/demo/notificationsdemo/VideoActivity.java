@@ -1,24 +1,27 @@
 package com.jwplayer.demo.notificationsdemo;
 
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
+import com.longtailvideo.jwplayer.events.FirstFrameEvent;
 import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 
-public class VideoActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
+import androidx.appcompat.app.AppCompatActivity;
 
-	private static final String TAG = "VideoActivity";
+public class VideoActivity extends AppCompatActivity implements
+													 VideoPlayerEvents.OnFullscreenListener,
+													 VideoPlayerEvents.OnFirstFrameListener {
 
 	/**
 	 * The JWPlayerView used for video playback.
@@ -28,12 +31,22 @@ public class VideoActivity extends AppCompatActivity implements VideoPlayerEvent
 	/**
 	 * Whether we have bound to a {@link MediaPlaybackService}.
 	 */
-	private boolean mIsBound;
+	private boolean mIsBound = false;
 
 	/**
-	 * The {@link MediaPlaybackService} we are bound to.
+	 * The {@link MediaPlaybackService} we are bound to. T
 	 */
 	private MediaPlaybackService mMediaPlaybackService;
+
+	/**
+	 * The {@link MediaSessionManager} handles the MediaSession logic, along with updates to the notification
+	 */
+	private MediaSessionManager mMediaSessionManager;
+
+	/**
+	 * The {@link MediaSessionManager} handles the Notification set and dismissal logic
+	 */
+	private NotificationWrapper mNotificationWrapper;
 
 	/**
 	 * The {@link ServiceConnection} serves as glue between this activity and the {@link MediaPlaybackService}.
@@ -46,9 +59,10 @@ public class VideoActivity extends AppCompatActivity implements VideoPlayerEvent
 			// interact with the service.  Because we have bound to a explicit
 			// service that we know is running in our own process, we can
 			// cast its IBinder to a concrete class and directly access it.
-			mMediaPlaybackService = ((MediaPlaybackService.MediaPlaybackServiceBinder) service)
+			mIsBound = true;
+			mMediaPlaybackService = ((MediaPlaybackService.MediaPlaybackServiceBinder)service)
 					.getService();
-			mMediaPlaybackService.setActivePlayer(mPlayerView);
+			mMediaPlaybackService.setupMediaSession(mMediaSessionManager, mNotificationWrapper);
 		}
 
 		@Override
@@ -74,37 +88,41 @@ public class VideoActivity extends AppCompatActivity implements VideoPlayerEvent
 		// Create a new JWPlayerView
 		mPlayerView = new JWPlayerView(this, playerConfig);
 		mPlayerView.addOnFullscreenListener(this);
+		mPlayerView.addOnFirstFrameListener(this);
 
 		// Add the JWPlayerView to the screen. Make sure it's 16:9.
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
+		RelativeLayout container = findViewById(R.id.container);
 		container.addView(mPlayerView, new RelativeLayout.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, metrics.widthPixels / 16 * 9));
 
-		// Bind to the MediaPlaybackService.
-		doBindService();
+		NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationWrapper = new NotificationWrapper(notificationManager);
+		mMediaSessionManager = new MediaSessionManager(this,
+													   mPlayerView,
+													   mNotificationWrapper);
 	}
 
 	@Override
 	protected void onPause() {
 		// Allow background audio playback.
+		super.onPause();
 		mPlayerView.setBackgroundAudio(true);
 		mPlayerView.onPause();
-		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
-		mPlayerView.onResume();
 		super.onResume();
+		mPlayerView.onResume();
 	}
 
 	@Override
 	protected void onDestroy() {
+		super.onDestroy();
 		doUnbindService();
 		mPlayerView.onDestroy();
-		super.onDestroy();
 	}
 
 	private void doBindService() {
@@ -113,8 +131,10 @@ public class VideoActivity extends AppCompatActivity implements VideoPlayerEvent
 		// we know will be running in our own process (and thus won't be
 		// supporting component replacement by other applications).
 		bindService(new Intent(VideoActivity.this,
-				MediaPlaybackService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
-		mIsBound = true;
+							   MediaPlaybackService.class),
+					mServiceConnection,
+					Context.BIND_AUTO_CREATE);
+
 	}
 
 	private void doUnbindService() {
@@ -127,11 +147,20 @@ public class VideoActivity extends AppCompatActivity implements VideoPlayerEvent
 
 	@Override
 	public void onFullscreen(FullscreenEvent fullscreenEvent) {
-		boolean fullscreen = fullscreenEvent.getFullscreen();
-		if (fullscreen) {
+		if (fullscreenEvent.getFullscreen()) {
 			getSupportActionBar().hide();
 		} else {
 			getSupportActionBar().show();
+		}
+	}
+
+	@Override
+	public void onFirstFrame(FirstFrameEvent firstFrameEvent) {
+		// Only bind to the service if media has begun playback
+		// You could also use onBeforePlay as your listener
+		// if you wanted to start the service and notification earlier
+		if (!mIsBound) {
+			doBindService();
 		}
 	}
 }
