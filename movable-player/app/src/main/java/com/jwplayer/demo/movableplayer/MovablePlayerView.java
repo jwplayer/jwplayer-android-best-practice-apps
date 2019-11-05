@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
 
-import androidx.core.view.MotionEventCompat;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
@@ -103,9 +102,10 @@ public class MovablePlayerView extends JWPlayerView {
 
 					mPosX += dx;
 					mPosY += dy;
+
 					mSpringAnimationY.animateToFinalPosition(mPosY);
 					mSpringAnimationX.animateToFinalPosition(mPosX);
-					invalidate();
+
 
 					// Remember this touch position for the next move event
 					mLastTouchX = x;
@@ -122,9 +122,8 @@ public class MovablePlayerView extends JWPlayerView {
 				}
 
 				case MotionEvent.ACTION_POINTER_UP: {
-
-					final int pointerIndex = MotionEventCompat.getActionIndex(ev);
-					final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
+					final int pointerIndex = ev.getActionIndex();
+					final int pointerId = ev.getPointerId(pointerIndex);
 
 					if (pointerId == mActivePointerId) {
 						// This was our active pointer going up. Choose a new
