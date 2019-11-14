@@ -1,7 +1,6 @@
 package com.jwplayer.chromecastdemo;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -18,8 +17,6 @@ import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
-import java.util.List;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -31,8 +28,8 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 	private CastContext mCastContext;
 
-	private static final String GooglePlayStorePackageNameOld = "com.google.market";
-	private static final String GooglePlayStorePackageNameNew = "com.android.vending";
+	private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME_OLD = "com.google.market";
+	private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME_NEW = "com.android.vending";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,22 +61,26 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 	}
 
+
+	private boolean doesPackageExist(String targetPackage) {
+		try {
+			getPackageManager().getPackageInfo(targetPackage, PackageManager.GET_META_DATA);
+		} catch (PackageManager.NameNotFoundException e) {
+			return false;
+		}
+		return true;
+	}
+
 	// Without the Google API's Chromecast won't work
 	private boolean isGoogleApiAvailable(Context context) {
-		boolean googlePlayStoreInstalled = false;
-		PackageManager packageManager = context.getApplicationContext().getPackageManager();
-		List<PackageInfo> packages = packageManager
-				.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
-		for (PackageInfo packageInfo : packages) {
-			if (packageInfo.packageName.equals(GooglePlayStorePackageNameOld) ||
-					packageInfo.packageName.equals(GooglePlayStorePackageNameNew)) {
-				googlePlayStoreInstalled = true;
-				break;
-			}
-		}
+		boolean isOldPlayStoreInstalled = doesPackageExist(GOOGLE_PLAY_STORE_PACKAGE_NAME_OLD);
+		boolean isNewPlayStoreInstalled = doesPackageExist(GOOGLE_PLAY_STORE_PACKAGE_NAME_NEW);
+
+		boolean isPlaystoreInstalled = isNewPlayStoreInstalled||isOldPlayStoreInstalled;
+
 		boolean isGoogleApiAvailable = GoogleApiAvailability.getInstance()
-														  .isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS;
-		return googlePlayStoreInstalled && isGoogleApiAvailable;
+															.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
+		return isPlaystoreInstalled && isGoogleApiAvailable;
 	}
 
 	@Override
