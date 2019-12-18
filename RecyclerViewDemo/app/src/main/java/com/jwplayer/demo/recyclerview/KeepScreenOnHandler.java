@@ -1,4 +1,4 @@
-package com.longtailvideo.jwplayer.demo;
+package com.jwplayer.demo.recyclerview;
 
 import android.view.Window;
 import android.view.WindowManager;
@@ -22,14 +22,14 @@ import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
  * @author Paul Mandal [paul.mandal@jwplayer.com]
  */
 public class KeepScreenOnHandler implements VideoPlayerEvents.OnPlayListener,
-        VideoPlayerEvents.OnPauseListener,
-        VideoPlayerEvents.OnCompleteListener,
-        VideoPlayerEvents.OnErrorListener,
-        AdvertisingEvents.OnAdPlayListener,
-        AdvertisingEvents.OnAdPauseListener,
-        AdvertisingEvents.OnAdCompleteListener,
-        AdvertisingEvents.OnAdSkippedListener,
-        AdvertisingEvents.OnAdErrorListener {
+											VideoPlayerEvents.OnPauseListener,
+											VideoPlayerEvents.OnCompleteListener,
+											VideoPlayerEvents.OnErrorListener,
+											AdvertisingEvents.OnAdPlayListener,
+											AdvertisingEvents.OnAdPauseListener,
+											AdvertisingEvents.OnAdCompleteListener,
+											AdvertisingEvents.OnAdSkippedListener,
+											AdvertisingEvents.OnAdErrorListener {
 
     /**
      * The application window
