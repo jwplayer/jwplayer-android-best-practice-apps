@@ -7,9 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
+import com.longtailvideo.jwplayer.core.PlayerState;
 import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
+import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
 import java.util.ArrayList;
 
@@ -20,22 +21,51 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 public class MainActivity extends AppCompatActivity implements
-													VideoPlayerEvents.OnFullscreenListener {
+													VideoPlayerEvents.OnFullscreenListener,
+													CustomJWPlayerView.ActivePlayerListener {
 
 	private ArrayList<JWPlayerView> mPlayers = new ArrayList<>();
+	private JWPlayerView mActivePlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_layout);
 
-		String promoUrl = "http://content.jwplatform.com/manifests/Y5UQq0fG.m3u8";
+
 		ArrayList<ItemBase> items = new ArrayList<>();
-		items.add(new TextItem("Item 1"));
-		items.add(new TextItem("Item 2"));
-		items.add(new VideoItem(promoUrl));
-		items.add(new TextItem("Item 4"));
-		items.add(new VideoItem(promoUrl));
+		items.add(new TextItem("Hi,\nIn this demo we showcase how you can place a JWPlayerView into a RecyclerView and how to implement mutually exclusive playback, so when you press play on one video the other video pauses.\nScroll around and test it out!"));
+		items.add(new VideoItem(new PlaylistItem.Builder()
+										.file("https://content.jwplatform.com/manifests/3BSFM9FJ.m3u8")
+										.image("https://content.jwplatform.com/thumbs/3BSFM9FJ-720.jpg")
+										.title("Tears of steel")
+										.mediaId("3BSFM9FJ")
+										.build()));
+		items.add(new VideoItem(new PlaylistItem.Builder()
+										.file("https://content.jwplatform.com/manifests/30eyfBgl.m3u8")
+										.image("https://content.jwplatform.com/thumbs/30eyfBgl-720.jpg")
+										.title("JW Player Promo")
+										.mediaId("30eyfBgl")
+										.build()));
+		items.add(new VideoItem(new PlaylistItem.Builder()
+										.file("https://content.jwplatform.com/manifests/tx2vPRG5.m3u8")
+										.image("https://content.jwplatform.com/thumbs/tx2vPRG5-720.jpg")
+										.mediaId("tx2vPRG5")
+										.title("Big buck bunny")
+										.build()));
+		items.add(new VideoItem(new PlaylistItem.Builder()
+										.file("https://content.jwplatform.com/manifests/1sc0kL2N.m3u8")
+										.image("https://content.jwplatform.com/thumbs/1sc0kL2N-720.jpg")
+										.mediaId("1sc0kL2N")
+										.title("Press Play")
+										.build()));
+		items.add(new VideoItem(new PlaylistItem.Builder()
+										.file("https://content.jwplatform.com/manifests/mFq72HEY.m3u8")
+										.image("https://content.jwplatform.com/thumbs/mFq72HEY-720.jpg")
+										.mediaId("mFq72HEY")
+										.title("Jellyfish")
+										.build()));
+
 		RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(items);
 
 		RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -89,18 +119,6 @@ public class MainActivity extends AppCompatActivity implements
 		}
 	}
 
-	//	@Override
-	//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	//		// If we are in fullscreen mode, exit fullscreen mode when the user uses the back button.
-	//		if (keyCode == KeyEvent.KEYCODE_BACK) {
-	//			if (mPlayerView.getFullscreen()) {
-	//				mPlayerView.setFullscreen(false, true);
-	//				return true;
-	//			}
-	//		}
-	//		return super.onKeyDown(keyCode, event);
-	//	}
-
 	@Override
 	public void onFullscreen(FullscreenEvent fullscreenEvent) {
 		ActionBar actionBar = getSupportActionBar();
@@ -109,6 +127,18 @@ public class MainActivity extends AppCompatActivity implements
 				actionBar.hide();
 			} else {
 				actionBar.show();
+			}
+		}
+	}
+
+	@Override
+	public void onPlayerActive(JWPlayerView activePlayer) {
+		mActivePlayer = activePlayer;
+
+		for(JWPlayerView player : mPlayers){
+			// there was no active player
+			if (player.getState() == PlayerState.PLAYING && !player.equals(mActivePlayer)) {
+				player.pause();
 			}
 		}
 	}
@@ -122,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements
 
 			public TextViewHolder(View v) {
 				super(v);
-				textView = (TextView)v.findViewById(R.id.text_view);
+				textView = v.findViewById(R.id.text_view);
 			}
 		}
 
@@ -131,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements
 
 			public VideoViewHolder(View v) {
 				super(v);
-				playerView = (JWPlayerView)v.findViewById(R.id.player_view);
+				playerView = v.findViewById(R.id.player_view);
 			}
 		}
 
@@ -161,14 +191,16 @@ public class MainActivity extends AppCompatActivity implements
 			switch (viewType) {
 				case 0:
 					v = LayoutInflater.from(parent.getContext())
-									  .inflate(R.layout.fullscreen_test_text_cell, parent, false);
+									  .inflate(R.layout.recycler_text_cell, parent, false);
 					return new TextViewHolder(v);
 				case 1:
 					v = LayoutInflater.from(parent.getContext())
-									  .inflate(R.layout.fullscreen_test_video_cell, parent, false);
-					JWPlayerView playerView = v.findViewById(R.id.player_view);
+									  .inflate(R.layout.recycler_video_cell, parent, false);
+					CustomJWPlayerView playerView = v.findViewById(R.id.player_view);
 					new KeepScreenOnHandler(playerView, getWindow());
 					playerView.addOnFullscreenListener(MainActivity.this);
+					playerView.setActivePlayerListener(MainActivity.this);
+					mPlayers.add(playerView);
 					return new VideoViewHolder(v);
 			}
 			return null;
@@ -185,9 +217,7 @@ public class MainActivity extends AppCompatActivity implements
 				case 1:
 					VideoItem videoItem = (VideoItem)mData.get(position);
 					VideoViewHolder videoViewHolder = (VideoViewHolder)holder;
-					PlayerConfig playerConfig = new PlayerConfig.Builder().file(videoItem.url)
-																		  .build();
-					videoViewHolder.playerView.setup(playerConfig);
+					videoViewHolder.playerView.load(videoItem.playlistItem);
 					break;
 			}
 		}
@@ -195,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
 	class ItemBase {
+
 	}
 
 	class TextItem extends ItemBase {
@@ -206,10 +237,10 @@ public class MainActivity extends AppCompatActivity implements
 	}
 
 	class VideoItem extends ItemBase {
-		public String url;
+		public PlaylistItem playlistItem;
 
-		VideoItem(String url) {
-			this.url = url;
+		VideoItem(PlaylistItem playlistItem) {
+			this.playlistItem = playlistItem;
 		}
 	}
 

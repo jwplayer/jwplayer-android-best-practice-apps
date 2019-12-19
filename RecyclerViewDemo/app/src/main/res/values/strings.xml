@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Movable Player Demo</string>
+    <string name="app_name">RecyclerView Demo</string>
     <string name="action_settings">Settings</string>
-    <string name="toggle_movable_player">Toggle Movable Player</string>
-    <string name="hint">The JW Player is now movable.\nTry dragging it!</string>
 </resources>
