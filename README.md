@@ -1,29 +1,32 @@
-# JW Player SDK for Android Best Practice Apps
+# JW Player SDK for Android - Best Practice Apps
 
-This repository contains samples relating to the JW Player SDK for Android.
+In this repository you will find several tech demos that use the JW Player SDK for Android
 
-Every subdirectory in this repository is a gradle project that can be imported into Android Studio, or IntelliJ IDEA.
-See the README in the subdirectory for specific usage instructions.
+Refer to the README in each subdirectory for specific usage instructions.
 
 ## Sample Apps
 
-Currently this repository contains two sample apps:
+- **ChromecastDemo** - A simple implementation of our Chromecast module. Allows you to cast to any available Chromecast devices
+- **ChromecastFragmentDemo** - Similar to the ChromecastDemo app, this app uses the `JWPlayerSupportFragment` as the main video component
+- **DemoNativeControls** - A barebones implementation of a native UI utilizing Android `View` elements
+- **FullBackgroundAudio**	- A demo of how you can setup the player to allow for background audio playback
+- **LocalAssetPlayback** - Demonstrates the ability of the JW Player SDK to load locally stored assets. In the demo we utilize the built in Android **Assets** folder
+- **RecyclerViewDemo**	- Shows you how to use the `JWPlayerView` within a `RecyclerView`, including mutually exclusive playback of the videos
+- **listview-fullscreen** - An older implementation on how you could use the `JWPlayerView` within a `ListView`
+- **movable-player** - A fun tech demo that uses Android's new Additive Animation libraries to smoothly drag a `JWPlayerView` around the screen
+- **conviva-integration**	- An application with convivial analytics
+- **notifications-demo** - An example of how you can setup a native Android `Notification` to control background audio playback
 
-- Movable Player Demo: showcases how you could use the JW Player SDK for Android to create an
-app that allows you to display a video that can be dragged around within an Activity.
-- ListView / FullscreenHandler Demo: showcases how you could use the JWPlayerView within a ListView, and how you can use a custom FullscreenHandler to achieve proper fullscreen behavior in ListViews.
 
 ## Usage instructions
 
-In general the following usage instructions apply to sample projects:
+In general the following usage instructions apply to most sample projects:
 
-- Clone this repository.
-- In Android Studio choose 'Open an Existing Android Studio Project' or File / Open...
-- Navigate to the location of the sample app that you want to open and select the `build.gradle` file in that directory, and click OK.
-- Once the project opens, go to File / New / New Module ...
-- Select Import .JAR/.AAR Package from the list
-- Navigate to the JW Player SDK for Android .aar file, select it, and click OK
-- Right-click on "app" in the Project view and choose Open Module Settings
-- Click on the Dependencies tab, then click on the green plus sign and choose Module dependency
-- Select 'jwplayer-android-sdk-x.y.z' and click OK
-- Open the AndroidManifest.xml file and replace {YOUR_LICENSE_KEY} with your license key
+- Clone this repository
+- Start up Android Studio choose **Open an Existing Android Studio Project**
+- Navigate to the location of the repository and select the root directory of the app you want to load.
+- Click **OK**
+- Lastly, open the **AndroidManifest.xml** file and replace `{YOUR_LICENSE_KEY` with your **Android SDK 3** license key. You can find the license key in your dashboard under **Players > Downloads & Keys**
+- Click **Run**
+
+For more information about the JW Player SDK for Android, and how to use it, head over to our [Developer Portal](https://developer.jwplayer.com/jwplayer/docs/android-getting-started)
