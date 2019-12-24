@@ -26,12 +26,13 @@ public class MainActivity extends AppCompatActivity implements
 
 	private ArrayList<JWPlayerView> mPlayers = new ArrayList<>();
 	private JWPlayerView mActivePlayer;
-
+	private KeepScreenOnHandler mKeepScreenOnHandler;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_layout);
 
+		mKeepScreenOnHandler = new KeepScreenOnHandler(getWindow());
 
 		ArrayList<ItemBase> items = new ArrayList<>();
 		items.add(new TextItem("Hi,\nIn this demo we showcase how you can place a JWPlayerView into a RecyclerView and how to implement mutually exclusive playback, so when you press play on one video the other video pauses.\nScroll around and test it out!"));
@@ -134,11 +135,13 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	public void onPlayerActive(JWPlayerView activePlayer) {
 		mActivePlayer = activePlayer;
+		mKeepScreenOnHandler.addListeners(mActivePlayer);
 
 		for(JWPlayerView player : mPlayers){
-			// there was no active player
+			// If a player was playing, then it was previously set as the active player, pause() and remove listeners
 			if (player.getState() == PlayerState.PLAYING && !player.equals(mActivePlayer)) {
 				player.pause();
+				mKeepScreenOnHandler.removeListeners(player);
 			}
 		}
 	}
@@ -197,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements
 					v = LayoutInflater.from(parent.getContext())
 									  .inflate(R.layout.recycler_video_cell, parent, false);
 					CustomJWPlayerView playerView = v.findViewById(R.id.player_view);
-					new KeepScreenOnHandler(playerView, getWindow());
 					playerView.addOnFullscreenListener(MainActivity.this);
 					playerView.setActivePlayerListener(MainActivity.this);
 					mPlayers.add(playerView);

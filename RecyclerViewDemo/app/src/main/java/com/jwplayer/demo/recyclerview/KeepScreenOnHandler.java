@@ -36,7 +36,11 @@ public class KeepScreenOnHandler implements VideoPlayerEvents.OnPlayListener,
      */
     private Window mWindow;
 
-    public KeepScreenOnHandler(JWPlayerView jwPlayerView, Window window) {
+    public KeepScreenOnHandler( Window window) {
+        mWindow = window;
+    }
+
+    public void addListeners(JWPlayerView jwPlayerView){
         jwPlayerView.addOnPlayListener(this);
         jwPlayerView.addOnPauseListener(this);
         jwPlayerView.addOnCompleteListener(this);
@@ -45,7 +49,17 @@ public class KeepScreenOnHandler implements VideoPlayerEvents.OnPlayListener,
         jwPlayerView.addOnAdPauseListener(this);
         jwPlayerView.addOnAdCompleteListener(this);
         jwPlayerView.addOnAdErrorListener(this);
-        mWindow = window;
+    }
+
+    public void removeListeners(JWPlayerView jwPlayerView){
+        jwPlayerView.removeOnPlayListener(this);
+        jwPlayerView.removeOnPauseListener(this);
+        jwPlayerView.removeOnCompleteListener(this);
+        jwPlayerView.removeOnErrorListener(this);
+        jwPlayerView.removeOnAdPlayListener(this);
+        jwPlayerView.removeOnAdPauseListener(this);
+        jwPlayerView.removeOnAdCompleteListener(this);
+        jwPlayerView.removeOnAdErrorListener(this);
     }
 
     private void updateWakeLock(boolean enable) {
