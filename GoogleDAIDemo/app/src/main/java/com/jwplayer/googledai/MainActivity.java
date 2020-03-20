@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity
         VideoPlayerEvents.OnReadyListener {
 
     JWPlayerView mPlayerView;
-    RelativeLayout mTouchInterceptorView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +35,12 @@ public class MainActivity extends AppCompatActivity
         List<PlaylistItem> playlist = new ArrayList<>();
         String videoId = "bbb-clear";
         String cmsId = "2474148";
-        ImaDaiSettings.StreamType a = ImaDaiSettings.StreamType.DASH;
-        ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, a, null);
-        String chosenFile = "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8";
+        ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.DASH;
+        ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, streamType, null);
+        String fallbackUrl = "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8";
 
         PlaylistItem playlistItem = new PlaylistItem.Builder()
-                .file(chosenFile)
+                .file(fallbackUrl)
                 .imaDaiSettings(imaDaiSettings)
                 .title(getString(R.string.demo_video_title))
                 .description("A video player testing video.")
@@ -52,10 +51,6 @@ public class MainActivity extends AppCompatActivity
 
         mPlayerView.setup(config);
         mPlayerView.setControls(true);
-
-        mTouchInterceptorView = findViewById(R.id.touch_interceptor_relative_view);
-        mTouchInterceptorView.setVisibility(View.INVISIBLE);
-
     }
 
     @Override
