@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
+import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.ReadyEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
@@ -50,10 +51,10 @@ public class MainActivity extends AppCompatActivity
 
         //Subscribe to any events we're interested in
         mPlayerView.addOnReadyListener(this);
-
-        mNativePlayerControls = findViewById(R.id.player_control_view);
+        mNativePlayerControls = new JWPlayerNativeControls(this);
         //Initialize our mNativePlayerControls
         mNativePlayerControls.setJWView(mPlayerView);
+        mPlayerView.addView(mNativePlayerControls);
         //Subscribe to the mNativePlayerControls interaction events being emitted
         //by the mNativePlayerControls to automatically fade the mNativePlayerControls out during playback
         mNativePlayerControls.addControlsInteractionListener(this);
@@ -79,11 +80,15 @@ public class MainActivity extends AppCompatActivity
         mPlayerView.setControls(false);
 
         //We're going to go full native
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
         //So use a big view to intercept and manage clicks to get around some built in webplayer click functionality
-        mTouchInterceptorView = findViewById(R.id.touch_interceptor_relative_view);
+        mTouchInterceptorView = new RelativeLayout(this);
+        mTouchInterceptorView.setLayoutParams(params);
         mTouchInterceptorView.setOnClickListener(this);
         mTouchInterceptorView.setVisibility(View.INVISIBLE);
 
+        mPlayerView.addView(mTouchInterceptorView);
         //Hide the controls initially
         //If we encounter a load error publicly display that
         //Bring back the controls in the onReady
@@ -121,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         //If we click on the touch interceptor and it's invisible
         //make it visible so we can see the native controls again
         //And set a delayed event to hide the native controls again if the user does nothing
-        if(v.getId() == R.id.touch_interceptor_relative_view){
+        if(v == mTouchInterceptorView){
             int currentVisibility = mNativePlayerControls.getVisibility();
             if(currentVisibility != View.VISIBLE){
                 mNativePlayerControls.setVisibility(View.VISIBLE);
