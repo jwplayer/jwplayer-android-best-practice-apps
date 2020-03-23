@@ -8,9 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
 import com.longtailvideo.jwplayer.events.AdErrorEvent;
-import com.longtailvideo.jwplayer.events.ReadyEvent;
 import com.longtailvideo.jwplayer.events.listeners.AdvertisingEvents;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 import com.longtailvideo.jwplayer.media.ads.dai.ImaDaiSettings;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
@@ -18,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements AdvertisingEvents.OnAdErrorListener,
-        VideoPlayerEvents.OnReadyListener {
+        implements AdvertisingEvents.OnAdErrorListener{
 
     JWPlayerView mPlayerView;
 
@@ -28,7 +25,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mPlayerView = findViewById(R.id.jwplayer);
-        mPlayerView.addOnReadyListener(this);
 
         List<PlaylistItem> playlist = new ArrayList<>();
         String videoId = "bbb-clear";
@@ -40,7 +36,7 @@ public class MainActivity extends AppCompatActivity
         PlaylistItem playlistItem = new PlaylistItem.Builder()
                 .file(fallbackUrl)
                 .imaDaiSettings(imaDaiSettings)
-                .title(getString(R.string.demo_video_title))
+                .title("Google DAI Demo")
                 .description("A video player testing video.")
                 .build();
 
@@ -82,14 +78,14 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
 
     @Override
     public void onAdError(AdErrorEvent adErrorEvent) {
         Log.e("DaiAdError", adErrorEvent.getMessage());
-    }
-
-    @Override
-    public void onReady(ReadyEvent readyEvent) {
-        mPlayerView.setControls(true);
     }
 }
