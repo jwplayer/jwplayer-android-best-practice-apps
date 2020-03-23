@@ -2,8 +2,6 @@ package com.jwplayer.googledai;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         PlayerConfig config = new PlayerConfig.Builder().playlist(playlist).build();
 
         mPlayerView.setup(config);
-        mPlayerView.setControls(true);
     }
 
     @Override
@@ -88,7 +85,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onAdError(AdErrorEvent adErrorEvent) {
-        Log.e(adErrorEvent.getTag(), adErrorEvent.getMessage());
+        Log.e("DaiAdError", adErrorEvent.getMessage());
     }
 
     @Override
