@@ -27,12 +27,16 @@ public class MainActivity extends AppCompatActivity
         mPlayerView = findViewById(R.id.jwplayer);
 
         List<PlaylistItem> playlist = new ArrayList<>();
+        //videoId: Identifier of the DAI video to be displayed, used for video on demand
+        //cmsId: Content management system ID of the video, used for video on demand
         String videoId = "bbb-clear";
         String cmsId = "2474148";
+        //streamType: Defines the type of stream to use
         ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.DASH;
         ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, streamType, null);
+        //fallbackUrl: Contain URL in case ads stream fails. Since the content is a stream
+        //you must be ready to call a fallback stream if the DAI stream encounters an error
         String fallbackUrl = "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8";
-
         PlaylistItem playlistItem = new PlaylistItem.Builder()
                 .file(fallbackUrl)
                 .imaDaiSettings(imaDaiSettings)
