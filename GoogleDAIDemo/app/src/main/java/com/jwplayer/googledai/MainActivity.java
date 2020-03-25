@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity
         //streamType: Defines the type of stream to use
         ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.DASH;
         ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, streamType, null);
-        //fallbackUrl: Contain URL in case ads stream fails. Since the content is a stream
-        //you must be ready to call a fallback stream if the DAI stream encounters an error
+        //fallbackUrl: Contain URL in case ads stream fails. This url will be use automatically
+        //in case the DAI stream encounters an error
         String fallbackUrl = "http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8";
         PlaylistItem playlistItem = new PlaylistItem.Builder()
                 .file(fallbackUrl)
