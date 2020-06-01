@@ -16,7 +16,7 @@ Refer to the README in each subdirectory for specific usage instructions.
 - **movable-player** - A fun tech demo that uses Android's new Additive Animation libraries to smoothly drag a `JWPlayerView` around the screen
 - **conviva-integration** - An application with convivial analytics
 - **notifications-demo** - An example of how you can setup a native Android `Notification` to control background audio playback
-
+- **FullscreenWithoutRotationDemo** - An example of how you can setup `JWPlayerView` within a `FullscreenHandler` to control screen behavior avoiding the rotation
 
 ## Usage instructions
 
