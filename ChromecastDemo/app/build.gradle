@@ -30,5 +30,5 @@ dependencies {
 
 	implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.7.1'
 	implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.7.1'
-	implementation 'com.longtailvideo.jwplayer:jwplayer-chromecast:3.7.1'
+	implementation 'com.longtailvideo.jwplayer:jwplayer-chromecast:3.15.1'
 }
