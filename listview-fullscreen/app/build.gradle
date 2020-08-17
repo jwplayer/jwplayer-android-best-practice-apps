@@ -26,7 +26,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.13'
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:design:28.0.0'
     implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.5.2'
     implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.5.2'
 }
