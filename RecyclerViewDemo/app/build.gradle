@@ -34,7 +34,7 @@ dependencies {
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: '1.1.0'
 
     implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.9.0'
-    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.9.0'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.15.1'
     implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '17.0.0'
 
 }
