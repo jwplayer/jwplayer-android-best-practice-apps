@@ -36,7 +36,7 @@ dependencies {
     }
 
     implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.5.0'
-    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.5.0'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.15.1'
 
     implementation 'com.conviva.sdk:conviva-core-sdk:2.145.1'
 
