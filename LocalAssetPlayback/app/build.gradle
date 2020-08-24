@@ -24,7 +24,7 @@ android {
 
 dependencies {
 
-	implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+	implementation 'com.android.support.constraint:constraint-layout:2.0.0'
 	implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.7.1'
 	implementation ('com.longtailvideo.jwplayer:jwplayer-common:3.7.1'){
 		exclude group:"com.android.support"
