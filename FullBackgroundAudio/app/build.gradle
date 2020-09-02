@@ -28,5 +28,5 @@ dependencies {
     implementation 'com.android.support:support-media-compat:27.1.1'
     //Include JW Player Android SDK
     implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.5.2'
-    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.5.2'
+    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.17.0'
 }
