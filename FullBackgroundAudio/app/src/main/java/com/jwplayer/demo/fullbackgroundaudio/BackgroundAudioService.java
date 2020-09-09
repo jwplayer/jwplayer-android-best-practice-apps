@@ -12,12 +12,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
 import com.longtailvideo.jwplayer.events.PauseEvent;
@@ -192,7 +194,9 @@ public class BackgroundAudioService extends Service {
         //Sets the common parameters for all notifications
         NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this, App.CHANNEL_ID);
         MediaStyleHelper.prepareNotification(mNotificationBuilder, mPlayer.getContext(), mPlayer.getPlaylistItem());
-        mNotificationBuilder.setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle().setMediaSession(mMediaSessionCompat.getSessionToken()));
+
+        mNotificationBuilder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(mMediaSessionCompat.getSessionToken()));
         //Add Actions to the notification
         if(mMediaSessionCompat.getController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
             Intent pauseIntent = new Intent(this, BackgroundAudioService.class);

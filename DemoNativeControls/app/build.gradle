@@ -32,8 +32,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 
-    implementation 'com.longtailvideo.jwplayer:jwplayer-core:3.6.0'
-    implementation 'com.longtailvideo.jwplayer:jwplayer-common:3.6.0'
+    def sdkVersion = '3.17.0'
+	implementation "com.longtailvideo.jwplayer:jwplayer-core:${sdkVersion}"
+	implementation "com.longtailvideo.jwplayer:jwplayer-common:${sdkVersion}"
 
     testImplementation 'junit:junit:4.13'
 }

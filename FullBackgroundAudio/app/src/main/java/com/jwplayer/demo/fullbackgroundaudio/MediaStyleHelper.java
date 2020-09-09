@@ -3,7 +3,8 @@ package com.jwplayer.demo.fullbackgroundaudio;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
+
+import androidx.core.app.NotificationCompat;
 
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
@@ -15,7 +16,7 @@ import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
  */
 public class MediaStyleHelper {
     public static void prepareNotification(NotificationCompat.Builder builder, Context context,
-                                        PlaylistItem item) {
+                                           PlaylistItem item) {
         Intent deleteIntent = new Intent(context, BackgroundAudioService.class);
         deleteIntent.putExtra(BackgroundAudioService.ACTION, BackgroundAudioService.ACTION_STOP);
         PendingIntent pendingIntentDelete = PendingIntent.getService(context, 0, deleteIntent,

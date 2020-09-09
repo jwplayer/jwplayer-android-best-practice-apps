@@ -1,8 +1,9 @@
 package com.jwplayer.demo.convivaintegration;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.conviva.api.AndroidSystemInterfaceFactory;
 import com.conviva.api.Client;

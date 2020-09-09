@@ -3,12 +3,13 @@ package com.jwplayer.demo.convivaintegration;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.jwplayer.demo.R;
 import com.longtailvideo.jwplayer.JWPlayerView;
