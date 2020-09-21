@@ -33,7 +33,7 @@ dependencies {
 
 
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    def sdkVersion = '3.17.0'
+    def sdkVersion = '3.17.1'
 	implementation "com.longtailvideo.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.longtailvideo.jwplayer:jwplayer-common:${sdkVersion}"
 }
