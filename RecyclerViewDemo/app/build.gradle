@@ -35,7 +35,7 @@ dependencies {
 
     implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '17.0.0'
 
-    def sdkVersion = '3.17.0'
+    def sdkVersion = '3.17.1'
 	implementation "com.longtailvideo.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.longtailvideo.jwplayer:jwplayer-common:${sdkVersion}"
 }
