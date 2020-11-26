@@ -6,13 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.jwplayer.pub.view.JWPlayerView
-        android:id="@+id/demoJWPlayerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <com.jwplayer.pub.view.JWPlayerView
+            android:id="@+id/demoJWPlayerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
