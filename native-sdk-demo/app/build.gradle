@@ -36,6 +36,5 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.android.gms:play-services-cast-framework:19.0.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.10.6'
     implementation 'com.squareup.picasso:picasso:2.71828'
 }
