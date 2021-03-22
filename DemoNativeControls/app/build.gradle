@@ -36,5 +36,5 @@ dependencies {
 	implementation "com.longtailvideo.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.longtailvideo.jwplayer:jwplayer-common:${sdkVersion}"
 
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
 }
