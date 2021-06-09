@@ -12,6 +12,7 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
@@ -39,6 +40,8 @@ public class JWPlayerViewExample extends AppCompatActivity
 		if (isGoogleApiAvailable(this)) {
 			mCastContext = CastContext.getSharedInstance(getApplicationContext());
 		}
+
+		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		mPlayerView = findViewById(R.id.jwplayer);
 

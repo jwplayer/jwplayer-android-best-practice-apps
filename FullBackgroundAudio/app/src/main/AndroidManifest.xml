@@ -20,11 +20,6 @@
             </intent-filter>
         </activity>
 
-        <!-- JW Player license key -->
-        <meta-data
-            android:name="JW_LICENSE_KEY"
-            android:value="Replace this text with your license" />
-
         <service android:name=".BackgroundAudioService" android:exported="false"/>
 
     </application>

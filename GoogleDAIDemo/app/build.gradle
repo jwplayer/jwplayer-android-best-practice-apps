@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "com.jwplayer.googledai"
-        minSdkVersion 19
-        targetSdkVersion 29
+        minSdkVersion 21
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -37,9 +37,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    def sdkVersion = '3.19.3'
-	implementation "com.longtailvideo.jwplayer:jwplayer-core:${sdkVersion}"
-	implementation "com.longtailvideo.jwplayer:jwplayer-common:${sdkVersion}"
-    implementation "com.longtailvideo.jwplayer:jwplayer-ima:${sdkVersion}"
+    def sdkVersion = '4.0.0'
+	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
+	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+    implementation "com.jwplayer:jwplayer-ima:${sdkVersion}"
 
 }

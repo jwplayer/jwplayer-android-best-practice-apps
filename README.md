@@ -26,7 +26,7 @@ In general the following usage instructions apply to most sample projects:
 - Start up Android Studio choose **Open an Existing Android Studio Project**
 - Navigate to the location of the repository and select the root directory of the app you want to load.
 - Click **OK**
-- Lastly, open the **AndroidManifest.xml** file and replace `{YOUR_LICENSE_KEY}` with your **Android SDK 3** license key. You can find the license key in your dashboard under **Players > Downloads & Keys**
+- Open the application's activity and replace YOUR_LICENSE_KEY with your license key
 - Click **Run**
 
 For more information about the JW Player SDK for Android, and how to use it, head over to our [Developer Portal](https://developer.jwplayer.com/jwplayer/docs/android-getting-started)

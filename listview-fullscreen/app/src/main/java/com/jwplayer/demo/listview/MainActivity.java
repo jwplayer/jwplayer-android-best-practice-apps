@@ -7,6 +7,8 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.jwplayer.pub.api.license.LicenseUtil;
+
 public class MainActivity extends AppCompatActivity {
 
     private PlayerAdapter mPlayerAdapter;
@@ -15,6 +17,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

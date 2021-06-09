@@ -34,11 +34,6 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </service>
-
-        <!-- TODO: Enter your license key below -->
-        <meta-data
-            android:name="JW_LICENSE_KEY"
-            android:value="YOUR_LICENSE_KEY" />
     </application>
 
 </manifest>

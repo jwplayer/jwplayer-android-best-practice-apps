@@ -20,11 +20,6 @@
             </intent-filter>
         </activity>
 
-        <!--TODO Set your license key-->
-        <meta-data
-            android:name="JW_LICENSE_KEY"
-            android:value="YOUR_LICENSE_KEY" />
-
     </application>
 
 </manifest>

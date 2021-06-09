@@ -19,10 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Uncomment and enter your license key -->
-<!--        <meta-data
-            android:name="JW_LICENSE_KEY"
-            android:value="{YOUR_LICENSE_KEY}"/> -->
     </application>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 </manifest>

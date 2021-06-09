@@ -20,12 +20,6 @@
 
         </activity>
 
-        <!--TODO Set your license key-->
-        <!--
-        <meta-data
-            android:name="JW_LICENSE_KEY"
-            android:value="{YOUR LICENSE KEY}" />
-            -->
     </application>
 
 </manifest>

@@ -7,13 +7,14 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.FullscreenEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.jwplayer.pub.api.license.LicenseUtil;
+import com.longtailvideo.jwplayer.configuration.PlayerConfig;
+import com.longtailvideo.jwplayer.events.FullscreenEvent;
+import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		// Get a reference to the CoordinatorLayout
 		RelativeLayout mRelativeLayout = findViewById(R.id.relative_layout);
