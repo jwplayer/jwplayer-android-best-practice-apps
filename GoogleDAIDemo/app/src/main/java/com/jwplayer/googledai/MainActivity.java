@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
 import com.longtailvideo.jwplayer.events.AdErrorEvent;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+
         mPlayerView = findViewById(R.id.jwplayer);
 
         List<PlaylistItem> playlist = new ArrayList<>();

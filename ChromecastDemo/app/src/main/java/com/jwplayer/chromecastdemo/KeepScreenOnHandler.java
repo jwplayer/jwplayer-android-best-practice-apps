@@ -3,18 +3,21 @@ package com.jwplayer.chromecastdemo;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.events.AdCompleteEvent;
-import com.longtailvideo.jwplayer.events.AdErrorEvent;
-import com.longtailvideo.jwplayer.events.AdPauseEvent;
-import com.longtailvideo.jwplayer.events.AdPlayEvent;
-import com.longtailvideo.jwplayer.events.AdSkippedEvent;
-import com.longtailvideo.jwplayer.events.CompleteEvent;
-import com.longtailvideo.jwplayer.events.ErrorEvent;
-import com.longtailvideo.jwplayer.events.PauseEvent;
-import com.longtailvideo.jwplayer.events.PlayEvent;
-import com.longtailvideo.jwplayer.events.listeners.AdvertisingEvents;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.events.AdCompleteEvent;
+import com.jwplayer.pub.api.events.AdErrorEvent;
+import com.jwplayer.pub.api.events.AdPauseEvent;
+import com.jwplayer.pub.api.events.AdPlayEvent;
+import com.jwplayer.pub.api.events.AdSkippedEvent;
+import com.jwplayer.pub.api.events.CompleteEvent;
+import com.jwplayer.pub.api.events.ErrorEvent;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.PauseEvent;
+import com.jwplayer.pub.api.events.PlayEvent;
+import com.jwplayer.pub.api.events.listeners.AdvertisingEvents;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
+
+
 
 /**
  * Sets the FLAG_KEEP_SCREEN_ON flag during playback - disables it when playback is stopped
@@ -34,15 +37,15 @@ public class KeepScreenOnHandler implements VideoPlayerEvents.OnPlayListener,
 	 */
 	private Window mWindow;
 
-	public KeepScreenOnHandler(JWPlayerView jwPlayerView, Window window) {
-		jwPlayerView.addOnPlayListener(this);
-		jwPlayerView.addOnPauseListener(this);
-		jwPlayerView.addOnCompleteListener(this);
-		jwPlayerView.addOnErrorListener(this);
-		jwPlayerView.addOnAdPlayListener(this);
-		jwPlayerView.addOnAdPauseListener(this);
-		jwPlayerView.addOnAdCompleteListener(this);
-		jwPlayerView.addOnAdErrorListener(this);
+	public KeepScreenOnHandler(JWPlayer playerApi, Window window) {
+		playerApi.addListener(EventType.PLAY, this);
+		playerApi.addListener(EventType.PAUSE, this);
+		playerApi.addListener(EventType.COMPLETE, this);
+		playerApi.addListener(EventType.ERROR, this);
+		playerApi.addListener(EventType.AD_PLAY, this);
+		playerApi.addListener(EventType.AD_PAUSE, this);
+		playerApi.addListener(EventType.AD_COMPLETE, this);
+		playerApi.addListener(EventType.AD_ERROR, this);
 		mWindow = window;
 	}
 

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerView;
 
 /**
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContainer = findViewById(R.id.container);
+
+        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+
         bindService(new Intent(this, BackgroundAudioService.class), mConnection, BIND_AUTO_CREATE);
     }
 

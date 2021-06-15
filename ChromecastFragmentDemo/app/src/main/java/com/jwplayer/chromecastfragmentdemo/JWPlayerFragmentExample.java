@@ -4,7 +4,12 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerSupportFragment;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
@@ -12,10 +17,6 @@ import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class JWPlayerFragmentExample extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class JWPlayerFragmentExample extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jwplayerfragment);
+
+        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
         List<PlaylistItem> playlist = new ArrayList<>();
         playlist.add(new PlaylistItem.Builder()

@@ -11,13 +11,14 @@ import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.configuration.PlayerConfig;
 import com.longtailvideo.jwplayer.events.FirstFrameEvent;
 import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class VideoActivity extends AppCompatActivity implements
 													 VideoPlayerEvents.OnFullscreenListener,
@@ -79,6 +80,8 @@ public class VideoActivity extends AppCompatActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video);
+
+		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		// Create a JWPlayerConfig
 		PlayerConfig playerConfig = new PlayerConfig.Builder()

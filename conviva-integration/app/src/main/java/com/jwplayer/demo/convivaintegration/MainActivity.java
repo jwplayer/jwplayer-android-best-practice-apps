@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.jwplayer.demo.R;
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jwplayerview);
+
+        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
         mPlayerView = findViewById(R.id.jwplayer);
         TextView outputTextView = findViewById(R.id.output);

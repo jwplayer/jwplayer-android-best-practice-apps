@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
@@ -27,6 +28,8 @@ public class JWPlayerViewExample extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_jwplayerview);
+
+		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		mPlayerView = findViewById(R.id.jwplayer);
 

@@ -25,12 +25,6 @@
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.jwplayer.chromecastdemo.CastOptionsProvider" />
-
-        <!--TODO Set your license key-->
-        <meta-data
-            android:name="JW_LICENSE_KEY"
-            android:value="YOUR_LICENSE_KEY" />
-
     </application>
 
 </manifest>

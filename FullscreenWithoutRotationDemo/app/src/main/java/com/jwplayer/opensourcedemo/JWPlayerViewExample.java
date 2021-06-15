@@ -1,14 +1,14 @@
 package com.jwplayer.opensourcedemo;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.jwplayer.pub.api.license.LicenseUtil;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.fullscreen.FullscreenHandler;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Constructor;
 
@@ -22,6 +22,8 @@ public class JWPlayerViewExample extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_jwplayerview);
+
+		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		mPlayerView = findViewById(R.id.jwplayer);
 
