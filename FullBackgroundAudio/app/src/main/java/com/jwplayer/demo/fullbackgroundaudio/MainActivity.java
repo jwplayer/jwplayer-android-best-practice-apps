@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
+import com.jwplayer.pub.view.JWPlayerView;
 
 /**
  * A simple activity that holds a JWPlayer view. This activity connects to the background
@@ -26,7 +26,7 @@ import com.longtailvideo.jwplayer.JWPlayerView;
 public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout mContainer;
-    private JWPlayerView mPlayer;
+    private JWPlayerView mPlayerView;
     private BackgroundAudioService.ServiceBinder mService;
     private boolean mIsBound = false;
 
@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             mService = (BackgroundAudioService.ServiceBinder) service;
             mService.createPlayer(MainActivity.this);
-            mPlayer = mService.getPlayer();
-            mContainer.addView(mPlayer, new RelativeLayout.LayoutParams(
+            mPlayerView = mService.getPlayerView();
+            mContainer.addView(mPlayerView, new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             Intent startIntent = new Intent(MainActivity.this, BackgroundAudioService.class);
             startIntent.putExtra(BackgroundAudioService.ACTION, BackgroundAudioService.ACTION_START);
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mContainer = findViewById(R.id.container);
 
-        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+        LicenseUtil.setLicenseKey(this, "");// YOUR_LICENSE_KEY);
 
         bindService(new Intent(this, BackgroundAudioService.class), mConnection, BIND_AUTO_CREATE);
     }
