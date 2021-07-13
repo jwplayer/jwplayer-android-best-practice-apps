@@ -9,11 +9,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.JWPlayerSupportFragment;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerSupportFragment;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class JWPlayerFragmentExample extends AppCompatActivity {
      * A reference to the {@link JWPlayerView} used by the JWPlayerSupportFragment.
      */
     private JWPlayerView mPlayerView;
+    private JWPlayer mPlayer;
 
 
     @Override
@@ -61,10 +63,10 @@ public class JWPlayerFragmentExample extends AppCompatActivity {
         fm.executePendingTransactions();
 
         // Get a reference to the JWPlayerView from the fragment
-        mPlayerView = mPlayerFragment.getPlayer();
+        mPlayer = mPlayerFragment.getPlayer();
 
         // Keep the screen on during playback
-        new KeepScreenOnHandler(mPlayerView, getWindow());
+        new KeepScreenOnHandler(mPlayer, getWindow());
 
     }
 
@@ -72,8 +74,8 @@ public class JWPlayerFragmentExample extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Exit fullscreen when the user pressed the Back button
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mPlayerView.getFullscreen()) {
-                mPlayerView.setFullscreen(false, true);
+            if (mPlayer.getFullscreen()) {
+                mPlayer.setFullscreen(false, true);
                 return false;
             }
         }
