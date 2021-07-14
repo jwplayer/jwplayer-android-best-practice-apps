@@ -1,6 +1,7 @@
 package com.jwplayer.demo.listview;
 
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 
 public class Samples {
     public static final PlaylistItem[] PLAYLIST = new PlaylistItem[]{

@@ -11,14 +11,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.PlayerState;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.FullscreenEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.core.PlayerState;
-import com.longtailvideo.jwplayer.events.FullscreenEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -79,50 +83,6 @@ public class MainActivity extends AppCompatActivity implements
 
 	}
 
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		for (JWPlayerView player : mPlayers) {
-			player.onStop();
-		}
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		for (JWPlayerView player : mPlayers) {
-			player.onStart();
-		}
-	}
-
-	@Override
-	protected void onResume() {
-		// Let JW Player know that the app has returned from the background
-		super.onResume();
-		for (JWPlayerView player : mPlayers) {
-			player.onResume();
-		}
-	}
-
-	@Override
-	protected void onPause() {
-		// Let JW Player know that the app is going to the background
-		super.onPause();
-		for (JWPlayerView player : mPlayers) {
-			player.onPause();
-		}
-	}
-
-	@Override
-	protected void onDestroy() {
-		// Let JW Player know that the app is being destroyed
-		super.onDestroy();
-		for (JWPlayerView player : mPlayers) {
-			player.onDestroy();
-		}
-	}
-
 	@Override
 	public void onFullscreen(FullscreenEvent fullscreenEvent) {
 		ActionBar actionBar = getSupportActionBar();
@@ -138,11 +98,12 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	public void onPlayerActive(JWPlayerView activePlayer) {
 		mActivePlayer = activePlayer;
-		mKeepScreenOnHandler.addListeners(mActivePlayer);
+		mKeepScreenOnHandler.addListeners(mActivePlayer.getPlayer());
 
-		for(JWPlayerView player : mPlayers){
+		for(JWPlayerView playerView : mPlayers){
 			// If a player was playing, then it was previously set as the active player, pause() and remove listeners
-			if (player.getState() == PlayerState.PLAYING && !player.equals(mActivePlayer)) {
+			JWPlayer player = playerView.getPlayer();
+			if (player.getState() == PlayerState.PLAYING && !playerView.equals(mActivePlayer)) {
 				player.pause();
 				mKeepScreenOnHandler.removeListeners(player);
 			}
@@ -164,10 +125,12 @@ public class MainActivity extends AppCompatActivity implements
 
 		private class VideoViewHolder extends RecyclerView.ViewHolder {
 			public JWPlayerView playerView;
+			public JWPlayer player;
 
 			public VideoViewHolder(View v) {
 				super(v);
 				playerView = v.findViewById(R.id.player_view);
+				player = playerView.getPlayer();
 			}
 		}
 
@@ -203,7 +166,8 @@ public class MainActivity extends AppCompatActivity implements
 					v = LayoutInflater.from(parent.getContext())
 									  .inflate(R.layout.recycler_video_cell, parent, false);
 					CustomJWPlayerView playerView = v.findViewById(R.id.player_view);
-					playerView.addOnFullscreenListener(MainActivity.this);
+					JWPlayer player = playerView.getPlayer();
+					player.addListener(EventType.FULLSCREEN,MainActivity.this);
 					playerView.setActivePlayerListener(MainActivity.this);
 					mPlayers.add(playerView);
 					return new VideoViewHolder(v);
@@ -222,7 +186,13 @@ public class MainActivity extends AppCompatActivity implements
 				case 1:
 					VideoItem videoItem = (VideoItem)mData.get(position);
 					VideoViewHolder videoViewHolder = (VideoViewHolder)holder;
-					videoViewHolder.playerView.load(videoItem.playlistItem);
+					List<PlaylistItem> playlist = new ArrayList<>();
+					playlist.add(videoItem.playlistItem);
+
+					PlayerConfig playerConfig = new PlayerConfig.Builder()
+							.playlist(playlist)
+							.build();
+					videoViewHolder.player.setup(playerConfig);
 					break;
 			}
 		}

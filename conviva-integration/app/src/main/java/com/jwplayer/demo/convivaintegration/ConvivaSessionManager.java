@@ -13,7 +13,7 @@ import com.conviva.api.SystemFactory;
 import com.conviva.api.SystemSettings;
 import com.conviva.api.player.PlayerStateManager;
 import com.conviva.api.system.SystemInterface;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 
 import java.util.HashMap;
 import java.util.Map;

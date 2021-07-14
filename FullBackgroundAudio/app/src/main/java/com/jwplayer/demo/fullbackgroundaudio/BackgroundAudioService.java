@@ -20,12 +20,14 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.PauseEvent;
-import com.longtailvideo.jwplayer.events.PlayEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.PauseEvent;
+import com.jwplayer.pub.api.events.PlayEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
 /**
  *
@@ -45,7 +47,8 @@ public class BackgroundAudioService extends Service {
     public static final String ACTION_PAUSE = "ACTION_PAUSE";
     public static final String ACTION_STOP = "ACTION_STOP";
 
-    private JWPlayerView mPlayer;
+    private JWPlayerView mPlayerView;
+    private JWPlayer mPlayer;
 
     private MediaSessionCompat mMediaSessionCompat;
 
@@ -142,8 +145,8 @@ public class BackgroundAudioService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPlayer.removeOnPlayListener(eventHandler);
-        mPlayer.removeOnPauseListener(eventHandler);
+        mPlayer.removeListener(EventType.PLAY, eventHandler);
+        mPlayer.removeListener(EventType.PAUSE, eventHandler);
         mPlayer.stop();
         mMediaSessionCompat.release();
         NotificationManagerCompat.from(this).cancel(App.NOTIFICATION_ID);
@@ -193,7 +196,7 @@ public class BackgroundAudioService extends Service {
     private void showNotification() {
         //Sets the common parameters for all notifications
         NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this, App.CHANNEL_ID);
-        MediaStyleHelper.prepareNotification(mNotificationBuilder, mPlayer.getContext(), mPlayer.getPlaylistItem());
+        MediaStyleHelper.prepareNotification(mNotificationBuilder, mPlayerView.getContext(), mPlayer.getPlaylistItem());
 
         mNotificationBuilder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                 .setMediaSession(mMediaSessionCompat.getSessionToken()));
@@ -230,14 +233,16 @@ public class BackgroundAudioService extends Service {
         public void createPlayer(Context context) {
             if(context instanceof Activity){
                 PlayerConfig config = new PlayerConfig.Builder().playlist(SampleMedia.SAMPLE).build();
-                mPlayer = new JWPlayerView(context, config);
-                mPlayer.addOnPlayListener(eventHandler);
-                mPlayer.addOnPauseListener(eventHandler);
+                mPlayerView = new JWPlayerView(context, null);
+                mPlayer = mPlayerView.getPlayer();
+                mPlayer.addListener(EventType.PLAY, eventHandler);
+                mPlayer.addListener(EventType.PAUSE, eventHandler);
+                mPlayer.setup(config);
             }
         }
 
-        public JWPlayerView getPlayer() {
-            return mPlayer;
+        public JWPlayerView getPlayerView() {
+            return mPlayerView;
         }
     }
     

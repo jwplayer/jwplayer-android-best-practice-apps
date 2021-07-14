@@ -12,12 +12,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.jwplayer.demo.R;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.JWPlayerCompat;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.FullscreenEvent;
+import com.jwplayer.pub.api.events.PlaylistItemEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.events.FullscreenEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
 
@@ -37,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
      * Reference to the {@link JWPlayerView}
      */
     private JWPlayerView mPlayerView;
+    private JWPlayer mPlayer;
 
     /**
      * An instance of our event handling class
@@ -64,19 +72,21 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
 
         mCoordinatorLayout = findViewById(R.id.activity_jwplayerview);
 
+        mPlayer = mPlayerView.getPlayer();
+
         // Handle hiding/showing of ActionBar
-        mPlayerView.addOnFullscreenListener(this);
+        mPlayer.addListener(EventType.FULLSCREEN, this);
 
         // Keep the screen on during playback
-        new KeepScreenOnHandler(mPlayerView, getWindow());
+        new KeepScreenOnHandler(mPlayer, getWindow());
 
         // Instantiate the JW Player event handler class
-        mEventHandler = new JWEventHandler(mPlayerView, outputTextView);
+        mEventHandler = new JWEventHandler(mPlayer, outputTextView);
 
         ConvivaSessionManager.initClient(this, CONVIVA_GATEWAY_URL, CONVIVA_CUSTOMER_KEY);
 
-        mPlayerView.addOnPlaylistItemListener(playlistItemEvent ->
-                ConvivaSessionManager.createConvivaSession(playlistItemEvent.getPlaylistItem()));
+        JWPlayerCompat playerCompat = new JWPlayerCompat(mPlayer);
+        playerCompat.addOnPlaylistItemListener(playlistItemEvent -> ConvivaSessionManager.createConvivaSession(playlistItemEvent.getPlaylistItem()));
 
         // Load a media source
         PlaylistItem pi = new PlaylistItem.Builder()
@@ -85,33 +95,25 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
                 .description("A video player testing video.")
                 .build();
 
-        mPlayerView.load(pi);
+        List<PlaylistItem> playlist = new ArrayList<>();
+        playlist.add(pi);
+
+        PlayerConfig playerConfig = new PlayerConfig.Builder()
+                .playlist(playlist)
+                .build();
+
+        mPlayer.setup(playerConfig);
 
         try {
-            mPlayerInterface = new CVJWPlayerInterface(ConvivaSessionManager.getPlayerStateManager(), mPlayerView);
+            mPlayerInterface = new CVJWPlayerInterface(ConvivaSessionManager.getPlayerStateManager(), mPlayer);
         } catch (Exception e) {
             Log.d(TAG, "CVJWPlayerInterface instance failed");
         }
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPlayerView.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mPlayerView.onResume();
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
-        mPlayerView.onPause();
-
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
             releaseConviva();
         }
@@ -120,8 +122,6 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
     @Override
     protected void onStop() {
         super.onStop();
-        mPlayerView.onStop();
-
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             releaseConviva();
         }
@@ -130,15 +130,13 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPlayerView.onDestroy();
-
         ConvivaSessionManager.deinitClient();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         // Set fullscreen when the device is rotated to landscape
-        mPlayerView.setFullscreen(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE,
+        mPlayer.setFullscreen(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE,
                 true);
         super.onConfigurationChanged(newConfig);
     }
@@ -147,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Exit fullscreen when the user pressed the Back button
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mPlayerView.getFullscreen()) {
-                mPlayerView.setFullscreen(false, true);
+            if (mPlayer.getFullscreen()) {
+                mPlayer.setFullscreen(false, true);
                 return false;
             }
         }

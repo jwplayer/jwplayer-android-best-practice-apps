@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
@@ -29,14 +29,6 @@ public class MovablePlayerView extends JWPlayerView {
 
 	public MovablePlayerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		if (!isInEditMode()) {
-			setupView();
-		}
-	}
-
-	public MovablePlayerView(Context context,
-							 PlayerConfig playerConfig) {
-		super(context, playerConfig);
 		if (!isInEditMode()) {
 			setupView();
 		}

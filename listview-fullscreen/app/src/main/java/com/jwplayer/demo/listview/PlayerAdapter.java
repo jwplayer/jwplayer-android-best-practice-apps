@@ -11,12 +11,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.fullscreen.FullscreenHandler;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.fullscreen.FullscreenHandler;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class PlayerAdapter extends BaseAdapter {
 
@@ -26,7 +29,7 @@ public class PlayerAdapter extends BaseAdapter {
     private View mDecorView;
     private ViewGroup mRootView;
     private HashSet<JWPlayerView> mPlayerViews = new HashSet<>();
-    private JWPlayerView mFullscreenPlayer;
+    private JWPlayer mFullscreenPlayer;
 
     public PlayerAdapter(Activity activity, ListView listView, PlaylistItem[] listItems) {
         mActivity = activity;
@@ -75,68 +78,54 @@ public class PlayerAdapter extends BaseAdapter {
         title.setText(playlistItem.getTitle());
         description.setText(playlistItem.getDescription());
 
+        List<PlaylistItem> playlist = new ArrayList<>();
+        playlist.add(playlistItem);
+        final PlayerConfig playerConfig = new PlayerConfig.Builder().playlist(playlist).build();
+
         // Check if there is already a JWPlayerView present in the convertView.
         // If there is, then we want to recycle it, because player instantiation is quite expensive.
-        JWPlayerView player = null;
+        JWPlayerView playerView = null;
         for (int i = 0; i < playerContainer.getChildCount(); i++) {
             if (playerContainer.getChildAt(i) instanceof JWPlayerView) {
                 // Recycle the JWPlayerView
-                player = (JWPlayerView) playerContainer.getChildAt(i);
+                playerView = (JWPlayerView) playerContainer.getChildAt(i);
+                JWPlayer player = playerView.getPlayer();
                 if (player.getPlaylistItem(player.getPlaylistIndex()) != playlistItem) {
                     // Make sure the player has been released.
                     player.stop();
                     // Hide the player, it will be shown again when a user interacts with the ImageView.
-                    player.setVisibility(View.GONE);
+                    playerView.setVisibility(View.GONE);
                 }
             }
         }
 
-        final JWPlayerView finalPlayer = player;
+        final JWPlayerView finalPlayer = playerView;
         placeholder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // As soon as a user interacts with the ImageView, swap it out for the JW Player.
                 // We're using ImageView's in order to optimize ListView performance.
                 JWPlayerView playerView;
+                JWPlayer player;
                 if (finalPlayer == null) {
-                    playerView = new JWPlayerView(mActivity, new PlayerConfig.Builder().build());
-                    playerView.setFullscreenHandler(new ListViewFullscreenHandler(
+                    playerView = new JWPlayerView(mActivity, null);
+                    player = playerView.getPlayer();
+                    player.setFullscreenHandler(new ListViewFullscreenHandler(
                             playerContainer, playerView));
                     mPlayerViews.add(playerView);
                     playerContainer.addView(playerView);
                 } else {
                     // Recycle an existing player.
                     playerView = finalPlayer;
+                    player = playerView.getPlayer();
                     playerView.setVisibility(View.VISIBLE);
                 }
-                playerView.load(playlistItem);
-                playerView.play();
+                player.setup(playerConfig);
+                player.play();
             }
         });
 
         return convertView;
-    }
-
-    /*
-     * Life cycle methods
-     */
-
-    public void onPause() {
-        for (JWPlayerView playerView : mPlayerViews) {
-            playerView.onPause();
-        }
-    }
-
-    public void onResume() {
-        for (JWPlayerView playerView : mPlayerViews) {
-            playerView.onResume();
-        }
-    }
-
-    public void onDestroy() {
-        for (JWPlayerView playerView : mPlayerViews) {
-            playerView.onDestroy();
-        }
     }
 
     /**
@@ -200,15 +189,8 @@ public class PlayerAdapter extends BaseAdapter {
             // Enter landscape mode for fullscreen videos
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-            // Destroy the player's rendering surface, we need to do this to prevent Android's
-            // MediaDecoders from crashing.
-            mPlayerView.destroySurface();
-
             // Remove the JWPlayerView from the list item.
             mPlayerContainer.removeView(mPlayerView);
-
-            // Initialize a new rendering surface.
-            mPlayerView.initializeSurface();
 
             // Add the JWPlayerView to the RootView as soon as the UI thread is ready.
             mRootView.post(new Runnable() {
@@ -216,7 +198,7 @@ public class PlayerAdapter extends BaseAdapter {
                 public void run() {
                     mRootView.addView(mPlayerView, new ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    mFullscreenPlayer = mPlayerView;
+                    mFullscreenPlayer = mPlayerView.getPlayer();
                 }
             });
         }
@@ -229,15 +211,8 @@ public class PlayerAdapter extends BaseAdapter {
             // Enter portrait mode
             mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-            // Destroy the surface that is used for video output, we need to do this before
-            // we can detach the JWPlayerView from a ViewGroup.
-            mPlayerView.destroySurface();
-
             // Remove the player view from the root ViewGroup.
             mRootView.removeView(mPlayerView);
-
-            // After we've detached the JWPlayerView we can safely reinitialize the surface.
-            mPlayerView.initializeSurface();
 
             // As soon as the UI thread has finished processing the current message queue it
             // should add the JWPlayerView back to the list item.
@@ -250,21 +225,6 @@ public class PlayerAdapter extends BaseAdapter {
                     mFullscreenPlayer = null;
                 }
             });
-        }
-
-        @Override
-        public void onResume() {
-            // Do nothing, we're not listening for device rotation changes.
-        }
-
-        @Override
-        public void onPause() {
-
-        }
-
-        @Override
-        public void onDestroy() {
-
         }
 
         @Override

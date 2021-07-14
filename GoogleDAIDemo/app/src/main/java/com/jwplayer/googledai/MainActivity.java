@@ -5,13 +5,14 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.AdErrorEvent;
+import com.jwplayer.pub.api.events.listeners.AdvertisingEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.AdErrorEvent;
-import com.longtailvideo.jwplayer.events.listeners.AdvertisingEvents;
-import com.longtailvideo.jwplayer.media.ads.dai.ImaDaiSettings;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.ads.dai.ImaDaiSettings;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity
         implements AdvertisingEvents.OnAdErrorListener{
 
     JWPlayerView mPlayerView;
+    JWPlayer mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity
         LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
         mPlayerView = findViewById(R.id.jwplayer);
+        mPlayer = mPlayerView.getPlayer();
 
         List<PlaylistItem> playlist = new ArrayList<>();
         //videoId: Identifier of the DAI video to be displayed, used for video on demand
@@ -51,37 +54,13 @@ public class MainActivity extends AppCompatActivity
         playlist.add(playlistItem);
         PlayerConfig config = new PlayerConfig.Builder().playlist(playlist).build();
 
-        mPlayerView.setup(config);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mPlayerView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mPlayerView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPlayerView.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPlayerView.onDestroy();
+        mPlayer.setup(config);
     }
 
     @Override
     public void onBackPressed() {
-        if (mPlayerView.getFullscreen()) {
-            mPlayerView.setFullscreen(false, true);
+        if (mPlayer.getFullscreen()) {
+            mPlayer.setFullscreen(false, true);
         } else {
             super.onBackPressed();
         }

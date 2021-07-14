@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 
 /**
  * Helper class to create a base notification with the default actions.

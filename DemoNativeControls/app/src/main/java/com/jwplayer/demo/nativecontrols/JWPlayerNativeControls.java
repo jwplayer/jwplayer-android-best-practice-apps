@@ -9,13 +9,15 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.core.PlayerState;
-import com.longtailvideo.jwplayer.events.CompleteEvent;
-import com.longtailvideo.jwplayer.events.PauseEvent;
-import com.longtailvideo.jwplayer.events.PlayEvent;
-import com.longtailvideo.jwplayer.events.TimeEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.PlayerState;
+import com.jwplayer.pub.api.events.CompleteEvent;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.PauseEvent;
+import com.jwplayer.pub.api.events.PlayEvent;
+import com.jwplayer.pub.api.events.TimeEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,7 @@ public class JWPlayerNativeControls extends RelativeLayout
     ArrayList<OnControlsInteraction> mControlChangeListeners = new ArrayList<>();
 
     JWPlayerView    mPlayerView;
+    JWPlayer        mPlayer;
     SeekBar         mSeekBar;
     TextView        mSeekBarText;
     JWProgressBar   mVideoProgressBar;
@@ -92,23 +95,23 @@ public class JWPlayerNativeControls extends RelativeLayout
         return mControlChangeListeners.remove(ocl);
     }
 
-    public void setJWView(JWPlayerView playerView) {
-        mPlayerView = playerView;
+    public void setJWView(JWPlayer player) {
+        mPlayer = player;
         //Sign us up for player related events so we can appopriately update UI
         //Play and pause will be used to toggle the play/pause button and it's functionality
-        mPlayerView.addOnPlayListener(this);
-        mPlayerView.addOnPauseListener(this);
+        mPlayer.addListener(EventType.PLAY, this);
+        mPlayer.addListener(EventType.PAUSE, this);
         //We'll use time event to update the seek bar time
-        mPlayerView.addOnTimeListener(mVideoProgressBar);
+        mPlayer.addListener(EventType.TIME, mVideoProgressBar);
         //Listen to the complete event to update the play pause UI
-        mPlayerView.addOnCompleteListener(this);
+        mPlayer.addListener(EventType.COMPLETE, this);
     }
 
     public void unSubscribeFromJWEvents(){
-        mPlayerView.removeOnPlayListener(this);
-        mPlayerView.removeOnPauseListener(this);
-        mPlayerView.removeOnTimeListener(mVideoProgressBar);
-        mPlayerView.removeOnCompleteListener(this);
+        mPlayer.removeListener(EventType.PLAY, this);
+        mPlayer.removeListener(EventType.PAUSE, this);
+        mPlayer.removeListener(EventType.TIME, mVideoProgressBar);
+        mPlayer.removeListener(EventType.COMPLETE, this);
     }
 
     @Override
@@ -117,47 +120,47 @@ public class JWPlayerNativeControls extends RelativeLayout
         switch (v.getId()) {
             case R.id.play_and_pause_button:
                 //If we're playing stop us, if we're not playing play us
-                if(mPlayerView.getState() == PlayerState.PLAYING){
-                    mPlayerView.pause();
+                if(mPlayer.getState() == PlayerState.PLAYING){
+                    mPlayer.pause();
                     stoppedPlayback = true;
-                } else if(mPlayerView.getState() != PlayerState.PLAYING){
-                    mPlayerView.play();
+                } else if(mPlayer.getState() != PlayerState.PLAYING){
+                    mPlayer.play();
                 }
                 break;
             case R.id.stop_button:
                 //Cancel playback ASAP and reset the UI back to the pre video starts
                 stoppedPlayback = true;
-                mPlayerView.stop();
+                mPlayer.stop();
                 resetVideoPlaybackUI();
                 break;
             case R.id.fullscreen_button:
-                if(mPlayerView.getFullscreen()){
-                    mPlayerView.setFullscreen(false,true);
+                if(mPlayer.getFullscreen()){
+                    mPlayer.setFullscreen(false,true);
                 } else {
-                    mPlayerView.setFullscreen(true,true);
+                    mPlayer.setFullscreen(true,true);
                 }
                 break;
             case R.id.fast_forward_button:
-                mPlayerView.seek(mPlayerView.getPosition() + 10);
+                mPlayer.seek(mPlayer.getPosition() + 10);
                 break;
             case R.id.rewind_button:
-                double newPosition = mPlayerView.getPosition() - 10;
+                double newPosition = mPlayer.getPosition() - 10;
                 //We clamp to 0 because JWPlayer would use negative numbers to jump to <end of video> - seekPos
                 //which would make -10, 10 seconds from the end of the video
                 if(newPosition < 0){
                     newPosition = 0;
                 }
-                mPlayerView.seek(newPosition);
+                mPlayer.seek(newPosition);
                 break;
             case R.id.mute_button:
-                if(mPlayerView.getState() == PlayerState.PLAYING){
-                    boolean muted = mPlayerView.getMute();
+                if(mPlayer.getState() == PlayerState.PLAYING){
+                    boolean muted = mPlayer.getMute();
                     if(muted){ //we're gonna unmute it
                         mMuteButton.setText("Mute");
                     } else { //We're gonna mute it
                         mMuteButton.setText("UnMute");
                     }
-                    mPlayerView.setMute(!muted);
+                    mPlayer.setMute(!muted);
                 }
                 break;
         }
@@ -191,7 +194,7 @@ public class JWPlayerNativeControls extends RelativeLayout
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             //Convert from progress to a time stamp to display to the user
-            double videoDuration = mPlayerView.getDuration();
+            double videoDuration = mPlayer.getDuration();
             String seekbarMessage = "";
             if(videoDuration > 0){
                 double currentTime = progress;
@@ -237,9 +240,9 @@ public class JWPlayerNativeControls extends RelativeLayout
                     if(seekValue == 0){
                         seekValue = -1;
                     }
-                    mPlayerView.seek(seekValue);
+                    mPlayer.seek(seekValue);
                 } else {
-                    mPlayerView.seek(progress);
+                    mPlayer.seek(progress);
                 }
             }
         }

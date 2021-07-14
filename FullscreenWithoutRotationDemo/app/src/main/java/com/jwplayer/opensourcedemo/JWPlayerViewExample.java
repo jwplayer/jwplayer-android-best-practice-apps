@@ -5,17 +5,23 @@ import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.fullscreen.FullscreenHandler;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.fullscreen.FullscreenHandler;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class JWPlayerViewExample extends AppCompatActivity {
 
 	private JWPlayerView mPlayerView;
+	private JWPlayer mPlayer;
 
 
 	@Override
@@ -26,9 +32,10 @@ public class JWPlayerViewExample extends AppCompatActivity {
 		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		mPlayerView = findViewById(R.id.jwplayer);
+		mPlayer = mPlayerView.getPlayer();
 
 		// set screen handler for manage the rotation of the screen
-		mPlayerView.setFullscreenHandler(new FullScreenHandler_NoRotation(mPlayerView));
+		mPlayer.setFullscreenHandler(new FullScreenHandler_NoRotation(mPlayerView));
 
 		// Load a media source
 		PlaylistItem pi = new PlaylistItem.Builder()
@@ -37,38 +44,14 @@ public class JWPlayerViewExample extends AppCompatActivity {
 				.description("A video player testing video.")
 				.build();
 
-		mPlayerView.load(pi);
-	}
+		List<PlaylistItem> playlist = new ArrayList<>();
+		playlist.add(pi);
 
+		PlayerConfig playerConfig = new PlayerConfig.Builder()
+				.playlist(playlist)
+				.build();
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		mPlayerView.onStart();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mPlayerView.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mPlayerView.onPause();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		mPlayerView.onStop();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mPlayerView.onDestroy();
+		mPlayer.setup(playerConfig);
 	}
 
 	public class FullScreenHandler_NoRotation implements FullscreenHandler {
@@ -89,21 +72,6 @@ public class JWPlayerViewExample extends AppCompatActivity {
 		@Override
 		public void onFullscreenExitRequested() {
 			doFullscreen(false);
-		}
-
-		@Override
-		public void onResume() {
-
-		}
-
-		@Override
-		public void onPause() {
-
-		}
-
-		@Override
-		public void onDestroy() {
-
 		}
 
 		@Override

@@ -24,11 +24,11 @@ import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.DecoderInitializationException;
 import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.source.MediaSourceEventListener.LoadEventInfo;
-import com.google.android.exoplayer2.source.MediaSourceEventListener.MediaLoadData;
+import com.google.android.exoplayer2.source.LoadEventInfo;
+import com.google.android.exoplayer2.source.MediaLoadData;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.longtailvideo.jwplayer.JWPlayerView;
+import com.jwplayer.pub.api.JWPlayer;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -41,7 +41,7 @@ public class CVJWPlayerInterface implements IClientMeasureInterface, IPlayerInte
 
     private final PlayerStateManager mStateManager;
 
-    private final JWPlayerView mPlayer;
+    private final JWPlayer mPlayer;
 
     private final Handler mMainHandler;
 
@@ -57,7 +57,7 @@ public class CVJWPlayerInterface implements IClientMeasureInterface, IPlayerInte
     private boolean mIsSendLogMethodAvailable;
 
 
-    public CVJWPlayerInterface(PlayerStateManager stateManager, JWPlayerView player) {
+    public CVJWPlayerInterface(PlayerStateManager stateManager, JWPlayer player) {
 
         mMainHandler = createHandler();
 
