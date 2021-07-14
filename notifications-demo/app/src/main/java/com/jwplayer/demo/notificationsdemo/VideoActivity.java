@@ -13,12 +13,14 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.FirstFrameEvent;
+import com.jwplayer.pub.api.events.FullscreenEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.FirstFrameEvent;
-import com.longtailvideo.jwplayer.events.FullscreenEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.view.JWPlayerView;
 
 public class VideoActivity extends AppCompatActivity implements
 													 VideoPlayerEvents.OnFullscreenListener,
@@ -28,6 +30,7 @@ public class VideoActivity extends AppCompatActivity implements
 	 * The JWPlayerView used for video playback.
 	 */
 	private JWPlayerView mPlayerView;
+	private JWPlayer mPlayer;
 
 	/**
 	 * Whether we have bound to a {@link MediaPlaybackService}.
@@ -89,9 +92,11 @@ public class VideoActivity extends AppCompatActivity implements
 				.build();
 
 		// Create a new JWPlayerView
-		mPlayerView = new JWPlayerView(this, playerConfig);
-		mPlayerView.addOnFullscreenListener(this);
-		mPlayerView.addOnFirstFrameListener(this);
+		mPlayerView = new JWPlayerView(this, null);
+		mPlayer = mPlayerView.getPlayer();
+		mPlayer.addListener(EventType.FULLSCREEN, this);
+		mPlayer.addListener(EventType.FIRST_FRAME, this);
+		mPlayer.setup(playerConfig);
 
 		// Add the JWPlayerView to the screen. Make sure it's 16:9.
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -105,27 +110,6 @@ public class VideoActivity extends AppCompatActivity implements
 		mMediaSessionManager = new MediaSessionManager(this,
 													   mPlayerView,
 													   mNotificationWrapper);
-	}
-
-	@Override
-	protected void onPause() {
-		// Allow background audio playback.
-		super.onPause();
-		mPlayerView.setBackgroundAudio(true);
-		mPlayerView.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mPlayerView.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		doUnbindService();
-		mPlayerView.onDestroy();
 	}
 
 	private void doBindService() {

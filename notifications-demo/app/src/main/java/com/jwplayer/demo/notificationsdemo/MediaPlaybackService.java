@@ -68,7 +68,7 @@ public class MediaPlaybackService extends Service {
 		mMediaSessionManager = mediaSessionManager;
 
 		Notification notification = notificationWrapper
-				.createNotification(mediaSessionManager.getPlayer().getContext(),
+				.createNotification(mediaSessionManager.getPlayerView().getContext(),
 									mMediaSessionManager.getMediaSession(),
 									mMediaSessionManager
 											.getCapabilities(mediaSessionManager.getPlayer()
