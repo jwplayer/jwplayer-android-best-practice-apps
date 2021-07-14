@@ -11,15 +11,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.FullscreenEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.FullscreenEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-
 
 public class MainActivity extends AppCompatActivity implements
 													VideoPlayerEvents.OnFullscreenListener {
 	private MovablePlayerView mPlayerView;
+	private JWPlayer mPlayer;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,9 @@ public class MainActivity extends AppCompatActivity implements
 		RelativeLayout mRelativeLayout = findViewById(R.id.relative_layout);
 
 		// Initialize a new JW Player.
-		mPlayerView = new MovablePlayerView(this, new PlayerConfig.Builder()
+		mPlayerView = new MovablePlayerView(this, null);
+		mPlayer = mPlayerView.getPlayer();
+		mPlayer.setup(new PlayerConfig.Builder()
 				.file("https://content.jwplatform.com/manifests/mkZVAqxV.m3u8")
 				.build());
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements
 		mPlayerView.setLayoutParams(params);
 		// Add the View to the View Hierarchy.
 		mRelativeLayout.addView(mPlayerView);
-		mPlayerView.addOnFullscreenListener(this);
+		mPlayer.addListener(EventType.FULLSCREEN, this);
 
 		findViewById(R.id.movable_player_toggle).setOnClickListener(v -> {
 			mPlayerView.toggleDrag();
@@ -56,51 +60,17 @@ public class MainActivity extends AppCompatActivity implements
 	@Override
 	public void onConfigurationChanged(@NonNull Configuration newConfig) {
 		// Set fullscreen when the device is rotated to landscape, and not in movable player mode.
-		mPlayerView.setFullscreen(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE,
+		mPlayer.setFullscreen(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE,
 								  true);
 		super.onConfigurationChanged(newConfig);
-	}
-
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		mPlayerView.onStop();
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		mPlayerView.onStart();
-	}
-
-	@Override
-	protected void onResume() {
-		// Let JW Player know that the app has returned from the background
-		super.onResume();
-		mPlayerView.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		// Let JW Player know that the app is going to the background
-		super.onPause();
-		mPlayerView.onPause();
-	}
-
-	@Override
-	protected void onDestroy() {
-		// Let JW Player know that the app is being destroyed
-		super.onDestroy();
-		mPlayerView.onDestroy();
 	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// If we are in fullscreen mode, exit fullscreen mode when the user uses the back button.
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (mPlayerView.getFullscreen()) {
-				mPlayerView.setFullscreen(false, true);
+			if (mPlayer.getFullscreen()) {
+				mPlayer.setFullscreen(false, true);
 				return true;
 			}
 		}
