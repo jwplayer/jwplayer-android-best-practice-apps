@@ -35,7 +35,7 @@ dependencies {
         force = true
     }
 
-    def sdkVersion = '3.19.3'
+    def sdkVersion = '3.19.4'
 	implementation "com.longtailvideo.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.longtailvideo.jwplayer:jwplayer-common:${sdkVersion}"
 
