@@ -33,7 +33,7 @@ dependencies {
     implementation group: 'androidx.constraintlayout', name: 'constraintlayout', version: '2.0.4'
     implementation group: 'androidx.recyclerview', name: 'recyclerview', version: '1.2.0'
 
-    implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '18.1.0'
+    implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '19.2.0'
 
     def sdkVersion = '4.0.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
