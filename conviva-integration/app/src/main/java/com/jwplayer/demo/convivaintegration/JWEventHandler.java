@@ -3,46 +3,47 @@ package com.jwplayer.demo.convivaintegration;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.events.AdClickEvent;
-import com.longtailvideo.jwplayer.events.AdCompleteEvent;
-import com.longtailvideo.jwplayer.events.AdErrorEvent;
-import com.longtailvideo.jwplayer.events.AdImpressionEvent;
-import com.longtailvideo.jwplayer.events.AdPauseEvent;
-import com.longtailvideo.jwplayer.events.AdPlayEvent;
-import com.longtailvideo.jwplayer.events.AdScheduleEvent;
-import com.longtailvideo.jwplayer.events.AdSkippedEvent;
-import com.longtailvideo.jwplayer.events.AdTimeEvent;
-import com.longtailvideo.jwplayer.events.AudioTrackChangedEvent;
-import com.longtailvideo.jwplayer.events.AudioTracksEvent;
-import com.longtailvideo.jwplayer.events.BeforeCompleteEvent;
-import com.longtailvideo.jwplayer.events.BeforePlayEvent;
-import com.longtailvideo.jwplayer.events.BufferEvent;
-import com.longtailvideo.jwplayer.events.CaptionsChangedEvent;
-import com.longtailvideo.jwplayer.events.CaptionsListEvent;
-import com.longtailvideo.jwplayer.events.CompleteEvent;
-import com.longtailvideo.jwplayer.events.ControlsEvent;
-import com.longtailvideo.jwplayer.events.DisplayClickEvent;
-import com.longtailvideo.jwplayer.events.ErrorEvent;
-import com.longtailvideo.jwplayer.events.FirstFrameEvent;
-import com.longtailvideo.jwplayer.events.FullscreenEvent;
-import com.longtailvideo.jwplayer.events.IdleEvent;
-import com.longtailvideo.jwplayer.events.LevelsChangedEvent;
-import com.longtailvideo.jwplayer.events.LevelsEvent;
-import com.longtailvideo.jwplayer.events.MetaEvent;
-import com.longtailvideo.jwplayer.events.MuteEvent;
-import com.longtailvideo.jwplayer.events.PauseEvent;
-import com.longtailvideo.jwplayer.events.PlayEvent;
-import com.longtailvideo.jwplayer.events.PlaylistCompleteEvent;
-import com.longtailvideo.jwplayer.events.PlaylistEvent;
-import com.longtailvideo.jwplayer.events.PlaylistItemEvent;
-import com.longtailvideo.jwplayer.events.SeekEvent;
-import com.longtailvideo.jwplayer.events.SeekedEvent;
-import com.longtailvideo.jwplayer.events.SetupErrorEvent;
-import com.longtailvideo.jwplayer.events.TimeEvent;
-import com.longtailvideo.jwplayer.events.VisualQualityEvent;
-import com.longtailvideo.jwplayer.events.listeners.AdvertisingEvents;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.events.AdClickEvent;
+import com.jwplayer.pub.api.events.AdCompleteEvent;
+import com.jwplayer.pub.api.events.AdErrorEvent;
+import com.jwplayer.pub.api.events.AdImpressionEvent;
+import com.jwplayer.pub.api.events.AdPauseEvent;
+import com.jwplayer.pub.api.events.AdPlayEvent;
+import com.jwplayer.pub.api.events.AdScheduleEvent;
+import com.jwplayer.pub.api.events.AdSkippedEvent;
+import com.jwplayer.pub.api.events.AdTimeEvent;
+import com.jwplayer.pub.api.events.AudioTrackChangedEvent;
+import com.jwplayer.pub.api.events.AudioTracksEvent;
+import com.jwplayer.pub.api.events.BeforeCompleteEvent;
+import com.jwplayer.pub.api.events.BeforePlayEvent;
+import com.jwplayer.pub.api.events.BufferEvent;
+import com.jwplayer.pub.api.events.CaptionsChangedEvent;
+import com.jwplayer.pub.api.events.CaptionsListEvent;
+import com.jwplayer.pub.api.events.CompleteEvent;
+import com.jwplayer.pub.api.events.ControlsEvent;
+import com.jwplayer.pub.api.events.DisplayClickEvent;
+import com.jwplayer.pub.api.events.ErrorEvent;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.FirstFrameEvent;
+import com.jwplayer.pub.api.events.FullscreenEvent;
+import com.jwplayer.pub.api.events.IdleEvent;
+import com.jwplayer.pub.api.events.LevelsChangedEvent;
+import com.jwplayer.pub.api.events.LevelsEvent;
+import com.jwplayer.pub.api.events.MetaEvent;
+import com.jwplayer.pub.api.events.MuteEvent;
+import com.jwplayer.pub.api.events.PauseEvent;
+import com.jwplayer.pub.api.events.PlayEvent;
+import com.jwplayer.pub.api.events.PlaylistCompleteEvent;
+import com.jwplayer.pub.api.events.PlaylistEvent;
+import com.jwplayer.pub.api.events.PlaylistItemEvent;
+import com.jwplayer.pub.api.events.SeekEvent;
+import com.jwplayer.pub.api.events.SeekedEvent;
+import com.jwplayer.pub.api.events.SetupErrorEvent;
+import com.jwplayer.pub.api.events.TimeEvent;
+import com.jwplayer.pub.api.events.VisualQualityEvent;
+import com.jwplayer.pub.api.events.listeners.AdvertisingEvents;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 
 /**
  * Outputs all JW Player Events to logging, with the exception of time events.
@@ -88,47 +89,43 @@ public class JWEventHandler implements VideoPlayerEvents.OnSetupErrorListener,
 
     TextView mOutput;
 
-    public JWEventHandler(JWPlayerView jwPlayerView, TextView output) {
+    public JWEventHandler(JWPlayer player, TextView output) {
         mOutput = output;
         // Subscribe to all JW Player events
-        jwPlayerView.addOnFirstFrameListener(this);
-        jwPlayerView.addOnSetupErrorListener(this);
-        jwPlayerView.addOnPlaylistListener(this);
-        jwPlayerView.addOnPlaylistItemListener(this);
-        jwPlayerView.addOnPlayListener(this);
-        jwPlayerView.addOnPauseListener(this);
-        jwPlayerView.addOnBufferListener(this);
-        jwPlayerView.addOnIdleListener(this);
-        jwPlayerView.addOnErrorListener(this);
-        jwPlayerView.addOnSeekListener(this);
-        jwPlayerView.addOnTimeListener(this);
-        jwPlayerView.addOnFullscreenListener(this);
-        jwPlayerView.addOnLevelsChangedListener(this);
-        jwPlayerView.addOnLevelsListener(this);
-        jwPlayerView.addOnCaptionsListListener(this);
-        jwPlayerView.addOnCaptionsChangedListener(this);
-        //  jwPlayerView.addOnRelatedCloseListener(this);
-        //  jwPlayerView.addOnRelatedOpenListener(this);
-        //  jwPlayerView.addOnRelatedPlayListener(this);
-        jwPlayerView.addOnControlsListener(this);
-        jwPlayerView.addOnDisplayClickListener(this);
-        jwPlayerView.addOnMuteListener(this);
-        jwPlayerView.addOnVisualQualityListener(this);
-        jwPlayerView.addOnSeekedListener(this);
-        jwPlayerView.addOnAdClickListener(this);
-        jwPlayerView.addOnAdCompleteListener(this);
-        jwPlayerView.addOnAdSkippedListener(this);
-        jwPlayerView.addOnAdErrorListener(this);
-        jwPlayerView.addOnAdImpressionListener(this);
-        jwPlayerView.addOnAdTimeListener(this);
-        jwPlayerView.addOnAdPauseListener(this);
-        jwPlayerView.addOnAdPlayListener(this);
-        jwPlayerView.addOnMetaListener(this);
-        jwPlayerView.addOnPlaylistCompleteListener(this);
-        jwPlayerView.addOnCompleteListener(this);
-        jwPlayerView.addOnBeforePlayListener(this);
-        jwPlayerView.addOnBeforeCompleteListener(this);
-        jwPlayerView.addOnAdScheduleListener(this);
+        player.addListener(EventType.FIRST_FRAME, this);
+        player.addListener(EventType.SETUP_ERROR, this);
+        player.addListener(EventType.PLAYLIST, this);
+        player.addListener(EventType.PLAYLIST_ITEM, this);
+        player.addListener(EventType.PLAY, this);
+        player.addListener(EventType.PAUSE, this);
+        player.addListener(EventType.BUFFER, this);
+        player.addListener(EventType.IDLE, this);
+        player.addListener(EventType.ERROR, this);
+        player.addListener(EventType.SEEK, this);
+        player.addListener(EventType.TIME, this);
+        player.addListener(EventType.FULLSCREEN, this);
+        player.addListener(EventType.LEVELS, this);
+        player.addListener(EventType.LEVELS_CHANGED, this);
+        player.addListener(EventType.CAPTIONS_LIST, this);
+        player.addListener(EventType.CAPTIONS_CHANGED, this);
+        player.addListener(EventType.CONTROLS, this);
+        player.addListener(EventType.DISPLAY_CLICK, this);
+        player.addListener(EventType.MUTE, this);
+        player.addListener(EventType.VISUAL_QUALITY, this);
+        player.addListener(EventType.SEEKED, this);
+        player.addListener(EventType.AD_CLICK, this);
+        player.addListener(EventType.AD_COMPLETE, this);
+        player.addListener(EventType.AD_SKIPPED, this);
+        player.addListener(EventType.AD_ERROR, this);
+        player.addListener(EventType.AD_IMPRESSION, this);
+        player.addListener(EventType.AD_TIME, this);
+        player.addListener(EventType.AD_PAUSE, this);
+        player.addListener(EventType.AD_PLAY, this);
+        player.addListener(EventType.META, this);
+        player.addListener(EventType.PLAYLIST_COMPLETE, this);
+        player.addListener(EventType.BEFORE_PLAY, this);
+        player.addListener(EventType.BEFORE_COMPLETE, this);
+        player.addListener(EventType.AD_SCHEDULE, this);
     }
 
     private void updateOutput(String output) {
@@ -259,7 +256,7 @@ public class JWEventHandler implements VideoPlayerEvents.OnSetupErrorListener,
     @Override
     public void onLevelsChanged(LevelsChangedEvent levelsChangedEvent) {
         Log.d(TAG, "onLevelsChanged");
-        updateOutput("onLevelsChange(" + levelsChangedEvent.getCurrentQuality() + ")");
+        updateOutput("onLevelsChange(" + levelsChangedEvent.getCurrentQualityIndex() + ")");
     }
 
     @Override

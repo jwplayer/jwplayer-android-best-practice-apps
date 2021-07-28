@@ -29,27 +29,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        // Let JW Player know that the app has returned from the background
-        mPlayerAdapter.onResume();
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        // Let JW Player know that the app is going to the background
-        mPlayerAdapter.onPause();
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        // Let JW Player know that the app is being destroyed
-        mPlayerAdapter.onDestroy();
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // If we are in fullscreen mode, exit fullscreen mode when the user uses the back button.
         if (keyCode == KeyEvent.KEYCODE_BACK) {

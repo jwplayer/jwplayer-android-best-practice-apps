@@ -3,10 +3,10 @@ package com.jwplayer.demo.recyclerview;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.PlayEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.PlayEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
+import com.jwplayer.pub.view.JWPlayerView;
 
 public class CustomJWPlayerView extends JWPlayerView implements VideoPlayerEvents.OnPlayListener {
 
@@ -19,14 +19,8 @@ public class CustomJWPlayerView extends JWPlayerView implements VideoPlayerEvent
 	public CustomJWPlayerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		if (!isInEditMode()) {
-			this.addOnPlayListener(this);
+			getPlayer().addListener(EventType.PLAY, this);
 		}
-	}
-
-	public CustomJWPlayerView(Context context,
-							  PlayerConfig playerConfig) {
-		super(context, playerConfig);
-		this.addOnPlayListener(this);
 	}
 
 	public void setActivePlayerListener(ActivePlayerListener listener){

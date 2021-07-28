@@ -9,12 +9,14 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.ReadyEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.configuration.PlayerConfig;
-import com.longtailvideo.jwplayer.events.ReadyEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity
         VideoPlayerEvents.OnReadyListener,
         JWPlayerNativeControls.OnControlsInteraction {
     JWPlayerView mPlayerView;
+    JWPlayer mPlayer;
     JWPlayerNativeControls mNativePlayerControls;
     RelativeLayout mTouchInterceptorView;
 
@@ -52,12 +55,13 @@ public class MainActivity extends AppCompatActivity
         LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
 
         mPlayerView = findViewById(R.id.jwplayer);
+        mPlayer = mPlayerView.getPlayer();
 
         //Subscribe to any events we're interested in
-        mPlayerView.addOnReadyListener(this);
+        mPlayer.addListener(EventType.READY, this);
         mNativePlayerControls = new JWPlayerNativeControls(this);
         //Initialize our mNativePlayerControls
-        mNativePlayerControls.setJWView(mPlayerView);
+        mNativePlayerControls.setJWView(mPlayer);
         mPlayerView.addView(mNativePlayerControls);
         //Subscribe to the mNativePlayerControls interaction events being emitted
         //by the mNativePlayerControls to automatically fade the mNativePlayerControls out during playback
@@ -78,10 +82,10 @@ public class MainActivity extends AppCompatActivity
         List<PlaylistItem> playlist = new ArrayList<>();
         playlist.add(playlistItem);
         PlayerConfig config = new PlayerConfig.Builder().playlist(playlist).build();
-        mPlayerView.setup(config);
+        mPlayer.setup(config);
 
         //Disable the player's controls so we don't have conflict with our native ones
-        mPlayerView.setControls(false);
+        mPlayer.setControls(false);
 
         //We're going to go full native
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -100,27 +104,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mPlayerView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mPlayerView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPlayerView.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPlayerView.onDestroy();
         mNativePlayerControls.unSubscribeFromJWEvents();
         mNativePlayerControls.removeControlsInteractionListener(this);
     }
@@ -177,15 +162,15 @@ public class MainActivity extends AppCompatActivity
         List<PlaylistItem> playlist = new ArrayList<>();
         playlist.add(playlistItem);
         PlayerConfig config = new PlayerConfig.Builder().playlist(playlist).build();
-        mPlayerView.stop();
+        mPlayer.stop();
         mNativePlayerControls.resetVideoPlaybackUI();
 
         //Cancel Timer to hide mNativePlayerControls altogether
         mHideControlsHandler.removeCallbacks(mHideControlsRunnable);
         mTouchInterceptorView.setClickable(false);
         mTouchInterceptorView.setVisibility(View.INVISIBLE);
-        mPlayerView.setup(config);
-        mPlayerView.setControls(false);
+        mPlayer.setup(config);
+        mPlayer.setControls(false);
         return true;
     }
     //Controls Interaction Listener Events
@@ -234,8 +219,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if(mPlayerView.getFullscreen()){
-            mPlayerView.setFullscreen(false,true);
+        if(mPlayer.getFullscreen()){
+            mPlayer.setFullscreen(false,true);
         } else {
             super.onBackPressed();
         }

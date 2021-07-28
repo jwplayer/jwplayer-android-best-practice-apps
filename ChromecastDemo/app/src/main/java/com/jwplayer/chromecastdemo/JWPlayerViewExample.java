@@ -12,20 +12,28 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.FullscreenEvent;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
-import com.longtailvideo.jwplayer.JWPlayerView;
-import com.longtailvideo.jwplayer.events.FullscreenEvent;
-import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.List;
 
 
 public class JWPlayerViewExample extends AppCompatActivity
 		implements VideoPlayerEvents.OnFullscreenListener {
 
 	private JWPlayerView mPlayerView;
+	private JWPlayer mPlayer;
 
 	private CastContext mCastContext;
 
@@ -45,11 +53,12 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 		mPlayerView = findViewById(R.id.jwplayer);
 
+		mPlayer = mPlayerView.getPlayer();
 		// Handle hiding/showing of ActionBar
-		mPlayerView.addOnFullscreenListener(this);
+		mPlayer.addListener(EventType.FULLSCREEN, this);
 
 		// Keep the screen on during playback
-		new KeepScreenOnHandler(mPlayerView, getWindow());
+		new KeepScreenOnHandler(mPlayer, getWindow());
 
 		// Load a media source
 		PlaylistItem pi = new PlaylistItem.Builder()
@@ -59,9 +68,14 @@ public class JWPlayerViewExample extends AppCompatActivity
 				.description("Press play with JW Player")
 				.build();
 
-		mPlayerView.load(pi);
+		List<PlaylistItem> playlist = new ArrayList<>();
+		playlist.add(pi);
 
+		PlayerConfig playerConfig = new PlayerConfig.Builder()
+				.playlist(playlist)
+				.build();
 
+		mPlayer.setup(playerConfig);
 	}
 
 
@@ -87,40 +101,10 @@ public class JWPlayerViewExample extends AppCompatActivity
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		mPlayerView.onStart();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mPlayerView.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mPlayerView.onPause();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		mPlayerView.onStop();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		mPlayerView.onDestroy();
-	}
-
-	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		// Set fullscreen when the device is rotated to landscape
-		mPlayerView.setFullscreen(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE,
-								  true);
+		mPlayer.setFullscreen(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE,
+					true);
 		super.onConfigurationChanged(newConfig);
 	}
 
@@ -128,8 +112,8 @@ public class JWPlayerViewExample extends AppCompatActivity
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// Exit fullscreen when the user pressed the Back button
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (mPlayerView.getFullscreen()) {
-				mPlayerView.setFullscreen(false, true);
+			if (mPlayer.getFullscreen()) {
+				mPlayer.setFullscreen(false, true);
 				return false;
 			}
 		}
@@ -159,5 +143,4 @@ public class JWPlayerViewExample extends AppCompatActivity
 												R.id.media_route_menu_item);
 		return true;
 	}
-
 }

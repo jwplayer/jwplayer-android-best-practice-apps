@@ -1,6 +1,7 @@
 package com.jwplayer.demo.notificationsdemo;
 
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 
 import java.util.LinkedList;
 

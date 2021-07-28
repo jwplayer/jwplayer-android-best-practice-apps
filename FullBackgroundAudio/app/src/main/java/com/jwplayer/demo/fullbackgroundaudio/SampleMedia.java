@@ -1,6 +1,6 @@
 package com.jwplayer.demo.fullbackgroundaudio;
 
-import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 
 import java.util.LinkedList;
 
