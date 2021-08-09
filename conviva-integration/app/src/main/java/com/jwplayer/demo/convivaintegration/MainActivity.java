@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
+import com.jwplayer.demo.BuildConfig;
 import com.jwplayer.demo.R;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.JWPlayerCompat;
