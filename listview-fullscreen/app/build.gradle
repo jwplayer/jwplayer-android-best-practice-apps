@@ -9,6 +9,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
     }
     buildTypes {
         release {

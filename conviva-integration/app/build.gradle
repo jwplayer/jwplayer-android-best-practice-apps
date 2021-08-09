@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
-
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
 android {
     compileSdkVersion 30
 
@@ -12,6 +13,7 @@ android {
         versionName "1.0"
 
         applicationId "com.jwplayer.opensourcedemo"
+		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
     }
     buildTypes {
         release {
