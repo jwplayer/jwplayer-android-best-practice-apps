@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
 // Detect if build is on Jenkins
 def isJenkinsBuild = System.getenv("BUILD_NUMBER") != null
-println ' TEST '
+println ' isJenkinsBuild = ' + isJenkinsBuild
 def props = new Properties()
 
 if (isJenkinsBuild) {
