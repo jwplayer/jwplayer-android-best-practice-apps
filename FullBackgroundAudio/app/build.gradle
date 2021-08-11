@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
-
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
+// Detect if build is on Jenkins
+def isJenkinsBuild = System.getenv("BUILD_NUMBER") != null
+def props = new Properties()
+if (isJenkinsBuild) {
+    def propsFile = rootProject.file("/etc/android_sdk/keystore.properties")
+    props.load(new FileInputStream(propsFile))
+}
 android {
     compileSdkVersion 30
     defaultConfig {
@@ -8,16 +16,31 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
+    }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+    signingConfigs {
+        release {
+            // Only attempt to read keystore.properties for Jenkins builds
+            if (isJenkinsBuild) {
+                storeFile = file(props['storeFile'])
+                storePassword = props['storePassword']
+                keyAlias = props['keyAlias']
+                keyPassword = props['keyPassword']
+            }
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (isJenkinsBuild) {
+                signingConfig signingConfigs.release
+            }
         }
-    }
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
     }
 }
 

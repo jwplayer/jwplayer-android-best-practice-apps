@@ -49,7 +49,10 @@ public class JWPlayerViewExample extends AppCompatActivity
 			mCastContext = CastContext.getSharedInstance(getApplicationContext());
 		}
 
-		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
+		// [OR] change in app-level build.gradle
+		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
+		LicenseUtil.setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
 		mPlayerView = findViewById(R.id.jwplayer);
 

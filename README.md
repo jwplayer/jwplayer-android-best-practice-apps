@@ -26,7 +26,10 @@ In general the following usage instructions apply to most sample projects:
 - Start up Android Studio choose **Open an Existing Android Studio Project**
 - Navigate to the location of the repository and select the root directory of the app you want to load.
 - Click **OK**
-- Open the application's activity and replace YOUR_LICENSE_KEY with your license key
+- Update application to use your license key (use 1 option below).
+  - set JWPLAYER_LICENSE_KEY as environment variable  
+  - overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license in the application's main acitivity
+  - change in app-level build.gradle
 - Click **Run**
 
 For more information about the JW Player SDK for Android, and how to use it, head over to our [Developer Portal](https://developer.jwplayer.com/jwplayer/docs/android-getting-started)
