@@ -15,7 +15,11 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.longtailvideo.jwplayer.JWPlayerView;
 import com.longtailvideo.jwplayer.events.FullscreenEvent;
 import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
+import com.longtailvideo.jwplayer.media.captions.Caption;
 import com.longtailvideo.jwplayer.media.playlists.PlaylistItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,8 +59,28 @@ public class JWPlayerViewExample extends AppCompatActivity
 				.image("https://content.jwplatform.com/thumbs/1sc0kL2N.jpg")
 				.description("Press play with JW Player")
 				.build();
+// Load a media source
+		List<Caption> captionTracks = new ArrayList<>();
 
-		mPlayerView.load(pi);
+		Caption captionEn = new Caption.Builder()
+				.file("https://assets-jpcust.jwpsrv.com/tracks/qb8d155c.vtt")
+				.label("English")
+				.isdefault(true)
+				.build();
+
+		captionTracks.add(captionEn);
+
+		PlaylistItem playlistItem = new PlaylistItem.Builder()
+				.file("https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8")
+				.title("BBBunny")
+				.description("Some really great content")
+				.tracks(captionTracks)
+				.build();
+
+		List<PlaylistItem> playlist = new ArrayList<>();
+		playlist.add(playlistItem);
+
+		mPlayerView.load(playlist);
 
 
 	}
