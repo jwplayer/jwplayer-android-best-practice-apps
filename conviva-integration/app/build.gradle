@@ -62,7 +62,7 @@ dependencies {
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
-    implementation 'com.conviva.sdk:conviva-core-sdk:2.145.1'
+    implementation 'com.conviva.sdk:conviva-core-sdk:4.145.3'
 
     testImplementation 'junit:junit:4.13.2'
 }
