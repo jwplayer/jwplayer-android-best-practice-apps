@@ -37,34 +37,22 @@ public class MainActivity extends AppCompatActivity implements
 		ArrayList<ItemBase> items = new ArrayList<>();
 		items.add(new TextItem("Hi,\nIn this demo we showcase how you can place a JWPlayerView into a RecyclerView and how to implement mutually exclusive playback, so when you press play on one video the other video pauses.\nScroll around and test it out!"));
 		items.add(new VideoItem(new PlaylistItem.Builder()
-										.file("https://content.jwplatform.com/manifests/3BSFM9FJ.m3u8")
-										.image("https://content.jwplatform.com/thumbs/3BSFM9FJ-720.jpg")
-										.title("Tears of steel")
-										.mediaId("3BSFM9FJ")
+										.file("INSERT_CONTENT_URL")
+										.title("INSERT_TITLE")
 										.build()));
 		items.add(new VideoItem(new PlaylistItem.Builder()
-										.file("https://content.jwplatform.com/manifests/30eyfBgl.m3u8")
-										.image("https://content.jwplatform.com/thumbs/30eyfBgl-720.jpg")
-										.title("JW Player Promo")
-										.mediaId("30eyfBgl")
+										.file("INSERT_CONTENT_URL")
+										.title("INSERT_TITLE")
+										.mediaDrmCallback(new VUDRMCallback("INSERT_TOKEN"))
 										.build()));
 		items.add(new VideoItem(new PlaylistItem.Builder()
-										.file("https://content.jwplatform.com/manifests/tx2vPRG5.m3u8")
-										.image("https://content.jwplatform.com/thumbs/tx2vPRG5-720.jpg")
-										.mediaId("tx2vPRG5")
-										.title("Big buck bunny")
+										.file("INSERT_CONTENT_URL")
+										.title("INSERT_TITLE")
 										.build()));
 		items.add(new VideoItem(new PlaylistItem.Builder()
-										.file("https://content.jwplatform.com/manifests/1sc0kL2N.m3u8")
-										.image("https://content.jwplatform.com/thumbs/1sc0kL2N-720.jpg")
-										.mediaId("1sc0kL2N")
-										.title("Press Play")
-										.build()));
-		items.add(new VideoItem(new PlaylistItem.Builder()
-										.file("https://content.jwplatform.com/manifests/mFq72HEY.m3u8")
-										.image("https://content.jwplatform.com/thumbs/mFq72HEY-720.jpg")
-										.mediaId("mFq72HEY")
-										.title("Jellyfish")
+										.file("INSERT_CONTENT_URL")
+										.title("INSERT_TITLE")
+										.mediaDrmCallback(new VUDRMCallback("INSERT_TOKEN"))
 										.build()));
 
 		RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(items);
