@@ -1,0 +1,60 @@
+plugins {
+	id 'com.android.application'
+	id 'kotlin-android'
+}
+
+android {
+	compileSdk 31
+
+	defaultConfig {
+		applicationId "com.jwplayer.drmdemo"
+		minSdk 21
+		targetSdk 31
+		versionCode 1
+		versionName "1.0"
+		multiDexEnabled true
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+	}
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+}
+
+dependencies {
+
+	def jwPlayerVersion = '4.2.0'
+	def exoplayerVersion = '2.14.2'
+	// JWPlayer SDK
+	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
+	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
+
+	// ExoPlayer dependencies
+	implementation "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
+	implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion"
+	implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayerVersion"
+	implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayerVersion"
+	implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
+
+	// JW Player Native UI dependencies
+	implementation 'com.squareup.picasso:picasso:2.71828'
+	implementation 'androidx.viewpager2:viewpager2:1.0.0'
+	implementation 'com.android.volley:volley:1.2.1'
+	implementation 'androidx.recyclerview:recyclerview:1.2.1'
+	implementation 'com.google.android.material:material:1.4.0'
+
+	implementation 'androidx.appcompat:appcompat:1.4.0'
+	implementation 'com.google.android.material:material:1.4.0'
+	implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+
+	implementation("androidx.multidex:multidex:2.0.1")
+
+	// QR Reader
+	implementation 'me.dm7.barcodescanner:zxing:1.9'
+}
