@@ -7,10 +7,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.configuration.UiConfig;
 import com.jwplayer.pub.api.events.EventType;
 import com.jwplayer.pub.api.events.ReadyEvent;
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
@@ -21,21 +20,22 @@ import com.jwplayer.pub.view.JWPlayerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener,
-        VideoPlayerEvents.OnReadyListener,
-        JWPlayerNativeControls.OnControlsInteraction {
+                   VideoPlayerEvents.OnReadyListener,
+                   JWPlayerNativeControls.OnControlsInteraction {
+
+    final Handler mHideControlsHandler = new Handler();
+    final long mDelayBeforeControlsAreHidden = 3000;
+    final String videoFileName = "https://content.jwplatform.com/manifests/1sc0kL2N.m3u8";
+    final String streamFileName = "https://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8";
+    final String scrubbaleStreamFileName = "https://playertest.longtailvideo.com/hls/hockey/new_master.m3u8";
     JWPlayerView mPlayerView;
     JWPlayer mPlayer;
     JWPlayerNativeControls mNativePlayerControls;
     RelativeLayout mTouchInterceptorView;
-
-    final Handler mHideControlsHandler = new Handler();
-    final long mDelayBeforeControlsAreHidden = 3000;
-    final String videoFileName = "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest(format=m3u8-aapl-v3)";
-    final String streamFileName = "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8";
-    final String scrubbaleStreamFileName = "http://playertest.longtailvideo.com/hls/hockey/new_master.m3u8";
-
     //The runnable that will be responsible for hiding mNativePlayerControls
     //This will trigger if the video is playing and the user doesn't interact with the screen
     Runnable mHideControlsRunnable = new Runnable() {
@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
-		// [OR] change in app-level build.gradle
-		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
-		LicenseUtil.setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
+        // [OR] change in app-level build.gradle
+        // [OR] set JWPLAYER_LICENSE_KEY as environment variable
+        LicenseUtil.setLicenseKey(this,BuildConfig.JWPLAYER_LICENSE_KEY );
 
         mPlayerView = findViewById(R.id.jwplayer);
         mPlayer = mPlayerView.getPlayer();
@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity
         mNativePlayerControls.addControlsInteractionListener(this);
 
 
-
         //You can demo stream functionality by using the other file url
         String chosenFile = videoFileName;
 
@@ -84,7 +83,13 @@ public class MainActivity extends AppCompatActivity
                 .build();
         List<PlaylistItem> playlist = new ArrayList<>();
         playlist.add(playlistItem);
-        PlayerConfig config = new PlayerConfig.Builder().playlist(playlist).build();
+        PlayerConfig config = new PlayerConfig.Builder()
+                .uiConfig(new UiConfig.Builder()
+                                  .hideAllControls()
+                                  .build())
+                .playlist(playlist)
+                .build();
+
         mPlayer.setup(config);
 
         //Disable the player's controls so we don't have conflict with our native ones
