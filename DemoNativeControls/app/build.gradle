@@ -10,15 +10,16 @@ if (isJenkinsBuild) {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.jwplayer.demo.nativecontrols"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
+        multiDexEnabled true
     }
 
     compileOptions {
@@ -48,18 +49,23 @@ android {
 }
 
 dependencies {
+    def lifecycle_version = "2.4.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation'com.google.android.material:material:1.0.0'
-    implementation 'com.android.support:recyclerview-v7:+'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
 
-    def sdkVersion = '4.0.0'
+    def sdkVersion = '4.2.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
     testImplementation 'junit:junit:4.13.2'
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
