@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity
         List<PlaylistItem> playlist = new ArrayList<>();
         //videoId: Identifier of the DAI video to be displayed, used for video on demand
         //cmsId: Content management system ID of the video, used for video on demand
-        String videoId = "bbb-clear";
-        String cmsId = "2474148";
+        String videoId = "tears-of-steel";
+        String cmsId = "2528370";
         //streamType: Defines the type of stream to use
-        ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.DASH;
+        ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.HLS;
         ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, streamType, null);
         //fallbackUrl: Contain URL in case ads stream fails. This url will be use automatically
         //in case the DAI stream encounters an error
