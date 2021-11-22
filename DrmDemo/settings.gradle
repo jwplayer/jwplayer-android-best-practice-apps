@@ -1,0 +1,5 @@
+dependencyResolutionManagement {
+	repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+}
+rootProject.name = "DrmDemo"
+include ':app'
