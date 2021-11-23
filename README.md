@@ -17,6 +17,7 @@ Refer to the README in each subdirectory for specific usage instructions.
 - **conviva-integration** - An application with convivial analytics
 - **notifications-demo** - An example of how you can setup a native Android `Notification` to control background audio playback
 - **FullscreenWithoutRotationDemo** - An example of how you can setup `JWPlayerView` within a `FullscreenHandler` to control screen behavior avoiding the rotation
+- **VUDRMWidevineDemo** - An example of how you can setup VUDRM Widevine to enable online playback of DRM protected content.
 
 ## Usage instructions
 
