@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">RecyclerView Demo</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">VUDRM Widevine Demo</string>
+    <string name="view_example">JWPlayerView Example</string>
 </resources>

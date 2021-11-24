@@ -1,4 +1,4 @@
-package com.jwplayer.demo.recyclerview;
+package com.jwplayer.vudrmwidevine;
 
 import java.io.IOException;
 import java.io.InputStream;

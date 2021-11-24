@@ -1,4 +1,4 @@
-package com.jwplayer.demo.recyclerview;
+package com.jwplayer.vudrmwidevine;
 
 import android.annotation.TargetApi;
 import android.net.Uri;
