@@ -35,7 +35,11 @@ dependencies {
 
     implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '18.1.0'
 
-    def sdkVersion = '4.0.0'
+    def sdkVersion = '4.3.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+
+    def lifecycle_version = "2.4.0"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
 }
