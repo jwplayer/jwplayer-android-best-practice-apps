@@ -37,9 +37,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    def sdkVersion = '4.0.0'
+    def sdkVersion = '4.3.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-ima:${sdkVersion}"
+
+    def lifecycle_version = "2.4.0"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
 
 }
