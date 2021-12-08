@@ -8,6 +8,7 @@ package com.jwplayer.demo.fullbackgroundaudio;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.longtailvideo.jwplayer.JWPlayerView;
+import com.longtailvideo.jwplayer.events.listeners.VideoPlayerEvents;
 
 /**
  * A simple activity that holds a JWPlayer view. This activity connects to the background
@@ -71,5 +73,8 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 }
