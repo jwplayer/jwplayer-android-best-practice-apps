@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

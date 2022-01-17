@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		// Get a reference to the CoordinatorLayout
 		RelativeLayout mRelativeLayout = findViewById(R.id.relative_layout);

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
         mPlayerView = findViewById(R.id.jwplayer);
         mPlayer = mPlayerView.getPlayer();

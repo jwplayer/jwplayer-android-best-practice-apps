@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mContainer = findViewById(R.id.container);
 
-        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
         bindService(new Intent(this, BackgroundAudioService.class), mConnection, BIND_AUTO_CREATE);
     }
