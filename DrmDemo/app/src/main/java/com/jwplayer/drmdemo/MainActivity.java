@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         qrCodeController = new QrCodeController(this, streamURL, authURL, root);
 
-        LicenseUtil.setLicenseKey(this, "YOUR_LICENSE_KEY");
+        new LicenseUtil().setLicenseKey(this, "YOUR_LICENSE_KEY");
 
         playerView.getPlayerAsync(this, this, jwPlayer -> player = jwPlayer);
 
