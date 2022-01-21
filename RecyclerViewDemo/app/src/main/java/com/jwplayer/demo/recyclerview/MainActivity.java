@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
 		// [OR] change in app-level build.gradle
 		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
-		new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
+		LicenseUtil.setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
 		mKeepScreenOnHandler = new KeepScreenOnHandler(getWindow());
 
