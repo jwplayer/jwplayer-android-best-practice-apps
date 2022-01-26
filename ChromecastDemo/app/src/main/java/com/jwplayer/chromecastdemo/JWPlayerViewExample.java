@@ -5,9 +5,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
 
-import com.google.android.gms.cast.framework.CastButtonFactory;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.common.ConnectionResult;
@@ -21,12 +19,11 @@ import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 import com.jwplayer.pub.view.JWPlayerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.List;
 
 
 public class JWPlayerViewExample extends AppCompatActivity
@@ -137,13 +134,4 @@ public class JWPlayerViewExample extends AppCompatActivity
 		}
 	}
 
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_jwplayerview, menu);
-		// Register the MediaRouterButton
-		CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu,
-												R.id.media_route_menu_item);
-		return true;
-	}
 }
