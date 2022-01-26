@@ -98,7 +98,7 @@ public class NotificationWrapper {
 		// We want to resume the existing VideoActivity, over creating a new one.
 		Intent intent = new Intent(context, context.getClass());
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 		builder.setContentIntent(pendingIntent);
 
 		Notification notification = builder.build();
@@ -112,7 +112,7 @@ public class NotificationWrapper {
 		Intent intent = new Intent(Intent.ACTION_MEDIA_BUTTON);
 		intent.setPackage(context.getPackageName());
 		intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, mediaKeyEvent));
-		return PendingIntent.getBroadcast(context, mediaKeyEvent, intent, 0);
+		return PendingIntent.getBroadcast(context, mediaKeyEvent, intent, PendingIntent.FLAG_IMMUTABLE);
 	}
 
 	void cancelNotification() {

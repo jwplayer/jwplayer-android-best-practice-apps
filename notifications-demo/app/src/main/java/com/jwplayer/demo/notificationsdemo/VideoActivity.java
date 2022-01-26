@@ -11,8 +11,6 @@ import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;
@@ -21,6 +19,8 @@ import com.jwplayer.pub.api.events.FullscreenEvent;
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.view.JWPlayerView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class VideoActivity extends AppCompatActivity implements
 													 VideoPlayerEvents.OnFullscreenListener,
@@ -120,6 +120,7 @@ public class VideoActivity extends AppCompatActivity implements
 		// class name because we want a specific service implementation that
 		// we know will be running in our own process (and thus won't be
 		// supporting component replacement by other applications).
+		mPlayer.allowBackgroundAudio(true);
 		bindService(new Intent(VideoActivity.this,
 							   MediaPlaybackService.class),
 					mServiceConnection,
@@ -129,6 +130,7 @@ public class VideoActivity extends AppCompatActivity implements
 
 	private void doUnbindService() {
 		if (mIsBound) {
+			mPlayer.allowBackgroundAudio(false);
 			// Detach our existing connection.
 			unbindService(mServiceConnection);
 			mIsBound = false;
