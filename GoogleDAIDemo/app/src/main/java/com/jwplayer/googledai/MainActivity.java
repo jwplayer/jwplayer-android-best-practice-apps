@@ -3,8 +3,6 @@ package com.jwplayer.googledai;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.AdErrorEvent;
@@ -16,6 +14,8 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity
         implements AdvertisingEvents.OnAdErrorListener{
@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity
         List<PlaylistItem> playlist = new ArrayList<>();
         //videoId: Identifier of the DAI video to be displayed, used for video on demand
         //cmsId: Content management system ID of the video, used for video on demand
-        String videoId = "bbb-clear";
-        String cmsId = "2474148";
+        String videoId = "tears-of-steel";
+        String cmsId = "2528370";
         //streamType: Defines the type of stream to use
-        ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.DASH;
+        ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.HLS;
         ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, streamType, null);
         //fallbackUrl: Contain URL in case ads stream fails. This url will be use automatically
         //in case the DAI stream encounters an error
