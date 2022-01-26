@@ -6,11 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.PlayerState;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
@@ -23,6 +18,11 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class MainActivity extends AppCompatActivity implements

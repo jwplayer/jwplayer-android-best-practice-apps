@@ -4,9 +4,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;
@@ -20,6 +17,9 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 public class JWPlayerViewExample extends AppCompatActivity

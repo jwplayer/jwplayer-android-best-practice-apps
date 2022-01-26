@@ -7,10 +7,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.TextView;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-
 import com.jwplayer.demo.BuildConfig;
 import com.jwplayer.demo.R;
 import com.jwplayer.pub.api.JWPlayer;
@@ -18,7 +14,6 @@ import com.jwplayer.pub.api.JWPlayerCompat;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;
 import com.jwplayer.pub.api.events.FullscreenEvent;
-import com.jwplayer.pub.api.events.PlaylistItemEvent;
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
@@ -26,6 +21,10 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 public class MainActivity extends AppCompatActivity implements VideoPlayerEvents.OnFullscreenListener {
 

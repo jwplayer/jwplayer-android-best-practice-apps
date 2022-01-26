@@ -7,16 +7,16 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;
 import com.jwplayer.pub.api.events.FullscreenEvent;
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements
 													VideoPlayerEvents.OnFullscreenListener {

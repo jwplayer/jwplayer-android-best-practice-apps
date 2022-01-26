@@ -1,6 +1,5 @@
 plugins {
 	id 'com.android.application'
-	id 'kotlin-android'
 }
 
 android {
@@ -29,7 +28,7 @@ android {
 
 dependencies {
 
-	def jwPlayerVersion = '4.2.0'
+	def jwPlayerVersion = '4.3.0'
 	def exoplayerVersion = '2.14.2'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"

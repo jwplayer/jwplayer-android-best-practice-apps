@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:exported="true"
             android:name=".VideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
@@ -21,7 +22,8 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+        <receiver android:name="androidx.media.session.MediaButtonReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
