@@ -8,12 +8,12 @@ public class Samples {
             new PlaylistItem.Builder()
                     .title("VP9 DASH")
                     .description("WebM with VP9 video and Opus audio playing in adaptive DASH.")
-                    .file("http://demo.jwplayer.com/vp9-dash/jwpmobile-vp9/jwmobile-vp9.mpd")
+                    .file("https://demo.jwplayer.com/vp9-dash/jwpmobile-vp9/jwmobile-vp9.mpd")
                     .build(),
             new PlaylistItem.Builder()
                     .title("Sintel")
                     .description("DASH")
-                    .file("http://playertest.longtailvideo.com/android/dash/sintel/sintel.mpd")
+                    .file("https://playertest.longtailvideo.com/android/dash/sintel/sintel.mpd")
                     .build(),
             new PlaylistItem.Builder()
                     .title("BipBop")
@@ -30,17 +30,17 @@ public class Samples {
             new PlaylistItem.Builder()
                     .title("BipBop")
                     .description("Adaptive HLS stream")
-                    .file("http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8")
+                    .file("https://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8")
                     .build(),
             new PlaylistItem.Builder()
                     .title("VP9 DASH")
                     .description("WebM with VP9 video and Opus audio playing in adaptive DASH.")
-                    .file("http://demo.jwplayer.com/vp9-dash/jwpmobile-vp9/jwmobile-vp9.mpd")
+                    .file("https://demo.jwplayer.com/vp9-dash/jwpmobile-vp9/jwmobile-vp9.mpd")
                     .build(),
             new PlaylistItem.Builder()
                     .title("Sintel")
                     .description("DASH")
-                    .file("http://playertest.longtailvideo.com/android/dash/sintel/sintel.mpd")
+                    .file("https://playertest.longtailvideo.com/android/dash/sintel/sintel.mpd")
                     .build(),
             new PlaylistItem.Builder()
                     .title("BipBop")
@@ -57,7 +57,7 @@ public class Samples {
             new PlaylistItem.Builder()
                     .title("BipBop")
                     .description("Adaptive HLS stream")
-                    .file("http://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8")
+                    .file("https://playertest.longtailvideo.com/adaptive/bipbop/bipbopall.m3u8")
                     .build()
     };
 
