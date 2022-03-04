@@ -1,0 +1,64 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"></style>
+
+    <style name="JWIcon">
+        <item name="android:layout_width">@dimen/jw_icon</item>
+        <item name="android:layout_height">@dimen/jw_icon</item>
+        <item name="android:scaleType">fitXY</item>
+        <item name="android:tint">@color/jw_transparent</item>
+        <item name="android:tintMode">add</item>
+    </style>
+    <style name="JWIcon.MenuOption">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:tint">@color/jw_labels_primary</item>
+        <item name="android:tintMode">multiply</item>
+    </style>
+    <style name="JWIcon.MenuBack">
+        <item name="android:tint">@color/jw_labels_primary</item>
+        <item name="android:tintMode">multiply</item>
+    </style>
+    <style name="JWImage.PlaylistItemPoster">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/jw_fill_primary</item>
+        <item name="android:tint">@color/jw_controls_overlay</item>
+        <item name="android:tintMode">src_atop</item>
+    </style>
+    <style name="JWText.OverlayTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/jw_text_xxlarge</item>
+        <item name="android:textColor">@color/darkest_green</item>
+    </style>
+    <style name="JWText.OverlayDescription">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/jw_text_large</item>
+        <item name="android:textColor">@color/darkest_green</item>
+    </style>
+    <style name="JWText">
+        <item name="android:textColor">@color/jw_labels_primary</item> <!-- All text is jw_labels_primary unless specified otherwise -->
+        <item name="android:fontFamily">@font/console</item> <!-- All text is roboto unless specified otherwise -->
+        <item name="android:lines">1</item> <!-- All text is single line unless specified otherwise -->
+        <item name="android:ellipsize">end</item> <!-- All text is ellipsized unless specified otherwise -->
+        <item name="android:textSize">@dimen/jw_text_medium</item>
+        <item name="android:textStyle">normal</item> <!-- All text is normal unless specified otherwise -->
+    </style>
+    <style name="JWRadio" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textColor">@color/jw_labels_primary</item>
+        <item name="android:fontFamily">@font/console</item>
+    </style>
+    <style name="JWText.PlaylistItemDuration">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/jw_text_xsmall</item>
+        <item name="android:fontFamily">@font/console</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/bg_jw_playlist_item_duration</item>
+    </style>
+</resources>
