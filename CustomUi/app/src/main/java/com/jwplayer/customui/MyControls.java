@@ -33,7 +33,7 @@ public class MyControls extends ConstraintLayout {
     }
 
     private void initView(Context context) {
-        inflate(context, R.layout.controls, this);
+        inflate(context, R.layout.view_my_controls, this);
         nextUpView = findViewById(R.id.my_next_up);
     }
 

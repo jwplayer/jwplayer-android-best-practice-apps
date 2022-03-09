@@ -1,7 +1,6 @@
 <resources>
 
     <!-- Base application theme. -->
-<!--    <style name="AppTheme" parent="Theme.Material3.Light"></style>-->
     <style name="AppTheme" parent="Theme.AppCompat.Light"></style>
     <style name="CircularImage" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerFamily">rounded</item>
@@ -11,9 +10,4 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10dp</item>
     </style>
-    <style name="JWView.NextUp">
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_width">0dp</item>
-    </style>
-
 </resources>

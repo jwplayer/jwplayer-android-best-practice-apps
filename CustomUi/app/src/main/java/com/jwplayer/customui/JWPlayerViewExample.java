@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 
 import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.UiGroup;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.configuration.UiConfig;
 import com.jwplayer.pub.api.events.EventType;
 import com.jwplayer.pub.api.events.FullscreenEvent;
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
@@ -52,8 +54,13 @@ public class JWPlayerViewExample extends AppCompatActivity
         // Load a media source
         PlayerConfig config = new PlayerConfig.Builder()
                 .playlistUrl("https://cdn.jwplayer.com/v2/playlists/3jBCQ2MI?format=json")
+                .uiConfig(new UiConfig.Builder()
+                        .displayAllControls()
+                        .hide(UiGroup.NEXT_UP)
+                        .build()
+                )
                 .build();
-        // You want to call setup before you bind the ViewModels because setup creates the ViewModels
+        // Call setup before binding the ViewModels because setup updates the ViewModels
         mPlayer.setup(config);
 
         // We create a MyControls ViewGroup in which we can control the positioning of the Views
