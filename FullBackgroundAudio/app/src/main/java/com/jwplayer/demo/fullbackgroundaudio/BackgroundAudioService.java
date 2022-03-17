@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -166,7 +167,7 @@ public class BackgroundAudioService extends Service {
      * Updates the current payback state
      */
     private void setPlaybackState(int state) {
-        mPlaybackStateBuilder.setState(state, (long) mPlayer.getPosition(), PLAYBACK_SPEED);
+        mPlaybackStateBuilder.setState(state, (long) mPlayer.getPosition() * 1000, PLAYBACK_SPEED);
         setActions(state);
         mMediaSessionCompat.setPlaybackState(mPlaybackStateBuilder.build());
     }
@@ -197,9 +198,10 @@ public class BackgroundAudioService extends Service {
         //Sets the common parameters for all notifications
         NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this, App.CHANNEL_ID);
         MediaStyleHelper.prepareNotification(mNotificationBuilder, mPlayerView.getContext(), mPlayer.getPlaylistItem());
-
-        mNotificationBuilder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                .setMediaSession(mMediaSessionCompat.getSessionToken()));
+        MediaMetadataCompat.Builder metaDataBuilder = new MediaMetadataCompat.Builder();
+        metaDataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, (long) Math.round(mPlayer.getDuration()) * 1000);
+        mMediaSessionCompat.setMetadata(metaDataBuilder.build());
+        mNotificationBuilder.setStyle(new androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mMediaSessionCompat.getSessionToken()));
         //Add Actions to the notification
         if(mMediaSessionCompat.getController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PLAYING) {
             Intent pauseIntent = new Intent(this, BackgroundAudioService.class);
