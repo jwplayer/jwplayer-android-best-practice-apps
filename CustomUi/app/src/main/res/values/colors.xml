@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gray">#606060</color>
+    <color name="white">#ffffff</color>
+    <color name="tint">#80191919</color>
+    <color name="stroke">#66FFD983</color>
+</resources>
