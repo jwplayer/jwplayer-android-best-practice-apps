@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="jw_large_icon">65dp</dimen>
+    <dimen name="jw_text_xxsmall">12sp</dimen>
+    <dimen name="jw_text_xsmall">14sp</dimen>
+    <dimen name="jw_text_small">15sp</dimen>
+    <dimen name="jw_text_medium">16sp</dimen>
+    <dimen name="jw_text_large">17sp</dimen>
+    <dimen name="jw_text_xlarge">18sp</dimen>
+    <dimen name="jw_text_xxlarge">19sp</dimen>
+</resources>
