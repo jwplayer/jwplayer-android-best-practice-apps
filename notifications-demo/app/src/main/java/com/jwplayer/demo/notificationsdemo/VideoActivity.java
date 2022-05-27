@@ -84,7 +84,7 @@ public class VideoActivity extends AppCompatActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video);
 
-		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		// Create a JWPlayerConfig
 		PlayerConfig playerConfig = new PlayerConfig.Builder()

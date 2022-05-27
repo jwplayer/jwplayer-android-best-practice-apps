@@ -35,7 +35,7 @@ dependencies {
         force = true
     }
 
-    def sdkVersion = '4.3.0'
+    def sdkVersion = '4.4.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 

@@ -49,7 +49,7 @@ public class JWPlayerViewExample extends AppCompatActivity
 			mCastContext = CastContext.getSharedInstance(getApplicationContext());
 		}
 
-		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		mPlayerView = findViewById(R.id.jwplayer);
 

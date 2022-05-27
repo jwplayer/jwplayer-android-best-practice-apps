@@ -38,7 +38,7 @@ public class JWPlayerFragmentExample extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jwplayerfragment);
 
-        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
         List<PlaylistItem> playlist = new ArrayList<>();
         playlist.add(new PlaylistItem.Builder()

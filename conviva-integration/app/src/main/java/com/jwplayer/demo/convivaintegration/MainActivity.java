@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jwplayerview);
 
-        LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
         mPlayerView = findViewById(R.id.jwplayer);
         TextView outputTextView = findViewById(R.id.output);

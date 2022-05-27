@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_layout);
 
-		LicenseUtil.setLicenseKey(this, YOUR_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
 
 		mKeepScreenOnHandler = new KeepScreenOnHandler(getWindow());
 
