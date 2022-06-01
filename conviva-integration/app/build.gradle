@@ -47,3 +47,10 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
 }
+
+// INFO: https://issuetracker.google.com/issues/199180389?pli=1
+configurations.all {
+  resolutionStrategy {
+    force 'androidx.core:core:1.6.0'
+    force 'androidx.core:core-ktx:1.6.0'
+  }
