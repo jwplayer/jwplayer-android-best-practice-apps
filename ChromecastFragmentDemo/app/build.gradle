@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
 
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 32
 
         versionCode 1
         versionName "1.0"
@@ -39,9 +39,9 @@ android {
 }
 
 dependencies {
-    implementation'androidx.appcompat:appcompat:1.4.0'
-    implementation'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation'androidx.appcompat:appcompat:1.4.2'
+    implementation'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     def sdkVersion = '4.4.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
@@ -52,12 +52,3 @@ dependencies {
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
 }
-
-// INFO: https://issuetracker.google.com/issues/199180389?pli=1
-configurations.all {
-  resolutionStrategy {
-    force 'androidx.core:core:1.6.0'
-    force 'androidx.core:core-ktx:1.6.0'
-  }
-}
-
