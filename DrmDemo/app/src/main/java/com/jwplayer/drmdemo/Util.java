@@ -25,7 +25,7 @@ public class Util {
             if (requestProperties != null) {
                 for (Map.Entry<String, String> requestProperty : requestProperties.entrySet()) {
                     urlConnection.setRequestProperty(requestProperty.getKey(),
-                                                     requestProperty.getValue());
+                            requestProperty.getValue());
                 }
             }
             // Write the request body, if there is one.
@@ -51,7 +51,7 @@ public class Util {
         }
     }
 
-    public static boolean isValidURL(String url){
+    public static boolean isValidURL(String url) {
         return URLUtil.isValidUrl(url) && Patterns.WEB_URL.matcher(url).matches();
     }
 }
