@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-	compileSdk 31
+	compileSdk 33
 
 	defaultConfig {
 		applicationId "com.jwplayer.drmdemo"
 		minSdk 21
-		targetSdk 31
+		targetSdk 33
 		versionCode 1
 		versionName "1.0"
 		multiDexEnabled true
@@ -24,12 +24,13 @@ android {
 		sourceCompatibility JavaVersion.VERSION_1_8
 		targetCompatibility JavaVersion.VERSION_1_8
 	}
+	namespace 'com.jwplayer.drmdemo'
 }
 
 dependencies {
 
-	def jwPlayerVersion = '4.3.0'
-	def exoplayerVersion = '2.14.2'
+	def jwPlayerVersion = '4.7.0'
+	def exoplayerVersion = '2.16.1'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
@@ -46,14 +47,12 @@ dependencies {
 	implementation 'androidx.viewpager2:viewpager2:1.0.0'
 	implementation 'com.android.volley:volley:1.2.1'
 	implementation 'androidx.recyclerview:recyclerview:1.2.1'
-	implementation 'com.google.android.material:material:1.4.0'
+	implementation 'com.google.android.material:material:1.6.1'
 
-	implementation 'androidx.appcompat:appcompat:1.4.0'
-	implementation 'com.google.android.material:material:1.4.0'
-	implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+	implementation 'androidx.appcompat:appcompat:1.5.1'
+	implementation 'com.google.android.material:material:1.6.1'
+	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
 	implementation("androidx.multidex:multidex:2.0.1")
 
-	// QR Reader
-	implementation 'me.dm7.barcodescanner:zxing:1.9'
 }
