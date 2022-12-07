@@ -29,18 +29,10 @@ android {
 
 dependencies {
 
-	def jwPlayerVersion = '4.7.0'
-	def exoplayerVersion = '2.16.1'
+	def jwPlayerVersion = '4.8.0'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
-
-	// ExoPlayer dependencies
-	implementation "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
-	implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion"
-	implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayerVersion"
-	implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayerVersion"
-	implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
 
 	// JW Player Native UI dependencies
 	implementation 'com.squareup.picasso:picasso:2.71828'
