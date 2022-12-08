@@ -8,15 +8,17 @@ import com.google.android.exoplayer2.drm.ExoMediaDrm;
 import com.jwplayer.pub.api.media.drm.MediaDrmCallback;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
-@TargetApi(18)
 public class WidevineCallback implements MediaDrmCallback {
 
     private final String defaultUri;
+    private Map<String, String> requestProperties = null;
 
-    public WidevineCallback(String drmAuthUrl) {
+    public WidevineCallback(String drmAuthUrl, Map<String, String> properties) {
         defaultUri = drmAuthUrl;
+        requestProperties = properties;
     }
 
     protected WidevineCallback(Parcel in) {
@@ -38,7 +40,7 @@ public class WidevineCallback implements MediaDrmCallback {
     @Override
     public byte[] executeProvisionRequest(UUID uuid, ExoMediaDrm.ProvisionRequest request) throws IOException {
         String url = request.getDefaultUrl() + "&signedRequest=" + new String(request.getData());
-        return Util.executePost(url, null, null);
+        return Util.executePost(url, null, requestProperties);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class WidevineCallback implements MediaDrmCallback {
         if (TextUtils.isEmpty(url)) {
             url = defaultUri;
         }
-        return Util.executePost(url, request.getData(), null);
+        return Util.executePost(url, request.getData(), requestProperties);
     }
 
     @Override
