@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">OfflineDrmDemo</string>
+
+    <string name="not_downloaded">Content Not Downloaded</string>
+    <string name="downloaded">Content Downloaded</string>
+
+    <string name="preparing_download">Preparing download</string>
+    <string name="download_failed">Download Failed</string>
+
+    <string name="offline">Offline</string>
+    <string name="downloading">Content Downloading</string>
+    <string name="online">Online</string>
+    <string name="already_downloaded">Already downloaded</string>
+    <string name="using_delivery_api">Online, using DAPI URL</string>
+    <string name="using_offline_drm">Offline, using downloaded content</string>
+    <string name="no_offline_content">Offline, no downloaded content</string>
+    <string name="must_select_media">You must select one video and one audio option</string>
+</resources>
