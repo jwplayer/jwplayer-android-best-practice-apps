@@ -10,6 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url 'https://mvn.jwplayer.com/content/repositories/releases/'
+        }
     }
 }
 rootProject.name = "OfflineDrmDemo"

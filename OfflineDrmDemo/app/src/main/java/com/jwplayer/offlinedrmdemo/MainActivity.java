@@ -15,10 +15,10 @@ import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.drm.DrmDownloadManager;
 import com.jwplayer.pub.api.drm.MediaDownloadOption;
 import com.jwplayer.pub.api.drm.MediaDownloadResultListener;
+import com.jwplayer.pub.api.drm.OfflineDrmFactory;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 import com.jwplayer.pub.view.JWPlayerView;
-import com.longtailvideo.jwplayer.drm.OfflineDrmFactory;
 
 import java.util.ArrayList;
 import java.util.List;
