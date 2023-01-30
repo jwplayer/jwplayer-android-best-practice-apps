@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.jwplayer.pub.view.JWPlayerView
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="h,16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:background="#aaa"
+        app:layout_constraintTop_toBottomOf="@id/player"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/companionAdSlotOne"
+        android:layout_width="300px"
+        android:layout_height="250px"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textAlignment="center" />
+    <FrameLayout
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:background="#ccc"
+        app:layout_constraintTop_toBottomOf="@id/companionAdSlotOne"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/companionAdSlotTwo"
+        android:layout_width="728px"
+        android:layout_height="90px"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textAlignment="center" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
