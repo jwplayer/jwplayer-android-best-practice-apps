@@ -12,12 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
-import com.jwplayer.pub.api.drm.DrmDownloadManager;
-import com.jwplayer.pub.api.drm.MediaDownloadOption;
-import com.jwplayer.pub.api.drm.MediaDownloadResultListener;
-import com.jwplayer.pub.api.drm.OfflineDrmFactory;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.api.offline.MediaDownloadOption;
+import com.jwplayer.pub.api.offline.MediaDownloadResultListener;
+import com.jwplayer.pub.api.offline.OfflineDownloadFactory;
+import com.jwplayer.pub.api.offline.OfflineDownloadManager;
 import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity
     // Player
     private JWPlayerView mPlayerView;
     private JWPlayer mPlayer;
-    private DrmDownloadManager mDrmDownloadManager;
+    private OfflineDownloadManager mOfflineDownloadManager;
 
     // Online or Offline status view
     private TextView mOnline;
@@ -68,8 +68,10 @@ public class MainActivity extends AppCompatActivity
         mVideoOptions = findViewById(R.id.video_options);
         mAudioOptions = findViewById(R.id.audio_options);
 
-        // Get the DrmDownloadManager for the media we might load
-        mDrmDownloadManager = OfflineDrmFactory.getDrmDownloadManagerFor(this, MEDIA_ID);
+        // Get the OfflineDownloadManager
+        mOfflineDownloadManager = OfflineDownloadFactory.getOfflineDownloadManager(this);
+        mOfflineDownloadManager.startService(this);
+
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
         mJsonDownloader = new JsonDownloader(this, new OkHttpClient());
 
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             // If content is already downloaded, no reason to download again
-            boolean isDownloaded = mDrmDownloadManager.isDownloaded(MEDIA_ID);
+            boolean isDownloaded = mOfflineDownloadManager.isDownloaded(MEDIA_ID);
             if (isDownloaded) {
                 Toast.makeText(this, R.string.already_downloaded, Toast.LENGTH_SHORT).show();
             } else {
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity
                 mPlayer.setup(config);
             } else {
                 // we are offline, if the content is downloaed setup with Offline DRM
-                boolean isDownloaded = mDrmDownloadManager.isDownloaded(MEDIA_ID);
+                boolean isDownloaded = mOfflineDownloadManager.isDownloaded(MEDIA_ID);
                 if (isDownloaded) {
                     Toast.makeText(this, R.string.using_offline_drm, Toast.LENGTH_SHORT)
                          .show();
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity
                     mPlayer.setup(new PlayerConfig.Builder()
                                           .playlist(new ArrayList<PlaylistItem>() {{
                                               // Use the DrmDownloadManager to get an Offline DRM PlaylistItem
-                                              add(mDrmDownloadManager.getDownloadedPlaylistItem(
+                                              add(mOfflineDownloadManager.getDownloadedPlaylistItem(
                                                       MEDIA_ID));
                                           }})
                                           .build()
@@ -143,17 +145,17 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
             // Download selected media for Offline DRM
-            mDrmDownloadManager.downloadMedia(this, video, audio);
+            mOfflineDownloadManager.downloadMedia(this, video, audio);
         });
 
         findViewById(R.id.removeDownload).setOnClickListener(v -> {
             // Removes the downloaded media from the device
-            mDrmDownloadManager.removeDownload(this, MEDIA_ID);
+            mOfflineDownloadManager.removeDownload(this, MEDIA_ID);
             mDownloaded.setText(R.string.not_downloaded);
         });
 
         // Update the downloaded status based on what the DrmDownloadManager knows
-        mDownloaded.setText(mDrmDownloadManager.isDownloaded(MEDIA_ID) ? R.string.downloaded : R.string.not_downloaded);
+        mDownloaded.setText(mOfflineDownloadManager.isDownloaded(MEDIA_ID) ? R.string.downloaded : R.string.not_downloaded);
     }
 
     @Override
@@ -166,7 +168,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDownloadOptionsAvailable(List<MediaDownloadOption> videoOptions,
-                                           List<MediaDownloadOption> audioOptions) {
+                                           List<MediaDownloadOption> audioOptions,
+                                           List<MediaDownloadOption> textOptions) {
         // Download options are available, show them to the user
         mOptionsContainer.setVisibility(View.VISIBLE);
         fillRadioGroup(videoOptions, mVideoOptions);
@@ -193,8 +196,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDownloadUpdate(float percentage) {
-        mDownloaded.setText(R.string.downloading);
+    public void onDownloadUpdate(String mediaId, float percentage) {
+        mDownloaded.setText("Content Downloading: "+percentage+"%");
     }
 
     @Override
@@ -206,7 +209,7 @@ public class MainActivity extends AppCompatActivity
     public void onJsonDownloadComplete(String playlistJson) {
         PlaylistItem item = JsonParser.parseJson(playlistJson);
         if (item != null) {
-            mDrmDownloadManager.prepareMediaDownload(this, item, this);
+            mOfflineDownloadManager.prepareMediaDownload(this, item, this);
         }
     }
 
@@ -215,6 +218,6 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         mNetworkTracker.destroy();
         // When the activity is destroyed you must release all Offline DRM resources
-        OfflineDrmFactory.destroyAll();
+        OfflineDownloadFactory.destroyAll();
     }
 }
