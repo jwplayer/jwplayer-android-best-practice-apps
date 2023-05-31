@@ -8,7 +8,6 @@
     <string name="download_failed">Download Failed</string>
 
     <string name="offline">Offline</string>
-    <string name="downloading">Content Downloading</string>
     <string name="online">Online</string>
     <string name="already_downloaded">Already downloaded</string>
     <string name="using_delivery_api">Online, using DAPI URL</string>
