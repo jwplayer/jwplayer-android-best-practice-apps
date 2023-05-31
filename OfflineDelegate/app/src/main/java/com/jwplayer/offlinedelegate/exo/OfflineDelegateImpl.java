@@ -18,12 +18,12 @@ public class OfflineDelegateImpl extends OfflineDelegate {
 
     @Override
     public DataSource.Factory getCacheDataSourceFactory(String mediaId) {
-        return DemoUtil.getDataSourceFactory(a);
+        return DemoUtil.getDataSourceFactory(mApplicationContext);
     }
 
     @Override
     public Download getDownload(String mediaId) {
-        DownloadManager manager = DemoUtil.getDownloadManager(a);
+        DownloadManager manager = DemoUtil.getDownloadManager(mApplicationContext);
         try (DownloadCursor loadedDownloads = manager.getDownloadIndex().getDownloads()) {
             while (loadedDownloads.moveToNext()) {
                 Download download = loadedDownloads.getDownload();
