@@ -29,7 +29,7 @@
         </activity>
 
         <service
-            android:name="com.jwplayer.pub.api.drm.DrmDownloadService"
+            android:name="com.jwplayer.pub.api.offline.OfflineDownloadService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.exoplayer.downloadService.action.ADD_DOWNLOAD" />

@@ -144,6 +144,10 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, R.string.must_select_media, Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (mOfflineDownloadManager.isDownloaded(MEDIA_ID)){
+                Toast.makeText(this, "Already downloaded", Toast.LENGTH_SHORT).show();
+                return;
+            }
             // Download selected media for Offline DRM
             mOfflineDownloadManager.downloadMedia(this, video, audio);
         });
