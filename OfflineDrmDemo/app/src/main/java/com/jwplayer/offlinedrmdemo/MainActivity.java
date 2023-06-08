@@ -52,9 +52,6 @@ public class MainActivity extends AppCompatActivity
     // Tracks current status of the network
     private NetworkTracker mNetworkTracker;
 
-    // Downloads JSON from the Delivery API (DAPI)
-    private JsonDownloader mJsonDownloader;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +70,6 @@ public class MainActivity extends AppCompatActivity
         mOfflineDownloadManager.startService(this);
 
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
-        mJsonDownloader = new JsonDownloader(this, new OkHttpClient());
-
 
         findViewById(R.id.prepare).setOnClickListener(v -> {
             // If we are offline, we can't prepare downloads of Offline DRM content
@@ -89,18 +84,21 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, R.string.already_downloaded, Toast.LENGTH_SHORT).show();
             } else {
                 // Content is not downloaded, request the JSON from the Delivery API
-                Toast.makeText(this, R.string.preparing_download, Toast.LENGTH_SHORT).show();
-                mJsonDownloader.execute(TokenSignedUrlGenerator.get(MEDIA_ID, POLICY_ID));
+                findViewById(R.id.prepare).setVisibility(View.GONE);
+                findViewById(R.id.progress).setVisibility(View.VISIBLE);
+                Toast.makeText(this, R.string.preparing_download, Toast.LENGTH_LONG).show();
+                new JsonDownloader(this, new OkHttpClient())
+                        .execute(TokenSignedUrlGenerator.get(MEDIA_ID, POLICY_ID));
             }
         });
 
         findViewById(R.id.setup).setOnClickListener(v -> {
+            mPlayerView.setVisibility(View.VISIBLE);
+            mPlayer = mPlayerView.getPlayer(this);
             if (mNetworkTracker.isOnline()) {
                 // we are online, setup with Online DRM using the Delivery API URL
                 Toast.makeText(this, R.string.using_delivery_api, Toast.LENGTH_SHORT)
                      .show();
-                mPlayerView.setVisibility(View.VISIBLE);
-                mPlayer = mPlayerView.getPlayer(this);
                 PlayerConfig config = new PlayerConfig.Builder()
                         .playlistUrl(TokenSignedUrlGenerator.get(MEDIA_ID, POLICY_ID))
                         .build();
@@ -111,8 +109,6 @@ public class MainActivity extends AppCompatActivity
                 if (isDownloaded) {
                     Toast.makeText(this, R.string.using_offline_drm, Toast.LENGTH_SHORT)
                          .show();
-                    mPlayerView.setVisibility(View.VISIBLE);
-                    mPlayer = mPlayerView.getPlayer(this);
                     mPlayer.setup(new PlayerConfig.Builder()
                                           .playlist(new ArrayList<PlaylistItem>() {{
                                               // Use the DrmDownloadManager to get an Offline DRM PlaylistItem
@@ -123,9 +119,9 @@ public class MainActivity extends AppCompatActivity
                     );
                 } else {
                     // We are offline and no content is available
-                    mPlayerView.setVisibility(View.GONE);
                     Toast.makeText(this, R.string.no_offline_content, Toast.LENGTH_SHORT)
                          .show();
+                    mPlayer.setup(new PlayerConfig.Builder().build());
                 }
             }
         });
@@ -136,28 +132,36 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, R.string.offline, Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            MediaDownloadOption video = (MediaDownloadOption) findViewById(mVideoOptions.getCheckedRadioButtonId()).getTag();
-            MediaDownloadOption audio = (MediaDownloadOption) findViewById(mAudioOptions.getCheckedRadioButtonId()).getTag();
-            // User must select a video and audio rendition to download
-            if (video == null || audio == null) {
-                Toast.makeText(this, R.string.must_select_media, Toast.LENGTH_SHORT).show();
-                return;
-            }
             if (mOfflineDownloadManager.isDownloaded(MEDIA_ID)){
                 Toast.makeText(this, "Already downloaded", Toast.LENGTH_SHORT).show();
                 return;
             }
+            // User must select a video and audio rendition to download
+            if (findViewById(mVideoOptions.getCheckedRadioButtonId()) == null ||
+                    findViewById(mAudioOptions.getCheckedRadioButtonId()) == null ){
+                Toast.makeText(this, R.string.must_select_media, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            MediaDownloadOption video = (MediaDownloadOption) findViewById(mVideoOptions.getCheckedRadioButtonId()).getTag();
+            MediaDownloadOption audio = (MediaDownloadOption) findViewById(mAudioOptions.getCheckedRadioButtonId()).getTag();
+
             // Download selected media for Offline DRM
             mOfflineDownloadManager.downloadMedia(this, video, audio);
+            mOptionsContainer.setVisibility(View.GONE);
+            mVideoOptions.removeAllViews();
+            mAudioOptions.removeAllViews();
         });
 
         findViewById(R.id.removeDownload).setOnClickListener(v -> {
             // Removes the downloaded media from the device
             mOfflineDownloadManager.removeDownload(this, MEDIA_ID);
             mDownloaded.setText(R.string.not_downloaded);
+            findViewById(R.id.prepare).setVisibility(View.VISIBLE);
+            v.setVisibility(View.GONE);
         });
 
+        findViewById(R.id.removeDownload).setVisibility(
+                mOfflineDownloadManager.isDownloaded(MEDIA_ID) ? View.VISIBLE : View.GONE);
         // Update the downloaded status based on what the DrmDownloadManager knows
         mDownloaded.setText(mOfflineDownloadManager.isDownloaded(MEDIA_ID) ? R.string.downloaded : R.string.not_downloaded);
     }
@@ -168,12 +172,14 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this, R.string.download_failed, Toast.LENGTH_SHORT).show();
         exception.printStackTrace();
         mDownloaded.setText(R.string.not_downloaded);
+        findViewById(R.id.prepare).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onDownloadOptionsAvailable(List<MediaDownloadOption> videoOptions,
                                            List<MediaDownloadOption> audioOptions,
                                            List<MediaDownloadOption> textOptions) {
+        findViewById(R.id.progress).setVisibility(View.GONE);
         // Download options are available, show them to the user
         mOptionsContainer.setVisibility(View.VISIBLE);
         fillRadioGroup(videoOptions, mVideoOptions);
@@ -197,6 +203,7 @@ public class MainActivity extends AppCompatActivity
         mVideoOptions.removeAllViews();
         mAudioOptions.removeAllViews();
         mDownloaded.setText(R.string.downloaded);
+        findViewById(R.id.removeDownload).setVisibility(View.VISIBLE);
     }
 
     @Override
