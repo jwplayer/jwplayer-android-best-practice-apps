@@ -144,6 +144,10 @@ public class MainActivity extends AppCompatActivity
             ).show();
         });
         findViewById(R.id.setup).setOnClickListener(v -> {
+           if (mPlayer != null) {
+               mPlayer.stop();
+           }
+
             Download download = mOfflineDelegate.getDownload(mCurrentItem.getMediaId());
             boolean isDownloaded = download != null && download.state == Download.STATE_COMPLETED;
             if (mNetworkTracker.isOnline() || isDownloaded) {
