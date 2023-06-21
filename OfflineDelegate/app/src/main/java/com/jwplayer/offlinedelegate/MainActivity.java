@@ -26,7 +26,7 @@ import com.jwplayer.pub.view.JWPlayerView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NetworkTracker.NetworkStatusChangedListener {
+        implements NetworkTracker.NetworkStatusChangedListener, DownloadTracker.Listener {
 
     private NetworkTracker mNetworkTracker;
 
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity
 
         mRenderersFactory = DemoUtil.buildRenderersFactory(this, false);
         downloadTracker = DemoUtil.getDownloadTracker(this);
+        downloadTracker.addListener(this);
         mOfflineDelegate = new OfflineDelegateImpl(getApplicationContext());
 
         updateContentStatus();
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity
                            success ? "Content download removed" : "No content to be removed",
                            Toast.LENGTH_SHORT
             ).show();
+            updateContentStatus();
         });
         findViewById(R.id.setup).setOnClickListener(v -> {
            if (mPlayer != null) {
@@ -190,5 +192,10 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         mNetworkTracker.destroy();
+    }
+
+    @Override
+    public void onDownloadsChanged() {
+        updateContentStatus();
     }
 }
