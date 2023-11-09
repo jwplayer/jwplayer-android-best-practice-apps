@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity
 
     final Handler mHideControlsHandler = new Handler();
     final long mDelayBeforeControlsAreHidden = 3000;
-    final String videoFileName = "http://samplescdn.origin.mediaservices.windows.net/e0e820ec-f6a2-4ea2-afe3-1eed4e06ab2c/AzureMediaServices_Overview.ism/manifest(format=m3u8-aapl-v3)";
+    final String videoFileName = "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8";
     final String streamFileName = "http://playertest.longtailvideo.com/adaptive/wowzaid3/playlist.m3u8";
     final String scrubbaleStreamFileName = "http://playertest.longtailvideo.com/hls/hockey/new_master.m3u8";
 
