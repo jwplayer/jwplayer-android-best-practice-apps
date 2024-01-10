@@ -1,9 +1,9 @@
 package com.jwplayer.imaadcompanions;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
@@ -14,7 +14,6 @@ import com.jwplayer.pub.api.events.EventType;
 import com.jwplayer.pub.api.events.listeners.AdvertisingEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.api.media.ads.AdCompanion;
-import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
