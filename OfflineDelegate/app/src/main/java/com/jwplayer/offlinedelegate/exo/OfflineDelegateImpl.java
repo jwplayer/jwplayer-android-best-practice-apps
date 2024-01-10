@@ -2,15 +2,17 @@ package com.jwplayer.offlinedelegate.exo;
 
 import android.content.Context;
 
-import com.google.android.exoplayer2.offline.Download;
-import com.google.android.exoplayer2.offline.DownloadCursor;
-import com.google.android.exoplayer2.offline.DownloadManager;
-import com.google.android.exoplayer2.upstream.DataSource;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.exoplayer.offline.Download;
+import androidx.media3.exoplayer.offline.DownloadCursor;
+import androidx.media3.exoplayer.offline.DownloadManager;
+
 import com.jwplayer.pub.api.offline.OfflineDelegate;
 
 import java.io.IOException;
 
-public class OfflineDelegateImpl extends OfflineDelegate {
+@UnstableApi public class OfflineDelegateImpl extends OfflineDelegate {
 
     public OfflineDelegateImpl(Context applicationContext) {
         super(applicationContext);

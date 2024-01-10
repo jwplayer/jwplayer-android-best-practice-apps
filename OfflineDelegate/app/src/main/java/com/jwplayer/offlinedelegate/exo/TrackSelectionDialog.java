@@ -31,15 +31,16 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.media3.common.C;
+import androidx.media3.common.Player;
+import androidx.media3.common.TrackGroup;
+import androidx.media3.common.TrackSelectionOverride;
+import androidx.media3.common.TrackSelectionParameters;
+import androidx.media3.common.Tracks;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.ui.TrackSelectionView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.Tracks;
-import com.google.android.exoplayer2.source.TrackGroup;
-import com.google.android.exoplayer2.trackselection.TrackSelectionOverride;
-import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
-import com.google.android.exoplayer2.ui.TrackSelectionView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.common.collect.ImmutableList;
 import com.jwplayer.offlinedelegate.R;
@@ -50,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Dialog to select tracks. */
+@UnstableApi /** Dialog to select tracks. */
 public final class TrackSelectionDialog extends DialogFragment {
 
   /** Called when tracks are selected. */
@@ -299,7 +300,7 @@ public final class TrackSelectionDialog extends DialogFragment {
     }
   }
 
-  /** Fragment to show a track selection in tab of the track selection dialog. */
+  @UnstableApi /** Fragment to show a track selection in tab of the track selection dialog. */
   public static final class TrackSelectionViewFragment extends Fragment
       implements TrackSelectionView.TrackSelectionListener {
 
@@ -339,8 +340,8 @@ public final class TrackSelectionDialog extends DialogFragment {
         @Nullable Bundle savedInstanceState) {
       View rootView =
           inflater.inflate(
-                  com.google.android.exoplayer2.ui.R.layout.exo_track_selection_dialog, container, /* attachToRoot= */ false);
-      TrackSelectionView trackSelectionView = rootView.findViewById(com.google.android.exoplayer2.ui.R.id.exo_track_selection_view);
+                  androidx.media3.ui.R.layout.exo_track_selection_dialog, container, /* attachToRoot= */ false);
+      TrackSelectionView trackSelectionView = rootView.findViewById(androidx.media3.ui.R.id.exo_track_selection_view);
       trackSelectionView.setShowDisableOption(true);
       trackSelectionView.setAllowMultipleOverrides(allowMultipleOverrides);
       trackSelectionView.setAllowAdaptiveSelections(allowAdaptiveSelections);

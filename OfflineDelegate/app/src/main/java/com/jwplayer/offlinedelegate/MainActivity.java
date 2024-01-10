@@ -6,10 +6,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.RenderersFactory;
+import androidx.media3.exoplayer.offline.Download;
+import androidx.media3.exoplayer.offline.DownloadService;
 
-import com.google.android.exoplayer2.RenderersFactory;
-import com.google.android.exoplayer2.offline.Download;
-import com.google.android.exoplayer2.offline.DownloadService;
 import com.jwplayer.offlinedelegate.exo.DemoDownloadService;
 import com.jwplayer.offlinedelegate.exo.DemoUtil;
 import com.jwplayer.offlinedelegate.exo.DownloadTracker;
@@ -25,7 +26,7 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
+@UnstableApi public class MainActivity extends AppCompatActivity
         implements NetworkTracker.NetworkStatusChangedListener, DownloadTracker.Listener {
 
     private NetworkTracker mNetworkTracker;
