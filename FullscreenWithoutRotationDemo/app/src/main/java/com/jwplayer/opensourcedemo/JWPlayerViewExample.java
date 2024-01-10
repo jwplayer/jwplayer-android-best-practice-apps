@@ -31,10 +31,10 @@ public class JWPlayerViewExample extends AppCompatActivity {
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
 		// [OR] change in app-level build.gradle
 		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
-		LicenseUtil.setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
 		mPlayerView = findViewById(R.id.jwplayer);
-		mPlayer = mPlayerView.getPlayer();
+		mPlayer = mPlayerView.getPlayer(this);
 
 		// set screen handler for manage the rotation of the screen
 		mPlayer.setFullscreenHandler(new FullScreenHandler_NoRotation(mPlayerView));
@@ -56,7 +56,7 @@ public class JWPlayerViewExample extends AppCompatActivity {
 		mPlayer.setup(playerConfig);
 	}
 
-	public class FullScreenHandler_NoRotation implements FullscreenHandler {
+	public static class FullScreenHandler_NoRotation implements FullscreenHandler {
 		JWPlayerView mPlayerView;
 		ViewGroup.LayoutParams mDefaultParams;
 		ViewGroup.LayoutParams mFullscreenParams;
