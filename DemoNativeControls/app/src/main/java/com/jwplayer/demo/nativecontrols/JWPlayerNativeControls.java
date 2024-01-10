@@ -82,7 +82,7 @@ public class JWPlayerNativeControls extends RelativeLayout
     }
 
     public void resetVideoPlaybackUI(){
-        mPlayPauseButton.setImageResource(R.drawable.exo_controls_play);
+        mPlayPauseButton.setImageResource(R.drawable.exo_legacy_controls_play);
         mSeekBar.setProgress(0);
         mSeekBarText.setText("00:00 / 00:00");
     }
@@ -173,12 +173,12 @@ public class JWPlayerNativeControls extends RelativeLayout
 
     @Override
     public void onPlay(PlayEvent playEvent) {
-        mPlayPauseButton.setImageResource(R.drawable.exo_controls_pause);
+        mPlayPauseButton.setImageResource(R.drawable.exo_legacy_controls_pause);
     }
 
     @Override
     public void onPause(PauseEvent pauseEvent) {
-        mPlayPauseButton.setImageResource(R.drawable.exo_controls_play);
+        mPlayPauseButton.setImageResource(R.drawable.exo_legacy_controls_play);
     }
 
     @Override

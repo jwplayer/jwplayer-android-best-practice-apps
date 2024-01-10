@@ -10,7 +10,7 @@ if (isJenkinsBuild) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
     defaultConfig {
         applicationId "com.jwplayer.demo.nativecontrols"
         minSdkVersion 21
@@ -46,10 +46,11 @@ android {
             }
         }
     }
+    namespace 'com.jwplayer.demo.nativecontrols'
 }
 
 dependencies {
-    def sdkVersion = '4.10.2'
+    def sdkVersion = '4.16.0'
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
@@ -68,28 +69,28 @@ dependencies {
 
 
 
-//    //  Only needed when building with AAR instead
-//    def exoplayerVersion = '2.18.3'
-//
+////    //  Only needed when building with AAR instead
+//    def media3version = '1.1.1'
+////
 //    implementation 'androidx.appcompat:appcompat:1.4.1'
-//
+////
 //    implementation fileTree(dir: 'libs', include: ['*.jar'])
-//	implementation 'com.google.android.gms:play-services-cast-framework:21.2.0'
+//	implementation 'com.google.android.gms:play-services-cast-framework:21.3.0'
 //	implementation 'androidx.webkit:webkit:1.6.0'
-//	implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.29.0'
-//	implementation "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
+//	implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.31.0'
+//    implementation("androidx.media3:media3-exoplayer:$media3version")
+//    implementation("androidx.media3:media3-exoplayer-dash:$media3version")
+//    implementation("androidx.media3:media3-exoplayer-hls:$media3version")
+//    implementation("androidx.media3:media3-exoplayer-smoothstreaming:$media3version")
+//    implementation("androidx.media3:media3-ui:$media3version")
 //	implementation 'com.squareup.picasso:picasso:2.71828'
 //	implementation 'androidx.viewpager2:viewpager2:1.0.0'
 //	implementation 'com.android.volley:volley:1.2.1'
 //	implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
 //	implementation 'androidx.recyclerview:recyclerview:1.2.1'
-//
-//    implementation fileTree(dir: 'libs', include: 'jwplayer-common-4.10.2.aar')
-//	implementation fileTree(dir: 'libs', include: 'jwplayer-core-4.10.2.aar')
-//	implementation fileTree(dir: 'libs', include: 'jwplayer-chromecast-4.10.2.aar')
-//	implementation fileTree(dir: 'libs', include: 'jwplayer-ima-4.10.2.aar')
+////
+//    implementation fileTree(dir: 'libs', include: 'jwplayer-chromecast-generic-release.aar')
+//	implementation fileTree(dir: 'libs', include: 'jwplayer-common-generic-release.aar')
+//	implementation fileTree(dir: 'libs', include: 'jwplayer-core-generic-release.aar')
+//	implementation fileTree(dir: 'libs', include: 'jwplayer-ima-generic-release.aar')
 }
