@@ -29,7 +29,7 @@ android {
 
 dependencies {
 
-	def jwPlayerVersion = '4.8.0'
+	def jwPlayerVersion = '4.16.0'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
@@ -46,5 +46,6 @@ dependencies {
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
 	implementation("androidx.multidex:multidex:2.0.1")
+	implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
 }
