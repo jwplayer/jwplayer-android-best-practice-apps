@@ -45,7 +45,7 @@ public class CustomPlayerFragment extends Fragment implements VideoPlayerEvents.
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_player, container, false);
         mJWPlayerView = view.findViewById(R.id.fragment_player);
-        mJWPlayer = mJWPlayerView.getPlayer();
+        mJWPlayer = mJWPlayerView.getPlayer(this);
 
         AppCompatActivity appCompatActivity = (AppCompatActivity) this.getActivity();
 

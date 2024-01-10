@@ -123,9 +123,9 @@ public class CustomPlayerView extends ConstraintLayout {
 
         viewModel.getIsFullscreen().observe(lifecycleOwner, isFullscreen -> {
             fullscreenToggle.setImageDrawable(isFullscreen ? AppCompatResources
-                    .getDrawable(getContext(), R.drawable.ic_jw_fullscreen_not)
+                    .getDrawable(getContext(), R.drawable.ic_jw_exit_fullscreen)
                                                       : AppCompatResources
-                    .getDrawable(getContext(), R.drawable.ic_jw_fullscreen));
+                    .getDrawable(getContext(), R.drawable.ic_jw_enter_fullscreen));
         });
         fullscreenToggle.setOnClickListener(v -> {
             viewModel.toggleFullscreen();
