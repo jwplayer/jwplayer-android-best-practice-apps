@@ -9,11 +9,11 @@ if (isJenkinsBuild) {
     props.load(new FileInputStream(propsFile))
 }
 android {
-	compileSdkVersion 33
+	compileSdk 33
 
 	defaultConfig {
 		minSdkVersion 21
-		targetSdkVersion 32
+		targetSdkVersion 33
 		versionCode 1
 		versionName "1.0"
 		applicationId "com.jwplayer.chromecastdemo"
@@ -43,10 +43,11 @@ android {
 			}
 		}
 	}
+    namespace 'com.jwplayer.chromecastdemo'
 }
 
-ext.JWPlayerVersion = '4.10.2'
-ext.exoplayerVersion = '2.18.3'
+ext.JWPlayerVersion = '4.16.0'
+ext.media3exoplayer = '1.1.1'
 
 dependencies {
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -58,22 +59,22 @@ dependencies {
 	implementation "com.jwplayer:jwplayer-chromecast:$JWPlayerVersion"
 	implementation "com.jwplayer:jwplayer-ima:$JWPlayerVersion"
 
-//	//  Only needed when building with AAR instead
+//	// Only needed when building with AAR instead
 //	implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
 //
-//	//	implementation fileTree(dir: 'libs', include: 'jwplayer-common-4.10.2.aar')
-//	//	implementation fileTree(dir: 'libs', include: 'jwplayer-core-4.10.2.aar')
-//	//	implementation fileTree(dir: 'libs', include: 'jwplayer-chromecast-4.10.2.aar')
-//	//	implementation fileTree(dir: 'libs', include: 'jwplayer-ima-4.10.2.aar')
+//    implementation fileTree(dir: 'libs', include: 'jwplayer-chromecast-generic-release.aar')
+//	implementation fileTree(dir: 'libs', include: 'jwplayer-common-generic-release.aar')
+//	implementation fileTree(dir: 'libs', include: 'jwplayer-core-generic-release.aar')
+//	implementation fileTree(dir: 'libs', include: 'jwplayer-ima-generic-release.aar')
 //
-//	implementation 'com.google.android.gms:play-services-cast-framework:21.2.0'
+//	implementation 'com.google.android.gms:play-services-cast-framework:21.3.0'
 //	implementation 'androidx.webkit:webkit:1.6.0'
-//	implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.29.0'
-//	implementation "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayerVersion"
-//	implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
+//	implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.31.0'
+//    implementation("androidx.media3:media3-exoplayer:$media3exoplayer")
+//    implementation("androidx.media3:media3-exoplayer-dash:$media3exoplayer")
+//    implementation("androidx.media3:media3-exoplayer-hls:$media3exoplayer")
+//    implementation("androidx.media3:media3-exoplayer-smoothstreaming:$media3exoplayer")
+//    implementation("androidx.media3:media3-ui:$media3exoplayer")
 //	implementation 'com.squareup.picasso:picasso:2.71828'
 //	implementation 'androidx.viewpager2:viewpager2:1.0.0'
 //	implementation 'com.android.volley:volley:1.2.1'
@@ -83,5 +84,7 @@ dependencies {
 //	def lifecycle_version = "2.4.0"
 //	implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
 //	implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+//	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0"
+//	// End of only required for AAR's
 
 }

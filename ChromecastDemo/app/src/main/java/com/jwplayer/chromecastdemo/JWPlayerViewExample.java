@@ -10,6 +10,8 @@ import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;
@@ -21,6 +23,8 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +47,9 @@ public class JWPlayerViewExample extends AppCompatActivity
 		setContentView(R.layout.activity_jwplayerview);
 
 		if (isGoogleApiAvailable(this)) {
-			mCastContext = CastContext.getSharedInstance(getApplicationContext());
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			Task<CastContext> task = CastContext.getSharedInstance(this,executor);
+			task.addOnCompleteListener(task1 -> mCastContext = task1.getResult());
 		}
 
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
@@ -53,7 +59,7 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 		mPlayerView = findViewById(R.id.jwplayer);
 
-		mPlayer = mPlayerView.getPlayer();
+		mPlayer = mPlayerView.getPlayer(this);
 		// Handle hiding/showing of ActionBar
 		mPlayer.addListener(EventType.FULLSCREEN, this);
 
@@ -124,8 +130,8 @@ public class JWPlayerViewExample extends AppCompatActivity
 	public void onFullscreen(FullscreenEvent fullscreenEvent) {
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
-			boolean isCasting = mCastContext != null ? mCastContext
-					.getCastState() == CastState.CONNECTED : false;
+			boolean isCasting = mCastContext != null && mCastContext
+					.getCastState() == CastState.CONNECTED;
 			if (fullscreenEvent.getFullscreen() && !isCasting) {
 				actionBar.hide();
 			} else {
