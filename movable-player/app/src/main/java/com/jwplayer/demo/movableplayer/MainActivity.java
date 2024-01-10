@@ -31,14 +31,14 @@ public class MainActivity extends AppCompatActivity implements
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
 		// [OR] change in app-level build.gradle
 		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
-		LicenseUtil.setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
 		// Get a reference to the CoordinatorLayout
 		RelativeLayout mRelativeLayout = findViewById(R.id.relative_layout);
 
 		// Initialize a new JW Player.
 		mPlayerView = new MovablePlayerView(this, null);
-		mPlayer = mPlayerView.getPlayer();
+		mPlayer = mPlayerView.getPlayer(this);
 		mPlayer.setup(new PlayerConfig.Builder()
 				.file("https://content.jwplatform.com/manifests/mkZVAqxV.m3u8")
 				.build());
