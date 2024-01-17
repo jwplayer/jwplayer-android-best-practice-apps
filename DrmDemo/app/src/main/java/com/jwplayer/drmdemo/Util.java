@@ -1,5 +1,7 @@
 package com.jwplayer.drmdemo;
 
+import static androidx.media3.common.util.Util.toByteArray;
+
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
@@ -9,8 +11,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
-
-import static com.google.android.exoplayer2.util.Util.toByteArray;
 
 public class Util {
 

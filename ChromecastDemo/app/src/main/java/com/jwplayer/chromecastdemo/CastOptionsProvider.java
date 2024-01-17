@@ -2,6 +2,8 @@ package com.jwplayer.chromecastdemo;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.cast.framework.CastOptions;
 import com.google.android.gms.cast.framework.OptionsProvider;
@@ -21,8 +23,9 @@ public class CastOptionsProvider implements OptionsProvider {
      */
     private static final String DEFAULT_APPLICATION_ID = CastMediaControlIntent.DEFAULT_MEDIA_RECEIVER_APPLICATION_ID;
 
+    @NonNull
     @Override
-    public CastOptions getCastOptions(Context context) {
+    public CastOptions getCastOptions(@NonNull Context context) {
 
         final NotificationOptions notificationOptions = new NotificationOptions.Builder()
                 .setActions(Arrays.asList(
@@ -43,7 +46,7 @@ public class CastOptionsProvider implements OptionsProvider {
     }
 
     @Override
-    public List<SessionProvider> getAdditionalSessionProviders(Context appContext) {
+    public List<SessionProvider> getAdditionalSessionProviders(@NonNull Context appContext) {
         return null;
     }
 }

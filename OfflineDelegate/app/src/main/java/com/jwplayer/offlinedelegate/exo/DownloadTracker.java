@@ -25,30 +25,30 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentManager;
+import androidx.media3.common.DrmInitData;
+import androidx.media3.common.Format;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.TrackGroup;
+import androidx.media3.common.TrackSelectionParameters;
+import androidx.media3.common.Tracks;
+import androidx.media3.common.util.Log;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.common.util.Util;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.exoplayer.RenderersFactory;
+import androidx.media3.exoplayer.drm.DrmSession;
+import androidx.media3.exoplayer.drm.DrmSessionEventListener;
+import androidx.media3.exoplayer.drm.OfflineLicenseHelper;
+import androidx.media3.exoplayer.offline.Download;
+import androidx.media3.exoplayer.offline.DownloadCursor;
+import androidx.media3.exoplayer.offline.DownloadHelper;
+import androidx.media3.exoplayer.offline.DownloadIndex;
+import androidx.media3.exoplayer.offline.DownloadManager;
+import androidx.media3.exoplayer.offline.DownloadRequest;
+import androidx.media3.exoplayer.offline.DownloadService;
+import androidx.media3.exoplayer.source.TrackGroupArray;
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 
-import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.RenderersFactory;
-import com.google.android.exoplayer2.Tracks;
-import com.google.android.exoplayer2.drm.DrmInitData;
-import com.google.android.exoplayer2.drm.DrmSession;
-import com.google.android.exoplayer2.drm.DrmSessionEventListener;
-import com.google.android.exoplayer2.drm.OfflineLicenseHelper;
-import com.google.android.exoplayer2.offline.Download;
-import com.google.android.exoplayer2.offline.DownloadCursor;
-import com.google.android.exoplayer2.offline.DownloadHelper;
-import com.google.android.exoplayer2.offline.DownloadHelper.LiveContentUnsupportedException;
-import com.google.android.exoplayer2.offline.DownloadIndex;
-import com.google.android.exoplayer2.offline.DownloadManager;
-import com.google.android.exoplayer2.offline.DownloadRequest;
-import com.google.android.exoplayer2.offline.DownloadService;
-import com.google.android.exoplayer2.source.TrackGroup;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo;
-import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.util.Log;
-import com.google.android.exoplayer2.util.Util;
 import com.jwplayer.offlinedelegate.R;
 import com.jwplayer.pub.api.JsonHelper;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
@@ -58,7 +58,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-/** Tracks media that has been downloaded. */
+@UnstableApi /** Tracks media that has been downloaded. */
 public class DownloadTracker {
 
   /** Listens for changes in the tracked downloads. */
@@ -236,7 +236,7 @@ public class DownloadTracker {
 
     @Override
     public void onPrepareError(DownloadHelper helper, IOException e) {
-      boolean isLiveContent = e instanceof LiveContentUnsupportedException;
+      boolean isLiveContent = e instanceof DownloadHelper.LiveContentUnsupportedException;
       int toastStringId =
           isLiveContent ? R.string.download_live_unsupported : R.string.download_start_error;
       String logMessage =
@@ -279,7 +279,7 @@ public class DownloadTracker {
     @Nullable
     private Format getFirstFormatWithDrmInitData(DownloadHelper helper) {
       for (int periodIndex = 0; periodIndex < helper.getPeriodCount(); periodIndex++) {
-        MappedTrackInfo mappedTrackInfo = helper.getMappedTrackInfo(periodIndex);
+        MappingTrackSelector.MappedTrackInfo mappedTrackInfo = helper.getMappedTrackInfo(periodIndex);
         for (int rendererIndex = 0;
             rendererIndex < mappedTrackInfo.getRendererCount();
             rendererIndex++) {
@@ -326,7 +326,7 @@ public class DownloadTracker {
       }
       trackSelectionDialog =
           TrackSelectionDialog.createForTracksAndParameters(
-              /* titleId= */ com.google.android.exoplayer2.core.R.string.exo_download_description,
+              /* titleId= */ androidx.media3.exoplayer.R.string.exo_download_description,
                              tracks,
                              DownloadHelper.getDefaultTrackSelectorParameters(context),
               /* allowAdaptiveSelections= */ false,

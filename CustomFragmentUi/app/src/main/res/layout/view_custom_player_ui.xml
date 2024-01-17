@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/black"
+    tools:background="@color/jw_surface_transparent_black"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <ImageView
@@ -24,7 +24,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
-        android:src="@drawable/ic_jw_fullscreen"
+        android:src="@drawable/ic_jw_fullscreen_selector"
         android:visibility="visible"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

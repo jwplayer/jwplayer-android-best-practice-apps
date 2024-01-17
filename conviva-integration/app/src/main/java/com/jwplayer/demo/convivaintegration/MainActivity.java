@@ -68,14 +68,14 @@ public class MainActivity extends AppCompatActivity implements VideoPlayerEvents
         // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
 		// [OR] change in app-level build.gradle
 		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
-		LicenseUtil.setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
+		new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
         mPlayerView = findViewById(R.id.jwplayer);
         TextView outputTextView = findViewById(R.id.output);
 
         mCoordinatorLayout = findViewById(R.id.activity_jwplayerview);
 
-        mPlayer = mPlayerView.getPlayer();
+        mPlayer = mPlayerView.getPlayer(this);
 
         // Handle hiding/showing of ActionBar
         mPlayer.addListener(EventType.FULLSCREEN, this);

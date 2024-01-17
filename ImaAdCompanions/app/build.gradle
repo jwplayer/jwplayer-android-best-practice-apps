@@ -25,6 +25,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'com.jwplayer.imaadcompanions'
 }
 
 dependencies {
@@ -36,7 +37,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation "com.jwplayer:jwplayer-core:4.10.0"
-    implementation "com.jwplayer:jwplayer-common:4.10.0"
-    implementation "com.jwplayer:jwplayer-ima:4.10.0"
+    def jwPlayerVersion = '4.16.1'
+
+    implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
+    implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
+    implementation "com.jwplayer:jwplayer-ima:$jwPlayerVersion"
+
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 }

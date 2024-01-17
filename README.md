@@ -7,7 +7,6 @@ Refer to the README in each subdirectory for specific usage instructions.
 ## Sample Apps
 
 - **ChromecastDemo** - A simple implementation of our Chromecast module. Allows you to cast to any available Chromecast devices
-- **ChromecastFragmentDemo** - Similar to the ChromecastDemo app, this app uses the `JWPlayerSupportFragment` as the main video component
 - **DemoNativeControls** - A barebones implementation of a native UI utilizing Android `View` elements
 - **FullBackgroundAudio** - A demo of how you can setup the player to allow for background audio playback
 - **LocalAssetPlayback** - Demonstrates the ability of the JW Player SDK to load locally stored assets. In the demo we utilize the built in Android **Assets** folder
@@ -17,6 +16,14 @@ Refer to the README in each subdirectory for specific usage instructions.
 - **conviva-integration** - An application with convivial analytics
 - **notifications-demo** - An example of how you can setup a native Android `Notification` to control background audio playback
 - **FullscreenWithoutRotationDemo** - An example of how you can setup `JWPlayerView` within a `FullscreenHandler` to control screen behavior avoiding the rotation
+- **CustomFragmentUi** - Demonstrates inflating a custom player view living inside a Fragment
+- **CustomUi** - Demonstrates replacing a UiGroup with a custom view
+- **DrmDemo** - A basic DRM implementation demo
+- **GoogleDAIDemo** - A basic DAI demo application
+- **ImaAdCompanions** - Demonstrates displaying companion ads from IMA
+- **OfflineDelegate** - Demo app using our offline delegate with DRM
+- **OfflineDrmDemo** - A basic demo app using our offline DRM
+- **StylingDemo** - Demo app displaying how to override JW styles
 
 ## Usage instructions
 
