@@ -22,15 +22,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="com.jwplayer.pub.api.background.MediaService"
-            android:foregroundServiceType="mediaPlayback"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </service>
-
     </application>
 
 </manifest>
