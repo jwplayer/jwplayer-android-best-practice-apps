@@ -11,9 +11,7 @@ dependencyResolutionManagement {
   repositories {
     google()
     mavenCentral()
-    maven {
-      url = uri("https://mvn.jwplayer.com/content/repositories/releases/")
-    }
+    maven { url = uri("https://nexus.longtailvideo.com/content/repositories/android-sdk-staging/") }
   }
 }
 
