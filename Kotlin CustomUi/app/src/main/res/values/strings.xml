@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Custom UI Demo</string>
+    <string name="view_example">JWPlayerView Example</string>
+</resources>
