@@ -1,10 +1,12 @@
-package com.jwplayer.drmdemo;
+package com.jwplayer.drmdemo.java;
 
 import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.drmdemo.BuildConfig;
+import com.jwplayer.drmdemo.R;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;
@@ -32,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
         playerView = findViewById(R.id.jwplayerview);
         status = findViewById(R.id.status);
 
-        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
+        // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
+        // [OR] change in app-level build.gradle
+        // [OR] set JWPLAYER_LICENSE_KEY as environment variable
+        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
         playerView.getPlayerAsync(this, this, jwPlayer -> {
             player = jwPlayer;

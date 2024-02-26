@@ -1,4 +1,4 @@
-package com.jwplayer.offlinedrmdemo;
+package com.jwplayer.offlinedrmdemo.utils;
 
 import com.jwplayer.pub.api.configuration.DrmConfig;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
