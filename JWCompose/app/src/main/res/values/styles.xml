@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  style name="Theme.JWCompose" parent="android:Theme.Material.Light.NoActionBar" -->
+    <!--
+     This -> The style on this component requires your app theme to be Theme.AppCompat (or a descendant).
+      is the root cause of [Error inflating classes] to avoid this we need use the correct AppTheme
+     -->
+
+    <style name="Theme.JWCompose" parent="Theme.AppCompat.Light">
+        <item name="android:statusBarColor">@color/tint</item>
+    </style>
+</resources>
