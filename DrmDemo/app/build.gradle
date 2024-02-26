@@ -1,7 +1,9 @@
 plugins {
 	id 'com.android.application'
+	id("org.jetbrains.kotlin.android")
 }
-
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
 android {
 	compileSdk 33
 
@@ -12,6 +14,7 @@ android {
 		versionCode 1
 		versionName "1.0"
 		multiDexEnabled true
+		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
 	}
 
 	buildTypes {
@@ -24,12 +27,15 @@ android {
 		sourceCompatibility JavaVersion.VERSION_1_8
 		targetCompatibility JavaVersion.VERSION_1_8
 	}
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
 	namespace 'com.jwplayer.drmdemo'
 }
 
 dependencies {
 
-	def jwPlayerVersion = '4.16.1'
+	def jwPlayerVersion = '4.16.2'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
@@ -44,6 +50,9 @@ dependencies {
 	implementation 'androidx.appcompat:appcompat:1.6.1'
 	implementation 'com.google.android.material:material:1.9.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
 
 	implementation("androidx.multidex:multidex:2.0.1")
 	implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))

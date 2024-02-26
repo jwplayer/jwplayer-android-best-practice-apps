@@ -1,9 +1,10 @@
-package com.jwplayer.offlinedrmdemo;
+package com.jwplayer.offlinedrmdemo.utils;
 
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.jwplayer.offlinedrmdemo.BuildConfig;
 
 import java.util.Date;
 import java.util.Locale;
@@ -12,7 +13,11 @@ import java.util.Locale;
  * This is only for demo purposes, in a real production environment you would get a signed URL from your backend API
  */
 public class TokenSignedUrlGenerator {
-    private final static String API_SECRET = YOUR_V2_API_SECRET;
+
+    // INFO: Overwrite BuildConfig.YOUR_V2_API_SECRET with your v2 api secret here
+    // [OR] change in app-level build.gradle
+    // [OR] set YOUR_V2_API_SECRET as environment variable
+    private final static String API_SECRET = BuildConfig.YOUR_V2_API_SECRET;
 
     private static final String DELIVERY_API_DOMAIN = "https://cdn.jwplayer.com";
 

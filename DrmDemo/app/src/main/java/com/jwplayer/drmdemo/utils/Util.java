@@ -1,4 +1,4 @@
-package com.jwplayer.drmdemo;
+package com.jwplayer.drmdemo.utils;
 
 import static androidx.media3.common.util.Util.toByteArray;
 

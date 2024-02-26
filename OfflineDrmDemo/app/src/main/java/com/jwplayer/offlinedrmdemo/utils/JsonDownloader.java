@@ -1,4 +1,4 @@
-package com.jwplayer.offlinedrmdemo;
+package com.jwplayer.offlinedrmdemo.utils;
 
 import android.os.AsyncTask;
 import java.io.IOException;

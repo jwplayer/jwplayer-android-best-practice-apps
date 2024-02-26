@@ -1,4 +1,4 @@
-package com.jwplayer.offlinedrmdemo;
+package com.jwplayer.offlinedrmdemo.utils;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 

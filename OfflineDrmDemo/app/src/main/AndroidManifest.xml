@@ -17,7 +17,7 @@
         android:theme="@style/Theme.OfflineDrmDemo"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".kotlin.MainActivityKt"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:exported="true">
             <intent-filter>

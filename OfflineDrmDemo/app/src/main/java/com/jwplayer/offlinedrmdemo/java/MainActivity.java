@@ -1,4 +1,4 @@
-package com.jwplayer.offlinedrmdemo;
+package com.jwplayer.offlinedrmdemo.java;
 
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +10,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.offlinedrmdemo.BuildConfig;
+import com.jwplayer.offlinedrmdemo.utils.JsonDownloader;
+import com.jwplayer.offlinedrmdemo.utils.JsonParser;
+import com.jwplayer.offlinedrmdemo.utils.NetworkTracker;
+import com.jwplayer.offlinedrmdemo.R;
+import com.jwplayer.offlinedrmdemo.utils.TokenSignedUrlGenerator;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.license.LicenseUtil;
@@ -27,8 +33,8 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity
         implements MediaDownloadResultListener,
-                   NetworkTracker.NetworkStatusChangedListener,
-                   JsonDownloader.JsonDownloadListener {
+        NetworkTracker.NetworkStatusChangedListener,
+        JsonDownloader.JsonDownloadListener {
 
     // DRM resource identifiers
     private static final String POLICY_ID = "RbFUSrSU";
@@ -57,7 +63,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new LicenseUtil().setLicenseKey(getApplicationContext(),YOUR_LICENSE_KEY);
+        // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
+        // [OR] change in app-level build.gradle
+        // [OR] set JWPLAYER_LICENSE_KEY as environment variable
+        new LicenseUtil().setLicenseKey(getApplicationContext(), BuildConfig.JWPLAYER_LICENSE_KEY);
+
         mPlayerView = findViewById(R.id.player);
         mOnline = findViewById(R.id.online);
         mDownloaded = findViewById(R.id.downloaded);
@@ -67,6 +77,8 @@ public class MainActivity extends AppCompatActivity
 
         // Get the OfflineDownloadManager
         mOfflineDownloadManager = OfflineDownloadFactory.getOfflineDownloadManager(this);
+        // Setup Listener and Start Service
+        mOfflineDownloadManager.setMediaDownloadResultListener(this);
         mOfflineDownloadManager.startService(this);
 
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
@@ -220,7 +232,7 @@ public class MainActivity extends AppCompatActivity
     public void onJsonDownloadComplete(String playlistJson) {
         PlaylistItem item = JsonParser.parseJson(playlistJson);
         if (item != null) {
-            mOfflineDownloadManager.prepareMediaDownload(this, item, this);
+            mOfflineDownloadManager.prepareMediaDownload(this, item);
         }
     }
 

@@ -1,10 +1,11 @@
-package com.jwplayer.drmdemo;
+package com.jwplayer.drmdemo.java;
 
 import android.os.Parcel;
 import android.text.TextUtils;
 
 import androidx.media3.exoplayer.drm.ExoMediaDrm;
 
+import com.jwplayer.drmdemo.utils.Util;
 import com.jwplayer.pub.api.media.drm.MediaDrmCallback;
 
 import java.io.IOException;

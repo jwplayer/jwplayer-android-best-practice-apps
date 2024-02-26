@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
+    id("org.jetbrains.kotlin.android")
 }
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
+def v2ApiSecret = System.getenv('JWPLAYER_API_SECRET')
 
 android {
     compileSdk 33
@@ -13,6 +17,8 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
+        buildConfigField "String", "YOUR_V2_API_SECRET", """\"${v2ApiSecret}\""""
     }
 
     buildTypes {
@@ -25,6 +31,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     namespace 'com.jwplayer.offlinedrmdemo'
 }
 
@@ -34,7 +43,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    def sdkVersion = '4.16.1'
+    def sdkVersion = '4.16.2'
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
