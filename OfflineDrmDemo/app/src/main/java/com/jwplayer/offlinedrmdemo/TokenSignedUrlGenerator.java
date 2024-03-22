@@ -12,7 +12,7 @@ import java.util.Locale;
  * This is only for demo purposes, in a real production environment you would get a signed URL from your backend API
  */
 public class TokenSignedUrlGenerator {
-    private final static String API_SECRET = YOUR_V2_API_SECRET;
+    private final static String API_SECRET = YOUR_V1_API_SECRET;
 
     private static final String DELIVERY_API_DOMAIN = "https://cdn.jwplayer.com";
 
