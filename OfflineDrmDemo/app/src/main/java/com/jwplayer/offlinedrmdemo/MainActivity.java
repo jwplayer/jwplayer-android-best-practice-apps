@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity
     public void onJsonDownloadComplete(String playlistJson) {
         PlaylistItem item = JsonParser.parseJson(playlistJson);
         if (item != null) {
-            mOfflineDownloadManager.prepareMediaDownload(this, item, this);
+            mOfflineDownloadManager.prepareMediaDownload(this, item);
         }
     }
 

@@ -233,6 +233,11 @@ public class PlayerAdapter extends BaseAdapter {
         }
 
         @Override
+        public void onAllowFullscreenPortraitChanged(boolean allowFullscreenPortrait) {
+
+        }
+
+        @Override
         public void updateLayoutParams(ViewGroup.LayoutParams layoutParams) {
 
         }

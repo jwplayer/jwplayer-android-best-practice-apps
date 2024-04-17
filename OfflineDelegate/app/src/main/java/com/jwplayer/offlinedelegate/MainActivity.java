@@ -93,6 +93,8 @@ import java.util.ArrayList;
         mContentStatus = findViewById(R.id.content_status);
         mPlayerView = findViewById(R.id.player);
 
+        // TODO ask for user permissions or manually approve post notifications
+
         new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
 

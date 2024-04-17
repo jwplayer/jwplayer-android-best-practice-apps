@@ -8,7 +8,7 @@ Refer to the README in each subdirectory for specific usage instructions.
 
 - **ChromecastDemo** - A simple implementation of our Chromecast module. Allows you to cast to any available Chromecast devices
 - **DemoNativeControls** - A barebones implementation of a native UI utilizing Android `View` elements
-- **FullBackgroundAudio** - A demo of how you can setup the player to allow for background audio playback
+- **FullBackgroundAudio** - **DEPRECATED -- See `notifications-demo`** A demo of how you can setup the player to allow for background audio playback
 - **LocalAssetPlayback** - Demonstrates the ability of the JW Player SDK to load locally stored assets. In the demo we utilize the built in Android **Assets** folder
 - **RecyclerViewDemo** - Shows you how to use the `JWPlayerView` within a `RecyclerView`, including mutually exclusive playback of the videos
 - **listview-fullscreen** - An older implementation on how you could use the `JWPlayerView` within a `ListView`
