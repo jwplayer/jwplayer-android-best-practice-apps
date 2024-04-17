@@ -1,4 +1,4 @@
-package com.jwplayer.demo.fullbackgroundaudio;
+package com.jwplayer.demo.fullbackgroundaudio.java;
 
 import android.app.Application;
 import android.app.NotificationChannel;

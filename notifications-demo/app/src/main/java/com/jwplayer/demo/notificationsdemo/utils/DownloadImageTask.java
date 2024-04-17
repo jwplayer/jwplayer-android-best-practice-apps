@@ -1,4 +1,4 @@
-package com.jwplayer.demo.notificationsdemo;
+package com.jwplayer.demo.notificationsdemo.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,7 +19,7 @@ import java.net.URL;
  */
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
-	interface ImageDownloadListener {
+	public interface ImageDownloadListener {
 		void onBitmapReady(Bitmap bitmap);
 	}
 

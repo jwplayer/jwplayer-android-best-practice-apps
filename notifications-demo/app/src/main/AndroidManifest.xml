@@ -10,9 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:exported="true"
-            android:name=".VideoActivity"
+            android:name=".kotlin.VideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,12 +23,32 @@
         </activity>
 
         <service
-            android:name="com.jwplayer.demo.notificationsdemo.MediaPlaybackService"
-            android:exported="false">
+            android:name=".kotlin.VideoActivity$MyMediaService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </service>
+
+        <!--activity
+            android:exported="true"
+            android:name=".java.VideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.jwplayer.demo.notificationsdemo.java.MediaPlaybackService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </service-->
     </application>
 
 </manifest>

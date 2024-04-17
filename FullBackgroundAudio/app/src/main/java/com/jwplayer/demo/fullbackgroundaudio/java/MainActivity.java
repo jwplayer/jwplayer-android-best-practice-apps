@@ -3,7 +3,7 @@
  * c-egonzalez@jwplayer.com
  */
 
-package com.jwplayer.demo.fullbackgroundaudio;
+package com.jwplayer.demo.fullbackgroundaudio.java;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jwplayer.demo.fullbackgroundaudio.BuildConfig;
+import com.jwplayer.demo.fullbackgroundaudio.R;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.view.JWPlayerView;
 

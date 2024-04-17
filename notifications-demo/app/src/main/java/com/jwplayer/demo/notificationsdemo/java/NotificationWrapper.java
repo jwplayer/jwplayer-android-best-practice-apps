@@ -1,4 +1,4 @@
-package com.jwplayer.demo.notificationsdemo;
+package com.jwplayer.demo.notificationsdemo.java;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -17,6 +17,8 @@ import android.view.KeyEvent;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.media.app.NotificationCompat.MediaStyle;
+
+import com.jwplayer.demo.notificationsdemo.R;
 
 public class NotificationWrapper {
 

@@ -1,4 +1,4 @@
-package com.jwplayer.demo.notificationsdemo;
+package com.jwplayer.demo.notificationsdemo.java;
 
 import android.app.NotificationManager;
 import android.content.ComponentName;
@@ -11,6 +11,9 @@ import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.jwplayer.demo.notificationsdemo.BuildConfig;
+import com.jwplayer.demo.notificationsdemo.R;
+import com.jwplayer.demo.notificationsdemo.utils.Sample;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;

@@ -3,7 +3,7 @@
  * c-egonzalez@jwplayer.com
  */
 
-package com.jwplayer.demo.fullbackgroundaudio;
+package com.jwplayer.demo.fullbackgroundaudio.java;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -24,6 +24,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.jwplayer.demo.fullbackgroundaudio.R;
+import com.jwplayer.demo.fullbackgroundaudio.utils.SampleMedia;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;

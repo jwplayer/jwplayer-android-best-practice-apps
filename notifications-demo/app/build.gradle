@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
 // INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
 def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
 // Detect if build is on Jenkins
@@ -44,6 +45,9 @@ android {
             }
         }
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     namespace 'com.jwplayer.demo.notificationsdemo'
 }
 
@@ -55,7 +59,7 @@ dependencies {
     implementation'com.google.android.material:material:1.9.0'
     implementation 'androidx.media:media:1.6.0'
 
-    def sdkVersion = '4.16.1'
+    def sdkVersion = '4.17.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 

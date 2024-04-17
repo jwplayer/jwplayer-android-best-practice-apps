@@ -1,4 +1,4 @@
-package com.jwplayer.demo.notificationsdemo;
+package com.jwplayer.demo.notificationsdemo.utils;
 
 
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;

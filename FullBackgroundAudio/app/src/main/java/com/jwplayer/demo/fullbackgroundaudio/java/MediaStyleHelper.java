@@ -1,4 +1,4 @@
-package com.jwplayer.demo.fullbackgroundaudio;
+package com.jwplayer.demo.fullbackgroundaudio.java;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 
+import com.jwplayer.demo.fullbackgroundaudio.R;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 
 /**

@@ -1,4 +1,4 @@
-package com.jwplayer.demo.notificationsdemo;
+package com.jwplayer.demo.notificationsdemo.java;
 
 import android.app.Notification;
 import android.app.Service;

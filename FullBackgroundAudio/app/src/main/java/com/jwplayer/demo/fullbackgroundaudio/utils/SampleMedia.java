@@ -1,4 +1,4 @@
-package com.jwplayer.demo.fullbackgroundaudio;
+package com.jwplayer.demo.fullbackgroundaudio.utils;
 
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 
