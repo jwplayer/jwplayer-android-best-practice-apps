@@ -82,6 +82,11 @@ public class JWPlayerViewExample extends AppCompatActivity {
 		}
 
 		@Override
+		public void onAllowFullscreenPortraitChanged(boolean allowFullscreenPortrait) {
+
+		}
+
+		@Override
 		public void updateLayoutParams(ViewGroup.LayoutParams layoutParams) {
 
 		}

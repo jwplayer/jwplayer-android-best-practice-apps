@@ -5,6 +5,19 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.Surface;
 
+import androidx.media3.common.Format;
+import androidx.media3.common.Metadata;
+import androidx.media3.common.PlaybackParameters;
+import androidx.media3.common.Player;
+import androidx.media3.exoplayer.DecoderCounters;
+import androidx.media3.exoplayer.ExoPlaybackException;
+import androidx.media3.exoplayer.analytics.AnalyticsListener;
+import androidx.media3.exoplayer.mediacodec.MediaCodecRenderer;
+import androidx.media3.exoplayer.source.LoadEventInfo;
+import androidx.media3.exoplayer.source.MediaLoadData;
+import androidx.media3.exoplayer.source.TrackGroupArray;
+import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
+
 import com.conviva.api.Client.ErrorSeverity;
 import com.conviva.api.ConvivaException;
 import com.conviva.api.SystemSettings.LogLevel;
@@ -16,18 +29,7 @@ import com.conviva.api.system.ICancelTimer;
 import com.conviva.api.system.ITimerInterface;
 import com.conviva.platforms.android.AndroidNetworkUtils;
 import com.conviva.platforms.android.AndroidTimerInterface;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.analytics.AnalyticsListener;
-import com.google.android.exoplayer2.decoder.DecoderCounters;
-import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer.DecoderInitializationException;
-import com.google.android.exoplayer2.metadata.Metadata;
-import com.google.android.exoplayer2.source.LoadEventInfo;
-import com.google.android.exoplayer2.source.MediaLoadData;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+
 import com.jwplayer.pub.api.JWPlayer;
 
 import java.io.IOException;
@@ -238,7 +240,7 @@ public class CVJWPlayerInterface implements IClientMeasureInterface, IPlayerInte
         if (error.type == 1) {
             Exception cause = error.getRendererException();
 
-            if (cause instanceof DecoderInitializationException) {
+            if (cause instanceof MediaCodecRenderer.DecoderInitializationException) {
                 errorMsg = "Decoder Initialization Error";
             } else {
                 errorMsg = "Render Initialization Error";

@@ -9,12 +9,12 @@ if (isJenkinsBuild) {
     props.load(new FileInputStream(propsFile))
 }
 android {
-    compileSdk 33
+    compileSdk 34
     
     defaultConfig {
         applicationId "com.jwplayer.demo.notificationsdemo"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -55,7 +55,7 @@ dependencies {
     implementation'com.google.android.material:material:1.9.0'
     implementation 'androidx.media:media:1.6.0'
 
-    def sdkVersion = '4.16.1'
+    def sdkVersion = '4.17.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
