@@ -32,7 +32,7 @@ class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener, OnFirstFr
     setContentView(R.layout.activity_jwplayerview)
     WebView.setWebContentsDebuggingEnabled(true)
     // TODO: Add your license key
-    LicenseUtil().setLicenseKey(this, "License")
+    LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY)
     mPlayerView = findViewById(R.id.jwplayer)
 
     mPlayerView.getPlayerAsync(this, this, PlayerInitializationListener { jwPlayer: JWPlayer? ->
