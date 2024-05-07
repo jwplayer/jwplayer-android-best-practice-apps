@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    LicenseUtil().setLicenseKey(this, "YOUR_LICENSE_KEY")
+    LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY)
 
     setContent {
       JWComposeTheme {
