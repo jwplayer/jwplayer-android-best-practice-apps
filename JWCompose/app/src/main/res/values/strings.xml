@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">JWCompose</string>
+    <string name="title_video">Video Player</string>
+    <string name="label_pause">Pause</string>
+    <string name="label_play">Play</string>
+    <string name="cd_rewind">Rewind video</string>
+    <string name="cd_fast_forward">Fast Forward video</string>
+    <string name="cd_play">Play video</string>
+    <string name="cd_pause">Pause video</string>
+    <string name="label_display_controls">Display video controls</string>
+    <string name="label_hide_controls">Hide video controls</string>
+</resources>
