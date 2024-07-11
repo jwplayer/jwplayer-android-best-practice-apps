@@ -29,7 +29,7 @@ android {
 
 dependencies {
 
-	def jwPlayerVersion = '4.18.0'
+	def jwPlayerVersion = '4.18.2'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
