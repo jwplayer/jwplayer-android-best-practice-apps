@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-	val JWPlayerVersion = "4.18.0"
+	val JWPlayerVersion = "4.18.2"
 	val media3version = "1.1.1"
 
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
