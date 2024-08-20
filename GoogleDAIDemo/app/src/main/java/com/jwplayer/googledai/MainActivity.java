@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         //videoId: Identifier of the DAI video to be displayed, used for video on demand
         //cmsId: Content management system ID of the video, used for video on demand
         String videoId = "tears-of-steel";
-        String cmsId = "2528370";
+        String cmsId = "2548831";
         //streamType: Defines the type of stream to use
         ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.HLS;
         ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, streamType, null);
