@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    def sdkVersion = '4.18.2'
+    def sdkVersion = '4.18.3'
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
