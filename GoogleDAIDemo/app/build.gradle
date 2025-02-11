@@ -54,7 +54,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    def sdkVersion = '4.18.4'
+    def sdkVersion = '4.19.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-ima:${sdkVersion}"

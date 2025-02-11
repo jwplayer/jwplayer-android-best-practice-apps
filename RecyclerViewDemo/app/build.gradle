@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.jwplayer.demo.recyclerview"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -59,7 +59,7 @@ dependencies {
 
     implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '20.7.0'
 
-    def sdkVersion = '4.18.4'
+    def sdkVersion = '4.19.0'
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 

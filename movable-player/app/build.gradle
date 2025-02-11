@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.jwplayer.demo.movableplayer"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -57,7 +57,7 @@ dependencies {
 
 
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    def sdkVersion = '4.18.4'
+    def sdkVersion = '4.19.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
