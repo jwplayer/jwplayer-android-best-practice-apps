@@ -8,7 +8,7 @@ android {
 	compileSdk = 34
 
 	defaultConfig {
-		minSdk = 21
+		minSdk = 24
 		targetSdk = 34
 		versionCode = 1
 		versionName = "1.0"
@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-	val JWPlayerVersion = "4.18.2"
+	val JWPlayerVersion = "4.19.0"
 	val media3version = "1.1.1"
 
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")

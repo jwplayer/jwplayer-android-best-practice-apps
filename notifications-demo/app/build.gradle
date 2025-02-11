@@ -13,7 +13,7 @@ android {
     
     defaultConfig {
         applicationId "com.jwplayer.demo.notificationsdemo"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -55,7 +55,7 @@ dependencies {
     implementation'com.google.android.material:material:1.9.0'
     implementation 'androidx.media:media:1.6.0'
 
-    def sdkVersion = '4.18.4'
+    def sdkVersion = '4.19.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
