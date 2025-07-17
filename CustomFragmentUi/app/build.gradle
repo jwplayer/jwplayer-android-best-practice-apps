@@ -24,7 +24,7 @@ android {
     namespace 'com.jwplayer.customfragment'
 }
 
-ext.JWPlayerVersion = '4.20.0'
+ext.JWPlayerVersion = '4.21.0'
 ext.media3version = '1.4.1'
 
 dependencies {
