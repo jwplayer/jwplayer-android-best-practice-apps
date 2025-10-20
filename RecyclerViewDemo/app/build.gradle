@@ -59,7 +59,7 @@ dependencies {
 
     implementation group: 'com.google.android.gms', name: 'play-services-auth', version: '20.7.0'
 
-    def sdkVersion = '4.21.0'
+    def sdkVersion = '4.21.1'
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 

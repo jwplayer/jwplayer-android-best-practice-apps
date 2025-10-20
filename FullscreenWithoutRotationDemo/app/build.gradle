@@ -53,7 +53,7 @@ dependencies {
 	implementation'com.google.android.material:material:1.9.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-	def sdkVersion = '4.21.0'
+	def sdkVersion = '4.21.1'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
