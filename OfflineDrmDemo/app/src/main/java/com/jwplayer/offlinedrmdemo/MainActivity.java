@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new LicenseUtil().setLicenseKey(getApplicationContext(),YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(getApplicationContext(), BuildConfig.JWPLAYER_LICENSE_KEY);
         mPlayerView = findViewById(R.id.player);
         mOnline = findViewById(R.id.online);
         mDownloaded = findViewById(R.id.downloaded);
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
 
         // Get the OfflineDownloadManager
         mOfflineDownloadManager = OfflineDownloadFactory.getOfflineDownloadManager(this);
+        mOfflineDownloadManager.setMediaDownloadResultListener(this);
         mOfflineDownloadManager.startService(this);
 
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
@@ -220,7 +221,11 @@ public class MainActivity extends AppCompatActivity
     public void onJsonDownloadComplete(String playlistJson) {
         PlaylistItem item = JsonParser.parseJson(playlistJson);
         if (item != null) {
-            mOfflineDownloadManager.prepareMediaDownload(this, item);
+            mOfflineDownloadManager.prepareMediaDownload(getApplicationContext(), item);
+        } else {
+            findViewById(R.id.progress).setVisibility(View.GONE);
+            findViewById(R.id.prepare).setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Failed to parse JSON response", Toast.LENGTH_LONG).show();
         }
     }
 

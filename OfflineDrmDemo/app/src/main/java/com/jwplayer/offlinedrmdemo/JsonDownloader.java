@@ -13,14 +13,14 @@ public class JsonDownloader extends AsyncTask<String, Void, String> {
 
     private final OkHttpClient client;
 
-    private WeakReference<JsonDownloadListener> mOfflineDrmActivity;
+    private final JsonDownloadListener mOfflineDrmActivity;
 
     public interface JsonDownloadListener {
         void onJsonDownloadComplete(String playlistJson);
     }
 
     public JsonDownloader(JsonDownloadListener listener, OkHttpClient client) {
-        this.mOfflineDrmActivity = new WeakReference<>(listener);
+        this.mOfflineDrmActivity = listener;
         this.client = client;
     }
 
@@ -41,10 +41,8 @@ public class JsonDownloader extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        try {
-            mOfflineDrmActivity.get().onJsonDownloadComplete(s);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        if (mOfflineDrmActivity != null) {
+            mOfflineDrmActivity.onJsonDownloadComplete(s);
         }
     }
 }
