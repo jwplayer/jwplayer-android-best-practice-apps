@@ -69,7 +69,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
 
-    def sdkVersion = '4.21.1'
+    def sdkVersion = '4.23.0'
     implementation "com.jwplayer:jwplayer-core:$sdkVersion"
     implementation "com.jwplayer:jwplayer-common:$sdkVersion"
 

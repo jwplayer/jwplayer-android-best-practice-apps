@@ -24,7 +24,7 @@ android {
     namespace 'com.jwplayer.customfragment'
 }
 
-ext.JWPlayerVersion = '4.21.1'
+ext.JWPlayerVersion = '4.23.0'
 ext.media3version = '1.4.1'
 
 dependencies {
@@ -37,10 +37,10 @@ dependencies {
 	implementation "com.jwplayer:jwplayer-common:$JWPlayerVersion"
 
 	implementation("androidx.media3:media3-exoplayer:$media3version")
-    implementation("androidx.media3:media3-exoplayer-dash:$media3version")
-    implementation("androidx.media3:media3-exoplayer-hls:$media3version")
-    implementation("androidx.media3:media3-exoplayer-smoothstreaming:$media3version")
-    implementation("androidx.media3:media3-ui:$media3version")
+  implementation("androidx.media3:media3-exoplayer-dash:$media3version")
+  implementation("androidx.media3:media3-exoplayer-hls:$media3version")
+  implementation("androidx.media3:media3-exoplayer-smoothstreaming:$media3version")
+  implementation("androidx.media3:media3-ui:$media3version")
 
 	implementation 'com.squareup.picasso:picasso:2.71828'
 	implementation 'androidx.viewpager2:viewpager2:1.0.0'

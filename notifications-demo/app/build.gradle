@@ -55,9 +55,9 @@ dependencies {
     implementation'com.google.android.material:material:1.9.0'
     implementation 'androidx.media:media:1.6.0'
 
-    def sdkVersion = '4.21.1'
-	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
-	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+    def sdkVersion = '4.23.0'
+  	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
+  	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 }
