@@ -56,7 +56,7 @@ dependencies {
     implementation('com.google.android.material:material:1.5.0')
 
 
-    def sdkVersion = '4.21.1'
+    def sdkVersion = '4.23.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
 	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
