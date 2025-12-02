@@ -56,8 +56,8 @@ dependencies {
     implementation 'androidx.media:media:1.6.0'
 
     def sdkVersion = '4.23.0'
-	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
-	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+  	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
+  	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 }
