@@ -4,7 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
     tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/toolbar_background"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.jwplayer.pub.view.JWPlayerView
         android:id="@+id/player"
@@ -13,36 +32,44 @@
         app:layout_constraintDimensionRatio="h,16:9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
 
-    <FrameLayout
-        tools:visibility="visible"
-        android:visibility="invisible"
-        android:background="#aaa"
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/player"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/companionAdSlotOne"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:textAlignment="center" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-<!--    This will no longer render since it's not 100% viewable-->
-<!--    Use caution in what companion ads you attempt to load as if the dimensions do not fit -->
-<!--    on the window completely, IMA will not render them into the view. Also, use DP instead of the-->
-<!--    old PX option-->
-    <FrameLayout
-        tools:visibility="visible"
-        android:visibility="invisible"
-        android:background="#ccc"
-        app:layout_constraintTop_toBottomOf="@id/companionAdSlotOne"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:id="@+id/companionAdSlotTwo"
-        android:layout_width="728dp"
-        android:layout_height="90dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:textAlignment="center" />
+        <FrameLayout
+            tools:visibility="visible"
+            android:visibility="invisible"
+            android:background="#aaa"
+            android:id="@+id/companionAdSlotOne"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textAlignment="center" />
+
+        <!--    This will no longer render since it's not 100% viewable-->
+        <!--    Use caution in what companion ads you attempt to load as if the dimensions do not fit -->
+        <!--    on the window completely, IMA will not render them into the view. Also, use DP instead of the-->
+        <!--    old PX option-->
+        <FrameLayout
+            tools:visibility="visible"
+            android:visibility="invisible"
+            android:background="#ccc"
+            android:id="@+id/companionAdSlotTwo"
+            android:layout_width="728dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textAlignment="center" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

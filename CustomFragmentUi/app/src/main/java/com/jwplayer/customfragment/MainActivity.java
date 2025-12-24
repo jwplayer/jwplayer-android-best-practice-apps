@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         mRoot = findViewById(R.id.root);
 
         // TODO: Add your license key
-        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
         CallbackFragment callbackFragment = new CallbackFragment();
         CustomPlayerFragment customPlayerFragment = new CustomPlayerFragment(getConfig());

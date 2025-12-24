@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         playerView = findViewById(R.id.jwplayerview);
         status = findViewById(R.id.status);
 
-        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
         playerView.getPlayerAsync(this, this, jwPlayer -> {
             player = jwPlayer;

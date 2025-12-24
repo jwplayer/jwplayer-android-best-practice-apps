@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
     namespace = "com.jwplayer.compose"
 
     defaultConfig {
         applicationId "com.jwplayer.compose"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -69,7 +69,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
 
-    def sdkVersion = '4.23.0'
+    def sdkVersion = '4.24.0'
     implementation "com.jwplayer:jwplayer-core:$sdkVersion"
     implementation "com.jwplayer:jwplayer-common:$sdkVersion"
 

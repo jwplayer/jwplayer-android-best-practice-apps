@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".BackgroundAudioService" android:exported="false"/>
+        <service android:name=".BackgroundAudioService" android:foregroundServiceType="mediaPlayback" android:exported="false"/>
 
     </application>
 </manifest>

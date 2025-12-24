@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-	compileSdk 34
+	compileSdk 35
 
 	defaultConfig {
 		applicationId "com.jwplayer.drmdemo"
 		minSdk 24
-		targetSdk 34
+		targetSdk 35
 		versionCode 1
 		versionName "1.0"
 		multiDexEnabled true
@@ -29,7 +29,7 @@ android {
 
 dependencies {
 
-	def jwPlayerVersion = '4.23.0'
+	def jwPlayerVersion = '4.24.0'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"

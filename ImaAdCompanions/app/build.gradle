@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.jwplayer.imaadcompanions"
         minSdk 24
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -22,8 +22,9 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true  // ⚠️ MANDATORY for IMA
     }
     namespace 'com.jwplayer.imaadcompanions'
 }
@@ -37,11 +38,13 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    def jwPlayerVersion = '4.23.0'
+    def jwPlayerVersion = '4.24.0'
 
     implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
     implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
     implementation "com.jwplayer:jwplayer-ima:$jwPlayerVersion"
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
