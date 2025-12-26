@@ -7,7 +7,6 @@
     android:paddingLeft="5dp"
     android:paddingTop="5dp"
     android:layout_marginBottom="5dp"
-    android:background="#E2E2E2"
     android:paddingRight="5dp">
 
     <TextView

@@ -9,12 +9,12 @@ if (isJenkinsBuild) {
     props.load(new FileInputStream(propsFile))
 }
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.jwplayer.demo.movableplayer"
         minSdkVersion 24
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -57,7 +57,7 @@ dependencies {
 
 
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    def sdkVersion = '4.23.0'
+    def sdkVersion = '4.24.0'
   	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
   	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 

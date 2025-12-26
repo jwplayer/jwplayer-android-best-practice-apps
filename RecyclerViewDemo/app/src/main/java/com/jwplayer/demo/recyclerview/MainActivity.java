@@ -21,6 +21,9 @@ import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,6 +39,15 @@ public class MainActivity extends AppCompatActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_layout);
+
+		// Handle status bar insets
+		ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, windowInsets) -> {
+			Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+			Insets navBar = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+			v.setPadding(0, statusBars.top, 0, navBar.bottom);
+			return windowInsets;
+		});
+
 
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
 		// [OR] change in app-level build.gradle

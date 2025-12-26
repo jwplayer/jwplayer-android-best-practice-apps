@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.gms.cast.framework.CastState;
@@ -12,6 +13,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.events.EventType;
@@ -28,6 +31,10 @@ import java.util.concurrent.Executors;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 
 public class JWPlayerViewExample extends AppCompatActivity
@@ -37,6 +44,7 @@ public class JWPlayerViewExample extends AppCompatActivity
 	private JWPlayer mPlayer;
 
 	private CastContext mCastContext;
+	private AppBarLayout mAppBarLayout;
 
 	private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME_OLD = "com.google.market";
 	private static final String GOOGLE_PLAY_STORE_PACKAGE_NAME_NEW = "com.android.vending";
@@ -44,7 +52,19 @@ public class JWPlayerViewExample extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 		setContentView(R.layout.activity_jwplayerview);
+
+		mAppBarLayout = findViewById(R.id.app_bar_layout);
+		MaterialToolbar toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
+		// Handle status bar insets
+		ViewCompat.setOnApplyWindowInsetsListener(mAppBarLayout, (v, windowInsets) -> {
+			Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+			v.setPadding(0, statusBars.top, 0, 0);
+			return windowInsets;
+		});
 
 		if (isGoogleApiAvailable(this)) {
 			ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -128,14 +148,13 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 	@Override
 	public void onFullscreen(FullscreenEvent fullscreenEvent) {
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
+		if (mAppBarLayout != null) {
 			boolean isCasting = mCastContext != null && mCastContext
 					.getCastState() == CastState.CONNECTED;
 			if (fullscreenEvent.getFullscreen() && !isCasting) {
-				actionBar.hide();
+				mAppBarLayout.setVisibility(View.GONE);
 			} else {
-				actionBar.show();
+				mAppBarLayout.setVisibility(View.VISIBLE);
 			}
 		}
 	}

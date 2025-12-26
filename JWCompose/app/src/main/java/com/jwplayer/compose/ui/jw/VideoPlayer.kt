@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.LifecycleOwner
 import com.jwplayer.compose.R
 import com.jwplayer.compose.ui.jw.model.VideoEvent
@@ -37,7 +38,7 @@ fun VideoPlayer(
   val context = LocalContext.current
 
   Box(
-    modifier = modifier.background(Color.Black)
+    modifier = modifier
   ) {
     var controlsVisible by remember {
       mutableStateOf(
@@ -51,6 +52,7 @@ fun VideoPlayer(
       R.string.label_display_controls
     }
 
+    // Player view at the bottom layer
     Playback(
       modifier = Modifier
         .fillMaxSize()
@@ -58,7 +60,8 @@ fun VideoPlayer(
           onClickLabel = stringResource(id = controlsClickLabel)
         ) {
           controlsVisible = !controlsVisible
-        },
+        }
+        .zIndex(0f),
       lifecycleOwner = lifecycleOwner,
       videoState = videoState,
       handleEvent = handleEvent,
@@ -72,11 +75,13 @@ fun VideoPlayer(
       } else tween(delayMillis = 750)
     )
 
+    // Controls overlay at the top layer
     Controls(
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter)
-        .alpha(alphaAnimation),
+        .alpha(alphaAnimation)
+        .zIndex(1f),
       playerState = videoState.playerState,
       togglePlayingState = {
         handleEvent(VideoEvent.ToggleStatus)

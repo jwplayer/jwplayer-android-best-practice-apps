@@ -20,6 +20,10 @@ import java.util.List;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 
 public class JWPlayerViewExample extends AppCompatActivity
@@ -32,6 +36,14 @@ public class JWPlayerViewExample extends AppCompatActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_jwplayerview);
+
+		// Handle status bar insets
+		ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_jwplayerview), (v, windowInsets) -> {
+			Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+			Insets navBar = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+			v.setPadding(0, statusBars.top, 0, navBar.bottom);
+			return windowInsets;
+		});
 
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
 		// [OR] change in app-level build.gradle

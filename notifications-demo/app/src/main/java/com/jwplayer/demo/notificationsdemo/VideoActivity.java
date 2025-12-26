@@ -21,6 +21,9 @@ import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.view.JWPlayerView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public class VideoActivity extends AppCompatActivity implements
 													 VideoPlayerEvents.OnFullscreenListener,
@@ -83,6 +86,15 @@ public class VideoActivity extends AppCompatActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_video);
+
+		// Handle status bar insets
+		ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, windowInsets) -> {
+			Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+			Insets navBar = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+			v.setPadding(0, statusBars.top, 0, navBar.bottom);
+			return windowInsets;
+		});
+
 
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
 		// [OR] change in app-level build.gradle

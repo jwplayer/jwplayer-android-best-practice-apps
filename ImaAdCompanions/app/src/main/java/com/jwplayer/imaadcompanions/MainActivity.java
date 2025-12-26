@@ -4,7 +4,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.configuration.PlayerConfig;
 import com.jwplayer.pub.api.configuration.ads.ima.ImaCompanionSlot;
@@ -25,9 +31,28 @@ public class MainActivity extends AppCompatActivity implements AdvertisingEvents
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        new LicenseUtil().setLicenseKey(this,YOUR_LICENSE_KEY);
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Handle status bar insets
+        ViewCompat.setOnApplyWindowInsetsListener(appBarLayout, (v, windowInsets) -> {
+            Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+            v.setPadding(0, statusBars.top, 0, 0);
+            return windowInsets;
+        });
+
+        // Handle navigation bar insets on bottom content
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.content), (v, windowInsets) -> {
+            Insets navigationBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            v.setPadding(0, 0, 0, navigationBars.bottom);
+            return windowInsets;
+        });
+
+        new LicenseUtil().setLicenseKey(this, JWPLAYER_LICENSE_KEY);
         JWPlayerView view = findViewById(R.id.player);
 
         JWPlayer player = view.getPlayer(this);

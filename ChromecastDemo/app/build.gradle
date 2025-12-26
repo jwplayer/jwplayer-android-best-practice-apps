@@ -9,19 +9,20 @@ if (isJenkinsBuild) {
     props.load(new FileInputStream(propsFile))
 }
 android {
-	compileSdk 34
+	compileSdk 35
 
 	defaultConfig {
 		minSdkVersion 24
-		targetSdkVersion 34
+		targetSdkVersion 35
 		versionCode 1
 		versionName "1.0"
 		applicationId "com.jwplayer.chromecastdemo"
 		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
 	}
 	compileOptions {
-		sourceCompatibility 1.8
-		targetCompatibility 1.8
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
+		coreLibraryDesugaringEnabled true  // ⚠️ MANDATORY for IMA
 	}
 	signingConfigs {
 		release {
@@ -46,7 +47,7 @@ android {
     namespace 'com.jwplayer.chromecastdemo'
 }
 
-ext.JWPlayerVersion = '4.23.0'
+ext.JWPlayerVersion = '4.24.0'
 ext.media3exoplayer = '1.4.1'
 
 dependencies {
@@ -60,6 +61,8 @@ dependencies {
 	implementation "com.jwplayer:jwplayer-ima:$JWPlayerVersion"
 
 	implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+	
+	coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
 //	// Only needed when building with AAR instead
 //	implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])

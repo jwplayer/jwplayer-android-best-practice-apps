@@ -15,12 +15,13 @@ import com.jwplayer.compose.viewmodel.VideoViewModel
 @ExperimentalAnimationApi
 @Composable
 fun Video(
-  lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+  lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+  modifier: Modifier = Modifier
 ) {
   val viewModel: VideoViewModel = viewModel()
 
   VideoPlayer(
-    modifier = Modifier.fillMaxSize(),
+    modifier = modifier,
     videoState = viewModel.uiState.collectAsState().value,
     lifecycleOwner = lifecycleOwner,
     handleEvent = viewModel::handleEvent

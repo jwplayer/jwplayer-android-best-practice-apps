@@ -19,4 +19,5 @@
     <color name="jw_labels_secondary">#8eac8f</color>
     <color name="jw_icons_active">#D4DFD6</color>
     <color name="jw_radio_checked">#547c5a</color>
+    <color name="toolbar_background">#212121</color>
 </resources>

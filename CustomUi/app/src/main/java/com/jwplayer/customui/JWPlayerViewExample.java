@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.UiGroup;
@@ -35,6 +38,15 @@ public class JWPlayerViewExample extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jwplayerview);
         WebView.setWebContentsDebuggingEnabled(true);
+
+        // Handle status bar insets
+        ViewCompat.setOnApplyWindowInsetsListener( getWindow().getDecorView(), (v, windowInsets) -> {
+            Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+            Insets navigationBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            v.setPadding(0, statusBars.top, 0, navigationBars.bottom);
+            return windowInsets;
+        });
+
         // TODO: Add your license key
         new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
         mPlayerView = findViewById(R.id.jwplayer);

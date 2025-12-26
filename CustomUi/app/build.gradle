@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdk 34
+	compileSdk 35
 	defaultConfig {
 		minSdkVersion 24
-		targetSdkVersion 34
+		targetSdkVersion 35
 		versionCode 1
 		versionName "1.0"
 		applicationId "com.jwplayer.opensourcedemo"
@@ -24,7 +24,7 @@ android {
     namespace 'com.jwplayer.customui'
 }
 
-ext.JWPlayerVersion = '4.23.0'
+ext.JWPlayerVersion = '4.24.0'
 ext.media3version = '1.4.1'
 
 dependencies {

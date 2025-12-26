@@ -9,12 +9,12 @@ if (isJenkinsBuild) {
     props.load(new FileInputStream(propsFile))
 }
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.jwplayer.googledai"
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0"
 
@@ -22,17 +22,18 @@ android {
 		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
     }
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true  // ⚠️ MANDATORY for IMA
     }
-    signingConfigs {
-        release {
-            // Only attempt to read keystore.properties for Jenkins builds
-            if (isJenkinsBuild) {
-                storeFile = file(props['storeFile'])
-                storePassword = props['storePassword']
-                keyAlias = props['keyAlias']
-                keyPassword = props['keyPassword']
+            signingConfigs {
+                release {
+                    // Only attempt to read keystore.properties for Jenkins builds
+                    if (isJenkinsBuild) {
+                        storeFile = file(props['storeFile'])
+                        storePassword = props['storePassword']
+                        keyAlias = props['keyAlias']
+                        keyPassword = props['keyPassword']
             }
         }
     }
@@ -54,10 +55,13 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    def sdkVersion = '4.23.0'
+    def sdkVersion = '4.24.0'
 	  implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
   	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-ima:${sdkVersion}"
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+    implementation'com.google.android.material:material:1.9.0'
 
 }
