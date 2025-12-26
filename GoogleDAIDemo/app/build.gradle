@@ -26,14 +26,14 @@ android {
         targetCompatibility JavaVersion.VERSION_17
         coreLibraryDesugaringEnabled true  // ⚠️ MANDATORY for IMA
     }
-    signingConfigs {
-        release {
-            // Only attempt to read keystore.properties for Jenkins builds
-            if (isJenkinsBuild) {
-                storeFile = file(props['storeFile'])
-                storePassword = props['storePassword']
-                keyAlias = props['keyAlias']
-                keyPassword = props['keyPassword']
+            signingConfigs {
+                release {
+                    // Only attempt to read keystore.properties for Jenkins builds
+                    if (isJenkinsBuild) {
+                        storeFile = file(props['storeFile'])
+                        storePassword = props['storePassword']
+                        keyAlias = props['keyAlias']
+                        keyPassword = props['keyPassword']
             }
         }
     }

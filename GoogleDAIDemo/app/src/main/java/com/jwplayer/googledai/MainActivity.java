@@ -35,14 +35,14 @@ public class MainActivity extends AppCompatActivity
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_main);
 
-        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Handle status bar insets
-        ViewCompat.setOnApplyWindowInsetsListener(appBarLayout, (v, windowInsets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, windowInsets) -> {
             Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
-            v.setPadding(0, statusBars.top, 0, 0);
+            Insets navBar = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            v.setPadding(0, statusBars.top, 0, navBar.bottom);
             return windowInsets;
         });
 

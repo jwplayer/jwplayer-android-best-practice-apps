@@ -19,25 +19,20 @@ fun Playback(
   handleEvent: (event: VideoEvent) -> Unit,
   context: Context
 ) {
-  DisposableEffect(
-    AndroidView(
-      modifier = Modifier.fillMaxSize(),
-      factory = {
-        JWPlayerView(context).apply {
-          getPlayerAsync(context, lifecycleOwner) { jwPlayer ->
-            handleEvent(VideoEvent.PlayerAsyncInitialized(jwPlayer))
-          }
+  AndroidView(
+    modifier = modifier,
+    factory = {
+      JWPlayerView(context).apply {
+        getPlayerAsync(context, lifecycleOwner) { jwPlayer ->
+          handleEvent(VideoEvent.PlayerAsyncInitialized(jwPlayer))
         }
-      },
-      update = { playerView ->
-        /**
-         * Any operation for JWPlayerView after inflated in the view.
-         */
-        // videoState.playerConfig?.let { playerView.player.setup(it) }
-      })
-  ) {
-    onDispose {
-
+      }
+    },
+    update = { playerView ->
+      /**
+       * Any operation for JWPlayerView after inflated in the view.
+       */
+      // videoState.playerConfig?.let { playerView.player.setup(it) }
     }
-  }
+  )
 }

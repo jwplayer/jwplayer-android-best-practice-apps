@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentManager;
 
 
@@ -30,8 +33,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(isLandscape()? R.layout.activity_main_land : R.layout.activity_main);
         mRoot = findViewById(R.id.root);
 
+        // Handle status bar insets
+        ViewCompat.setOnApplyWindowInsetsListener(mRoot, (v, windowInsets) -> {
+            Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+            Insets navigationBars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            v.setPadding(0, statusBars.top, 0, navigationBars.bottom);
+            return windowInsets;
+        });
+
         // TODO: Add your license key
-        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, JWPLAYER_LICENSE_KEY);
 
         CallbackFragment callbackFragment = new CallbackFragment();
         CustomPlayerFragment customPlayerFragment = new CustomPlayerFragment(getConfig());
