@@ -104,7 +104,7 @@ class VideoViewModel : ViewModel(),
     )
   }
 
-  override fun onSetupError(p0: SetupErrorEvent?) {
+  override fun onSetupError(event: SetupErrorEvent?) {
     uiState.value = uiState.value.copy(
       playerState = PlayerState.ERROR
     )

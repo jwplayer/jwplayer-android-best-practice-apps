@@ -4,4 +4,5 @@
     <color name="white">#ffffff</color>
     <color name="tint">#80191919</color>
     <color name="stroke">#66FFD983</color>
+    <color name="toolbar_background">#212121</color>
 </resources>

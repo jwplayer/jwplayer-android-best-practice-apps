@@ -3,11 +3,15 @@ package com.jwplayer.customui
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
+import androidx.core.view.OnApplyWindowInsetsListener
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.jwplayer.pub.api.JWPlayer
 import com.jwplayer.pub.api.JWPlayer.PlayerInitializationListener
 import com.jwplayer.pub.api.UiGroup
@@ -31,6 +35,18 @@ class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener, OnFirstFr
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_jwplayerview)
     WebView.setWebContentsDebuggingEnabled(true)
+
+
+    // Handle status bar insets
+    ViewCompat.setOnApplyWindowInsetsListener(
+      window.decorView,
+      OnApplyWindowInsetsListener { v: View?, windowInsets: WindowInsetsCompat? ->
+        val statusBars = windowInsets!!.getInsets(WindowInsetsCompat.Type.statusBars())
+        val navBar = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+        v!!.setPadding(0, statusBars.top, 0, navBar.bottom)
+        windowInsets
+      })
+
     // TODO: Add your license key
     LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY)
     mPlayerView = findViewById(R.id.jwplayer)

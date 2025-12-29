@@ -5,11 +5,11 @@ plugins {
 
 android {
 	namespace = "com.jwplayer.customui"
-	compileSdk = 34
+	compileSdk = 35
 
 	defaultConfig {
 		minSdk = 24
-		targetSdk = 34
+		targetSdk = 35
 		versionCode = 1
 		versionName = "1.0"
 		applicationId = "com.jwplayer.opensourcedemo"
@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-	val JWPlayerVersion = "4.23.0"
+	val JWPlayerVersion = "4.24.0"
 	val media3version = "1.4.1"
 
 	implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
