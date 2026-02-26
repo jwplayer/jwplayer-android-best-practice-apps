@@ -47,7 +47,7 @@ android {
     namespace 'com.jwplayer.chromecastdemo'
 }
 
-ext.JWPlayerVersion = '4.24.0'
+ext.JWPlayerVersion = '4.24.1'
 ext.media3exoplayer = '1.4.1'
 
 dependencies {
