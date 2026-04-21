@@ -24,7 +24,7 @@ android {
     namespace 'com.jwplayer.customui'
 }
 
-ext.JWPlayerVersion = '4.24.0'
+ext.JWPlayerVersion = '4.25.0'
 ext.media3version = '1.4.1'
 
 dependencies {

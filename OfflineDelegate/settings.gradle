@@ -11,7 +11,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven {
-            url 'https://nexus.longtailvideo.com/content/repositories/android-sdk-staging/'
+            url 'https://mvn.jwplayer.com/content/repositories/releases/'
         }
     }
 }
