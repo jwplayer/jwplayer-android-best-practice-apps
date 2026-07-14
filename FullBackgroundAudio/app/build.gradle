@@ -9,7 +9,7 @@ if (isJenkinsBuild) {
     props.load(new FileInputStream(propsFile))
 }
 android {
-    compileSdk 35
+    compileSdk 36
     defaultConfig {
         applicationId "com.jwplayer.demo.fullbackgroundaudio"
         minSdkVersion 26
@@ -51,7 +51,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.media:media:1.6.0'
     
-    def sdkVersion = '4.25.0'
+    def sdkVersion = '4.26.0'
   	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
   	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 }
