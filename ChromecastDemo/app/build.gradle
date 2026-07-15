@@ -9,7 +9,7 @@ if (isJenkinsBuild) {
     props.load(new FileInputStream(propsFile))
 }
 android {
-	compileSdk 35
+	compileSdk 36
 
 	defaultConfig {
 		minSdkVersion 24
@@ -47,8 +47,8 @@ android {
     namespace 'com.jwplayer.chromecastdemo'
 }
 
-ext.JWPlayerVersion = '4.25.0'
-ext.media3exoplayer = '1.4.1'
+ext.JWPlayerVersion = '4.26.0'
+ext.media3exoplayer = '1.10.0'
 
 dependencies {
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

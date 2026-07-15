@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-	compileSdk 35
+	compileSdk 36
 	defaultConfig {
 		minSdkVersion 24
 		targetSdkVersion 35
@@ -24,8 +24,8 @@ android {
     namespace 'com.jwplayer.customui'
 }
 
-ext.JWPlayerVersion = '4.25.0'
-ext.media3version = '1.4.1'
+ext.JWPlayerVersion = '4.26.0'
+ext.media3version = '1.10.0'
 
 dependencies {
 	implementation 'androidx.appcompat:appcompat:1.6.1'

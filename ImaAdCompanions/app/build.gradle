@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.jwplayer.imaadcompanions"
@@ -38,7 +38,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    def jwPlayerVersion = '4.25.0'
+    def jwPlayerVersion = '4.26.0'
 
     implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
     implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
