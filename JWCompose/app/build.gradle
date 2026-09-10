@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.jwplayer.compose"
         minSdk 24
-        targetSdk 35
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -66,7 +66,7 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended'
 
     // JW Player SDK — provides media3-based playback transitively (no direct ExoPlayer/media3 dep needed).
-    def sdkVersion = '4.26.0'
+    def sdkVersion = '4.27.0'
     implementation "com.jwplayer:jwplayer-core:$sdkVersion"
     implementation "com.jwplayer:jwplayer-common:$sdkVersion"
 

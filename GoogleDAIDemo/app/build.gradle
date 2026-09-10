@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.jwplayer.googledai"
         minSdkVersion 26
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode 1
         versionName "1.0"
 
@@ -55,7 +55,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    def sdkVersion = '4.26.0'
+    def sdkVersion = '4.27.0'
 	  implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
   	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-ima:${sdkVersion}"

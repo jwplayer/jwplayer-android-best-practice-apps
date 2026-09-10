@@ -8,7 +8,7 @@ android {
 	defaultConfig {
 		applicationId "com.jwplayer.drmdemo"
 		minSdk 24
-		targetSdk 35
+		targetSdk 36
 		versionCode 1
 		versionName "1.0"
 		multiDexEnabled true
@@ -29,7 +29,7 @@ android {
 
 dependencies {
 
-	def jwPlayerVersion = '4.26.0'
+	def jwPlayerVersion = '4.27.0'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"

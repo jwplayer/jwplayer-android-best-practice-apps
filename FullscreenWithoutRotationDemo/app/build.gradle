@@ -12,7 +12,7 @@ android {
 	compileSdk 36
 	defaultConfig {
 		minSdkVersion 24
-		targetSdkVersion 35
+		targetSdkVersion 36
 		versionCode 1
 		versionName "1.0"
 		applicationId "com.jwplayer.opensourcedemo"
@@ -53,7 +53,7 @@ dependencies {
 	implementation'com.google.android.material:material:1.9.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    def sdkVersion = '4.26.0'
+    def sdkVersion = '4.27.0'
   	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
   	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
