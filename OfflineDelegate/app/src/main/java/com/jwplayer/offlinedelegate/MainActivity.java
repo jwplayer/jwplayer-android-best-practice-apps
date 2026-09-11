@@ -95,7 +95,7 @@ import java.util.ArrayList;
 
         // TODO ask for user permissions or manually approve post notifications
 
-        new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
 
         mRenderersFactory = DemoUtil.buildRenderersFactory(this, false);

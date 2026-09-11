@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
     // Enable edge-to-edge for API 35
     WindowCompat.setDecorFitsSystemWindows(window, false)
 
-    LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY)
+    LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY)
 
     setContent {
       JWComposeTheme {

@@ -200,7 +200,7 @@ public class DownloadTracker {
     // DownloadHelper.Callback implementation.
 
     @Override
-    public void onPrepared(DownloadHelper helper) {
+    public void onPrepared(DownloadHelper helper, boolean isRemoveAction) {
       @Nullable Format format = getFirstFormatWithDrmInitData(helper);
       if (format == null) {
         onDownloadPrepared(helper);

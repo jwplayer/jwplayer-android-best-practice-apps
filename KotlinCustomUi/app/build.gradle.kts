@@ -3,6 +3,9 @@ plugins {
 	id("org.jetbrains.kotlin.android")
 }
 
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+val licenseKey: String = System.getenv("JWPLAYER_LICENSE_KEY") ?: ""
+
 android {
 	namespace = "com.jwplayer.customui"
 	compileSdk = 36
@@ -13,6 +16,8 @@ android {
 		versionCode = 1
 		versionName = "1.0"
 		applicationId = "com.jwplayer.opensourcedemo"
+
+		buildConfigField("String", "JWPLAYER_LICENSE_KEY", "\"$licenseKey\"")
 	}
 
 	buildTypes {

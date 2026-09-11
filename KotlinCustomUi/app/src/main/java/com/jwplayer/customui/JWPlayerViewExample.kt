@@ -48,7 +48,7 @@ class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener, OnFirstFr
       })
 
     // TODO: Add your license key
-    LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY)
+    LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY)
     mPlayerView = findViewById(R.id.jwplayer)
 
     mPlayerView.getPlayerAsync(this, this, PlayerInitializationListener { jwPlayer: JWPlayer? ->

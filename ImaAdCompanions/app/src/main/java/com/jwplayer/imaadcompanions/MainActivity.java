@@ -52,7 +52,9 @@ public class MainActivity extends AppCompatActivity implements AdvertisingEvents
             return windowInsets;
         });
 
-        new LicenseUtil().setLicenseKey(this, JWPLAYER_LICENSE_KEY);
+        // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
+        // [OR] set JWPLAYER_LICENSE_KEY as environment variable
+        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
         JWPlayerView view = findViewById(R.id.player);
 
         JWPlayer player = view.getPlayer(this);
