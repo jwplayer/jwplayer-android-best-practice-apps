@@ -37,7 +37,7 @@
             android:foregroundServiceType="dataSync"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART"/>
+                <action android:name="androidx.media3.exoplayer.downloadService.action.RESTART"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </service>

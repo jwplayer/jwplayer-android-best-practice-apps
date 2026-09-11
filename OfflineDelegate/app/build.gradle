@@ -45,6 +45,13 @@ dependencies {
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
+    // Pinned explicitly to match the SDK's own media3 version: this module imports
+    // androidx.media3.exoplayer.* directly (DownloadTracker.java) rather than only
+    // through JW Player's public API, so it must not drift silently if the SDK's
+    // transitive media3 pin ever changes.
+    def media3Version = '1.10.1'
+    implementation "androidx.media3:media3-exoplayer:${media3Version}"
+
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
 }
