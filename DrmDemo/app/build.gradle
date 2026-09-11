@@ -2,16 +2,20 @@ plugins {
 	id 'com.android.application'
 }
 
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
+
 android {
 	compileSdk 36
 
 	defaultConfig {
 		applicationId "com.jwplayer.drmdemo"
 		minSdk 24
-		targetSdk 35
+		targetSdk 36
 		versionCode 1
 		versionName "1.0"
 		multiDexEnabled true
+		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
 	}
 
 	buildTypes {
@@ -29,7 +33,7 @@ android {
 
 dependencies {
 
-	def jwPlayerVersion = '4.26.0'
+	def jwPlayerVersion = '4.27.0'
 	// JWPlayer SDK
 	implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
 	implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"

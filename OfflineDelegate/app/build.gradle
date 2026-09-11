@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
+
 android {
     compileSdk 36
 
@@ -13,6 +16,7 @@ android {
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
     }
 
     buildTypes {
@@ -37,9 +41,16 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-     def sdkVersion = '4.26.0'
+     def sdkVersion = '4.27.0'
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+
+    // Pinned explicitly to match the SDK's own media3 version: this module imports
+    // androidx.media3.exoplayer.* directly (DownloadTracker.java) rather than only
+    // through JW Player's public API, so it must not drift silently if the SDK's
+    // transitive media3 pin ever changes.
+    def media3Version = '1.10.1'
+    implementation "androidx.media3:media3-exoplayer:${media3Version}"
 
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 

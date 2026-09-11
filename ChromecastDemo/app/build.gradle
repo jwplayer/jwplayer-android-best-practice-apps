@@ -13,7 +13,7 @@ android {
 
 	defaultConfig {
 		minSdkVersion 24
-		targetSdkVersion 35
+		targetSdkVersion 36
 		versionCode 1
 		versionName "1.0"
 		applicationId "com.jwplayer.chromecastdemo"
@@ -47,8 +47,8 @@ android {
     namespace 'com.jwplayer.chromecastdemo'
 }
 
-ext.JWPlayerVersion = '4.26.0'
-ext.media3exoplayer = '1.10.0'
+ext.JWPlayerVersion = '4.27.0'
+ext.media3exoplayer = '1.10.1'
 
 dependencies {
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

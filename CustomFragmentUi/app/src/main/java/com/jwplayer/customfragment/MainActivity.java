@@ -41,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
             return windowInsets;
         });
 
-        // TODO: Add your license key
-        new LicenseUtil().setLicenseKey(this, JWPLAYER_LICENSE_KEY);
+        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
         CallbackFragment callbackFragment = new CallbackFragment();
         CustomPlayerFragment customPlayerFragment = new CustomPlayerFragment(getConfig());

@@ -42,7 +42,9 @@ import java.util.List;
 @UnstableApi /** A service for downloading media. */
 public class DemoDownloadService extends DownloadService {
 
-  private static final int JOB_ID = 1;
+  // A value distinct from JW Player SDK's own OfflineDownloadService job ID: JobScheduler keys
+  // scheduled jobs on (uid, jobId), and both services share this app's uid.
+  private static final int JOB_ID = 1001;
   private static final int FOREGROUND_NOTIFICATION_ID = 1;
 
   public DemoDownloadService() {

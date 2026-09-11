@@ -200,7 +200,18 @@ public class DownloadTracker {
     // DownloadHelper.Callback implementation.
 
     @Override
-    public void onPrepared(DownloadHelper helper) {
+    public void onPrepared(DownloadHelper helper, boolean tracksInfoAvailable) {
+      if (!tracksInfoAvailable) {
+        // No track info (e.g. a progressive source prepared without track selection) --
+        // getMappedTrackInfo()/getFirstFormatWithDrmInitData() below require it, and
+        // onDownloadPrepared() also calls getTracks() unconditionally once getPeriodCount() > 0,
+        // so neither can be called here without throwing IllegalStateException. There is nothing
+        // DRM-specific or track-selection-specific to do without track info, so download the
+        // stream as-is.
+        startDownload();
+        downloadHelper.release();
+        return;
+      }
       @Nullable Format format = getFirstFormatWithDrmInitData(helper);
       if (format == null) {
         onDownloadPrepared(helper);

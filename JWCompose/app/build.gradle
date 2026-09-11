@@ -3,6 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
+
 android {
     compileSdk 36
     namespace = "com.jwplayer.compose"
@@ -10,7 +13,7 @@ android {
     defaultConfig {
         applicationId "com.jwplayer.compose"
         minSdk 24
-        targetSdk 35
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -18,6 +21,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
     }
 
     buildTypes {
@@ -35,6 +39,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
         // Compose compiler 1.5.14 pairs with Kotlin 1.9.24 (set in the root build).
@@ -66,7 +71,7 @@ dependencies {
     implementation 'androidx.compose.material:material-icons-extended'
 
     // JW Player SDK — provides media3-based playback transitively (no direct ExoPlayer/media3 dep needed).
-    def sdkVersion = '4.26.0'
+    def sdkVersion = '4.27.0'
     implementation "com.jwplayer:jwplayer-core:$sdkVersion"
     implementation "com.jwplayer:jwplayer-common:$sdkVersion"
 
