@@ -103,7 +103,7 @@ final class AdEventLog implements
         listener.onSetupFinished();
     }
 
-    // The configuration was rejected and no player was set up.
+    // This configuration failed to set up.
     @Override
     public void onSetupError(SetupErrorEvent event) {
         log("SETUP_ERROR " + event.getCode() + ": " + event.getMessage());
@@ -117,8 +117,7 @@ final class AdEventLog implements
         log("ERROR " + event.getErrorCode() + ": " + event.getMessage());
     }
 
-    // Player warnings include problems setting up advertising, for example a license key that is not
-    // enabled for ads. Content still plays but no ads will, so check here first if you see no ad events.
+    // Player warnings report problems that did not stop the player.
     @Override
     public void onWarning(WarningEvent event) {
         log("WARNING " + event.getErrorCode() + ": " + event.getMessage());
@@ -163,12 +162,12 @@ final class AdEventLog implements
 
     @Override
     public void onAdPlay(AdPlayEvent event) {
-        log("AD_PLAY (" + event.getAdPlayReason() + ")");
+        log("AD_PLAY");
     }
 
     @Override
     public void onAdPause(AdPauseEvent event) {
-        log("AD_PAUSE (" + event.getAdPauseReason() + ")");
+        log("AD_PAUSE");
     }
 
     @Override
@@ -183,7 +182,7 @@ final class AdEventLog implements
 
     // Ad errors end the ad or break, but content playback continues. The code says why: for example
     // 10064 is usually a no-fill, and 40100 means the ad service failed to set up, so no ad breaks play
-    // for the rest of the session. The codes are constants in ErrorCodes (e.g. AD_NO_AD_AVAILABLE).
+    // until the player is set up again. The codes are constants in ErrorCodes (e.g. AD_NO_AD_AVAILABLE).
     @Override
     public void onAdError(AdErrorEvent event) {
         log("AD_ERROR " + event.getAdErrorCode() + ": " + event.getMessage());

@@ -26,13 +26,13 @@ final class CnxPlayerConfig {
          */
         MANUAL,
         /**
-         * You list which positions may have a break (pre, mid, post) and give timing rules; the SDK's
-         * ad scheduler places the mid-rolls by those rules, and the ad server auctions each break.
+         * A pre-roll, then mid-rolls placed by the SDK's ad scheduler from the timing rules below, and a
+         * post-roll. The ad server auctions each break.
          */
         DYNAMIC
     }
 
-    /** Content seconds before the first dynamic mid-roll, and between later ones. */
+    /** No dynamic mid-roll before this much content, and at least this much content between breaks. */
     static final double DYNAMIC_FIRST_MIDROLL_AFTER = 30;
     static final double DYNAMIC_SECONDS_BETWEEN_MIDROLLS = 60;
 
@@ -56,14 +56,13 @@ final class CnxPlayerConfig {
         CnxAdvertisingConfig.Builder advertising = new CnxAdvertisingConfig.Builder()
                 // The application ID your app is registered under for ad serving. It is the app
                 // identity the ad service checks. Without this override the SDK sends this build's
-                // package name, which in your own app is normally the registered one already.
+                // package name to the ad service (including any applicationIdSuffix).
                 .bundleID(BuildConfig.REGISTERED_APPLICATION_ID)
-                // "strict" holds new auctions while the player is out of view. It never pauses an ad
-                // that is already playing: that is what autoPauseAdsOnViewability does.
+                // "strict" is the default, set here only to make it visible. It never pauses an ad that
+                // is already playing: that is what autoPauseAdsOnViewability does.
                 .viewabilityPolicy("strict")
                 .autoPauseAdsOnViewability(autoPauseAdsOnViewability)
-                // Marks ad requests as debug requests and adds ad-service logging. Remove before
-                // shipping.
+                // Logs ad errors from the ad service to the WebView console. Remove before shipping.
                 .debug(true);
 
         switch (scheduling) {
@@ -75,12 +74,13 @@ final class CnxPlayerConfig {
                 break;
             case DYNAMIC:
                 CnxDynamicAdsConfig.CnxDynamicAdRules rules = new CnxDynamicAdsConfig.CnxDynamicAdRules.Builder()
+                        // The dynamic pre-roll is controlled by forcePreroll.
                         .forcePreroll(true)
                         .secondsOfContentBeforeFirstAd(DYNAMIC_FIRST_MIDROLL_AFTER)
                         .secondsOfContentBetweenAds(DYNAMIC_SECONDS_BETWEEN_MIDROLLS)
                         .build();
-                // Only the positions listed here can ever play; the rules above only decide WHEN. A
-                // break with no tag or VAST XML is auctioned by the ad server.
+                // Mid- and post-rolls play only at the positions listed here; the rules above decide
+                // when. A break with no tag or VAST XML is auctioned by the ad server.
                 CnxDynamicAdsConfig.CnxDynamicAdBreak auctionedBreak =
                         new CnxDynamicAdsConfig.CnxDynamicAdBreak.Builder().build();
                 advertising.dynamicAds(new CnxDynamicAdsConfig.Builder()

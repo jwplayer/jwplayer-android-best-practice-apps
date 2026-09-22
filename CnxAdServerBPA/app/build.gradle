@@ -20,6 +20,8 @@ def cnxConfigProblems = {
     def problems = []
     if (cnxValue('LICENSE_KEY').isEmpty()) {
         problems << "LICENSE_KEY is empty: your JW Player license key, from JW dashboard > [your property] > API Credentials > JW Player License Keys."
+    } else if (cnxValue('LICENSE_KEY') =~ /["\\]/) {
+        problems << "LICENSE_KEY contains a quote or backslash: paste the key on its own, without quotes."
     }
     if (!(cnxValue('APP_PLAYER_ID') ==~ /[A-Za-z0-9]{8}/)) {
         problems << "APP_PLAYER_ID \"${cnxValue('APP_PLAYER_ID')}\" is not a player ID: it must be exactly 8 letters and digits, from JW dashboard > [your property] > Players > In-app tab > [your App Player]."
@@ -50,12 +52,6 @@ android {
         // Required by the JW Player CNX module.
         coreLibraryDesugaringEnabled true
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            signingConfig signingConfigs.debug
-        }
-    }
     buildFeatures {
         buildConfig true
     }
@@ -77,10 +73,8 @@ dependencies {
     def jwPlayerVersion = '4.30.0'
     implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
     implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
-    // Ad Server (CNX) support.
+    // Ad Server (CNX) support. It includes the Google IMA SDK, which renders the auctions won by IMA ads.
     implementation "com.jwplayer:jwplayer-cnx:$jwPlayerVersion"
-    // Some Ad Server auctions are won by ads that only Google IMA can render.
-    implementation "com.jwplayer:jwplayer-ima:$jwPlayerVersion"
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 

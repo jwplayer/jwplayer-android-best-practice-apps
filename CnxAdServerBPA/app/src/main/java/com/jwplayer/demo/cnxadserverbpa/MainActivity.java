@@ -1,6 +1,7 @@
 package com.jwplayer.demo.cnxadserverbpa;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,14 +56,22 @@ public class MainActivity extends AppCompatActivity implements AdEventLog.Listen
         if (scheduling == CnxPlayerConfig.AdScheduling.MANUAL) {
             append("MANUAL scheduling: pre-roll, mid-roll at 30s, post-roll.");
         } else {
-            append("DYNAMIC scheduling: pre-roll, then mid-rolls placed by the ad scheduler, the first after "
-                    + (int) CnxPlayerConfig.DYNAMIC_FIRST_MIDROLL_AFTER + "s of content, then at most one every "
-                    + (int) CnxPlayerConfig.DYNAMIC_SECONDS_BETWEEN_MIDROLLS + "s, and a post-roll.");
+            append("DYNAMIC scheduling: pre-roll, then mid-rolls placed by the ad scheduler, none before "
+                    + (int) CnxPlayerConfig.DYNAMIC_FIRST_MIDROLL_AFTER + "s of content and at least "
+                    + (int) CnxPlayerConfig.DYNAMIC_SECONDS_BETWEEN_MIDROLLS + "s apart, and a post-roll.");
         }
         setupInProgress = true;
         invalidateOptionsMenu();
         // Setting up the same player again replaces its current setup, so no restart is needed.
         player.setup(CnxPlayerConfig.make(scheduling, false));
+    }
+
+    // A plain JWPlayerView does not go fullscreen on rotation by itself: without this, landscape would
+    // push the player's controls off screen and leave no room for the log.
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        player.setFullscreen(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE, true);
     }
 
     // --- Menu ---
