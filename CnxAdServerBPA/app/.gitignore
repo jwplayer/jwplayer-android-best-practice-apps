@@ -1,0 +1,3 @@
+/build
+# Your real values. Copy cnx.properties.example to cnx.properties and fill it in; never commit it.
+/cnx.properties

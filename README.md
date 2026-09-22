@@ -6,6 +6,7 @@ Refer to the README in each subdirectory for specific usage instructions.
 
 ## Sample Apps
 
+- **CnxAdServerBPA** - Integrating JW Player's Ad Server (CNX): setup, event listening, manual and dynamic ad scheduling, and pausing ads when the player scrolls out of view. Requires JW Player SDK 4.30.0+, and its values are set in `app/cnx.properties` rather than as below; see its README
 - **ChromecastDemo** - A simple implementation of our Chromecast module. Allows you to cast to any available Chromecast devices
 - **DemoNativeControls** - A barebones implementation of a native UI utilizing Android `View` elements
 - **FullBackgroundAudio** - **DEPRECATED -- See `notifications-demo`** A demo of how you can setup the player to allow for background audio playback

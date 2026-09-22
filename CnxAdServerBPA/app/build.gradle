@@ -1,0 +1,90 @@
+apply plugin: 'com.android.application'
+
+// ---------------------------------------------------------------------------------------------
+// CNX Ad Server config: app/cnx.properties is the ONLY place this app's publisher values live.
+// Copy app/cnx.properties.example to app/cnx.properties and fill it in. The build fails, naming
+// each missing or malformed value, until you do. See cnx.properties.example for what each value
+// is and where it comes from.
+// ---------------------------------------------------------------------------------------------
+def cnxPropsFile = file('cnx.properties')
+def cnxProps = new Properties()
+if (cnxPropsFile.exists()) {
+    cnxPropsFile.withInputStream { cnxProps.load(it) }
+}
+def cnxValue = { String key -> (cnxProps.getProperty(key) ?: '').trim() }
+
+def cnxConfigProblems = {
+    if (!cnxPropsFile.exists()) {
+        return ["app/cnx.properties is missing. Copy app/cnx.properties.example to app/cnx.properties and fill in every value."]
+    }
+    def problems = []
+    if (cnxValue('LICENSE_KEY').isEmpty()) {
+        problems << "LICENSE_KEY is empty: your JW Player license key, from JW dashboard > [your property] > API Credentials > JW Player License Keys."
+    }
+    if (!(cnxValue('APP_PLAYER_ID') ==~ /[A-Za-z0-9]{8}/)) {
+        problems << "APP_PLAYER_ID \"${cnxValue('APP_PLAYER_ID')}\" is not a player ID: it must be exactly 8 letters and digits, from JW dashboard > [your property] > Players > In-app tab > [your App Player]."
+    }
+    if (!(cnxValue('REGISTERED_APPLICATION_ID') ==~ /[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)+/)) {
+        problems << "REGISTERED_APPLICATION_ID \"${cnxValue('REGISTERED_APPLICATION_ID')}\" is not an application ID: use the package name your app is registered under for ad serving (e.g. com.example.myapp)."
+    }
+    return problems
+}
+
+android {
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.jwplayer.demo.cnxadserverbpa"
+        minSdkVersion 26
+        targetSdkVersion 36
+        versionCode 1
+        versionName "1.0"
+
+        buildConfigField "String", "LICENSE_KEY", "\"${cnxValue('LICENSE_KEY')}\""
+        buildConfigField "String", "APP_PLAYER_ID", "\"${cnxValue('APP_PLAYER_ID')}\""
+        buildConfigField "String", "REGISTERED_APPLICATION_ID", "\"${cnxValue('REGISTERED_APPLICATION_ID')}\""
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+        // Required by the JW Player CNX module.
+        coreLibraryDesugaringEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+    }
+    buildFeatures {
+        buildConfig true
+    }
+    namespace 'com.jwplayer.demo.cnxadserverbpa'
+}
+
+// Fail the build, not the app, when the config is incomplete: every problem is listed at once.
+tasks.named('preBuild') {
+    doFirst {
+        def problems = cnxConfigProblems()
+        if (!problems.isEmpty()) {
+            throw new GradleException("CNX Ad Server config is incomplete (app/cnx.properties):\n - "
+                    + problems.join("\n - "))
+        }
+    }
+}
+
+dependencies {
+    def jwPlayerVersion = '4.30.0'
+    implementation "com.jwplayer:jwplayer-core:$jwPlayerVersion"
+    implementation "com.jwplayer:jwplayer-common:$jwPlayerVersion"
+    // Ad Server (CNX) support.
+    implementation "com.jwplayer:jwplayer-cnx:$jwPlayerVersion"
+    // Some Ad Server auctions are won by ads that only Google IMA can render.
+    implementation "com.jwplayer:jwplayer-ima:$jwPlayerVersion"
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+}
