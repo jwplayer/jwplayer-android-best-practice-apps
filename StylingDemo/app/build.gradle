@@ -29,7 +29,7 @@ android {
     namespace 'com.jwplayer.stylingdemo'
 }
 
-ext.JWPlayerVersion = '4.27.0'
+ext.JWPlayerVersion = '4.27.1'
 ext.media3version = '1.10.1'
 
 dependencies {
