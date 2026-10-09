@@ -1,0 +1,42 @@
+# CNX Ad Server configuration: the ONLY place this app's publisher-specific values live.
+#
+# Copy this file to app/cnx.properties (it is gitignored, so your values are never committed) and
+# fill in every value. The build fails, naming each missing or malformed value, until you do.
+#
+# --- Before you start ---
+#
+# Ads only play when your account is set up for them. None of the following can be checked from the
+# app. Most of them fail the same way: the auction returns no ad, and the event log shows
+# "AD_ERROR 10064: No ad available".
+#
+#  1. Your JW Player account is enabled for Ad Server. Ask your JW Player account manager if unsure.
+#  2. You have an App Player in the JW dashboard property you will use: Players > In-app tab. It exists
+#     only to give you a player ID for targeting and analytics; styling and player settings come from
+#     the SDK, not from the dashboard.
+#  3. Your Ad Server line items, creatives and targeting rules are in that same property.
+#  4. Your app includes the jwplayer-cnx module and enables core library desugaring, which it requires
+#     (see app/build.gradle).
+#  5. Your app is registered for ad serving. Registration is not self-service: contact JW Player
+#     support to register a new app or confirm an existing registration, and ask which application ID
+#     it is registered under. That is the value REGISTERED_APPLICATION_ID must hold.
+#
+# --- Required values ---
+
+# Your JW Player license key.
+# Where to find it: JW dashboard > [your property] > API Credentials > JW Player License Keys.
+# It must come from the SAME property as APP_PLAYER_ID.
+LICENSE_KEY=
+
+# The ID of your App Player: exactly 8 letters and digits, e.g. a1B2c3D4.
+# Where to find it: JW dashboard > [your property] > Players > In-app tab > [your App Player].
+# It scopes ad requests to this placement; the license key identifies the account.
+APP_PLAYER_ID=
+
+# The application ID (package name) your app is registered under for ad serving, e.g. com.example.myapp.
+# This is the app identity the ad service checks, so it decides whether ads play at all.
+# In your own app this is normally your applicationId, but a build with an applicationIdSuffix (e.g.
+# .debug) sends the suffixed ID, so pass the registered ID to bundleID(...) for those builds.
+# It is a separate value here because this sample is built as com.jwplayer.demo.cnxadserverbpa, which
+# is not registered for ad serving; the app passes it to CnxAdvertisingConfig.Builder.bundleID(...),
+# which overrides the package name the SDK would otherwise send to the ad service.
+REGISTERED_APPLICATION_ID=

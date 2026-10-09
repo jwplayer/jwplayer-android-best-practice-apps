@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CNX Ad Server</string>
+    <string name="ad_status_initial">Last ad event: none yet</string>
+    <string name="feed_title">Pause on scroll</string>
+    <string name="menu_manual">Manual scheduling</string>
+    <string name="menu_dynamic">Dynamic scheduling</string>
+    <string name="menu_feed">Feed</string>
+    <string name="menu_clear">Clear log</string>
+    <string name="feed_intro">The player below pauses its ad when you scroll it out of view, and resumes it when it comes back. The bar at the top shows the latest ad event.</string>
+    <string name="feed_body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</string>
+</resources>
