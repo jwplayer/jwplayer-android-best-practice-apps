@@ -24,6 +24,7 @@ import java.util.List;
 public class PlayerActivity extends AppCompatActivity {
 
     static final String EXTRA_MODE = "mode";
+    static final String EXTRA_SDK_AUDIO_FOCUS = "sdkAudioFocus";
     static final String MODE_BUTTONS = "buttons";
     static final String MODE_LEGACY = "legacy";
     static final String MODE_DEFAULT = "default";
@@ -56,6 +57,18 @@ public class PlayerActivity extends AppCompatActivity {
         } else {
             api = null; // the SDK's default transport controls
             status.setText(R.string.mode_default);
+        }
+
+        // Audio focus (SDK 4.28.0+, off by default): when enabled, the player requests focus
+        // while playing, pauses when another app takes it, pauses and resumes for short
+        // interruptions such as a call or an assistant prompt, and lets the system lower the
+        // volume for navigation prompts. Leave it off if your app manages audio focus itself.
+        // Independent of this, the player always pauses when headphones or a Bluetooth audio
+        // device disconnect.
+        if (getIntent().getBooleanExtra(EXTRA_SDK_AUDIO_FOCUS, false)) {
+            player.getExoPlayerSettings().setAudioFocusHandlingEnabled(true);
+            player.getExoPlayerSettings().setAudioFocusListener(change ->
+                    status.setText(getString(R.string.audio_focus_status, change.name())));
         }
 
         // Binds the SDK's background-audio service for the lifetime of this activity: it is

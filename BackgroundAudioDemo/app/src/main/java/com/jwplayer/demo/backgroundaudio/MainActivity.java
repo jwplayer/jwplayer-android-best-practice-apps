@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.CheckBox;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void open(String mode) {
-        startActivity(new Intent(this, PlayerActivity.class).putExtra(PlayerActivity.EXTRA_MODE, mode));
+        boolean sdkAudioFocus = ((CheckBox) findViewById(R.id.sdk_audio_focus)).isChecked();
+        startActivity(new Intent(this, PlayerActivity.class)
+                .putExtra(PlayerActivity.EXTRA_MODE, mode)
+                .putExtra(PlayerActivity.EXTRA_SDK_AUDIO_FOCUS, sdkAudioFocus));
     }
 }
