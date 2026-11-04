@@ -10,6 +10,8 @@ import com.jwplayer.pub.api.media.captions.Caption;
 import com.jwplayer.pub.api.media.captions.CaptionType;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
 import com.jwplayer.pub.view.JWPlayerView;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,15 @@ import androidx.core.view.WindowInsetsCompat;
 
 
 public class JWPlayerViewExample extends AppCompatActivity {
+
+	// Back leaves fullscreen. Enabled only while the player is fullscreen, so otherwise Back
+	// behaves normally. Uses the OnBackPressedDispatcher rather than onKeyDown(KEYCODE_BACK).
+	private final OnBackPressedCallback mExitFullscreenOnBack = new OnBackPressedCallback(false) {
+		@Override
+		public void handleOnBackPressed() {
+			mPlayer.setFullscreen(false, true);
+		}
+	};
 
 	private JWPlayerView mPlayerView;
 	private JWPlayer mPlayer;
@@ -75,18 +86,9 @@ public class JWPlayerViewExample extends AppCompatActivity {
 
 		mPlayer.setup(playerConfig);
 
-		// Exit fullscreen when the user presses Back
-		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-			@Override
-			public void handleOnBackPressed() {
-				if (mPlayer.getFullscreen()) {
-					mPlayer.setFullscreen(false, true);
-				} else {
-					setEnabled(false);
-					getOnBackPressedDispatcher().onBackPressed();
-				}
-			}
-		});
+		getOnBackPressedDispatcher().addCallback(this, mExitFullscreenOnBack);
+		mPlayer.addListener(EventType.FULLSCREEN, (VideoPlayerEvents.OnFullscreenListener) event ->
+				mExitFullscreenOnBack.setEnabled(event.getFullscreen()));
 	}
 
 	@Override

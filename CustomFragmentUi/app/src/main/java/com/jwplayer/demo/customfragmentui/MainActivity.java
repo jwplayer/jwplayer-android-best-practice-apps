@@ -6,6 +6,8 @@ import android.os.Bundle;
 import com.jwplayer.demo.customfragmentui.player.CustomPlayerFragment;
 import com.jwplayer.pub.api.JWPlayer;
 import com.jwplayer.pub.api.license.LicenseUtil;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -23,6 +25,18 @@ import androidx.core.view.WindowInsetsCompat;
  * also happens again after the fragment is restored (e.g. after process death).
  */
 public class MainActivity extends AppCompatActivity implements JWPlayer.PlayerInitializationListener {
+
+    // Back leaves fullscreen. Enabled only while the player is fullscreen, so otherwise Back
+    // behaves normally. Uses the OnBackPressedDispatcher rather than onKeyDown(KEYCODE_BACK).
+    private final OnBackPressedCallback mExitFullscreenOnBack = new OnBackPressedCallback(false) {
+        @Override
+        public void handleOnBackPressed() {
+            CustomPlayerFragment fragment = getPlayerFragment();
+            if (fragment != null) {
+                fragment.setFullscreen(false, true);
+            }
+        }
+    };
 
     private static final String PLAYER_FRAGMENT_TAG = "PlayerFragment";
     private ConstraintLayout mRoot;
@@ -54,19 +68,7 @@ public class MainActivity extends AppCompatActivity implements JWPlayer.PlayerIn
                     .commit();
         }
 
-        // Back exits fullscreen before leaving the app.
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                CustomPlayerFragment fragment = getPlayerFragment();
-                if (fragment != null && fragment.getFullscreen()) {
-                    fragment.setFullscreen(false, true);
-                } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
-                }
-            }
-        });
+        getOnBackPressedDispatcher().addCallback(this, mExitFullscreenOnBack);
     }
 
     @Override
@@ -75,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements JWPlayer.PlayerIn
             mEventLog = new EventLog(findViewById(R.id.event_log));
         }
         mEventLog.attach(player);
+        player.addListener(EventType.FULLSCREEN, (VideoPlayerEvents.OnFullscreenListener) event ->
+                mExitFullscreenOnBack.setEnabled(event.getFullscreen()));
     }
 
     @Override

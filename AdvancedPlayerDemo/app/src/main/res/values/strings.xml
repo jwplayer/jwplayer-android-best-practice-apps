@@ -7,4 +7,5 @@
     <string name="ad">Ad</string>
     <string name="skip">Skip</string>
     <string name="skip_in">Skip in %d</string>
+    <string name="playback_error">Playback error</string>
 </resources>

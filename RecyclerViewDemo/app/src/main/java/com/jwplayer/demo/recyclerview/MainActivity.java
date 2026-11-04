@@ -49,6 +49,17 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
+	// Back leaves fullscreen. Enabled only while the player is fullscreen, so otherwise Back
+	// behaves normally. Uses the OnBackPressedDispatcher rather than onKeyDown(KEYCODE_BACK).
+	private final OnBackPressedCallback mExitFullscreenOnBack = new OnBackPressedCallback(false) {
+		@Override
+		public void handleOnBackPressed() {
+			if (mFullscreenPlayer != null) {
+				mFullscreenPlayer.setFullscreen(false, false);
+			}
+		}
+	};
+
 	private static final int TYPE_TEXT = 0;
 	private static final int TYPE_VIDEO = 1;
 
@@ -68,9 +79,8 @@ public class MainActivity extends AppCompatActivity {
 			return windowInsets;
 		});
 
-		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
-		// [OR] change in app-level build.gradle
-		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
+		// The key comes from the JWPLAYER_LICENSE_KEY environment variable at build time
+		// (see app/build.gradle). You can also pass your key here directly.
 		new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
 		List<Object> items = new ArrayList<>();
@@ -89,18 +99,7 @@ public class MainActivity extends AppCompatActivity {
 		recyclerView.setLayoutManager(new LinearLayoutManager(this));
 		recyclerView.setAdapter(new Adapter(items));
 
-		// Back exits fullscreen first.
-		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-			@Override
-			public void handleOnBackPressed() {
-				if (mFullscreenPlayer != null) {
-					mFullscreenPlayer.setFullscreen(false, false);
-				} else {
-					setEnabled(false);
-					getOnBackPressedDispatcher().onBackPressed();
-				}
-			}
-		});
+		getOnBackPressedDispatcher().addCallback(this, mExitFullscreenOnBack);
 	}
 
 	private static PlaylistItem video(String file, String title) {
@@ -109,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
 	void setFullscreenPlayer(JWPlayer player) {
 		mFullscreenPlayer = player;
+		mExitFullscreenOnBack.setEnabled(player != null);
 	}
 
 	/** Pauses every player except {@code active}, and keeps the screen on while it plays. */
@@ -200,7 +200,8 @@ public class MainActivity extends AppCompatActivity {
 		public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
 			// A cell scrolled off-screen is first kept in RecyclerView's view cache, un-recycled,
 			// so onViewRecycled may not run for a while. Pause here so it stops playing as soon
-			// as it leaves the screen; scrolling back resumes from the same position.
+			// as it leaves the screen. The player keeps its position, paused, so scrolling back shows
+			// it where it stopped.
 			if (holder instanceof VideoViewHolder) {
 				JWPlayer player = ((VideoViewHolder) holder).player;
 				if (player != mFullscreenPlayer) {
@@ -261,6 +262,11 @@ public class MainActivity extends AppCompatActivity {
 		void unbind() {
 			// The ViewHolder is going back to the pool: stop the player so an off-screen video
 			// doesn't keep playing or buffering. bind() sets it up again with the new item.
+			// If this player is still fullscreen, exit first: that moves it back into its cell
+			// and lifts the RecyclerView layout suppression set on entering fullscreen.
+			if (player == mFullscreenPlayer) {
+				player.setFullscreen(false, false);
+			}
 			player.stop();
 			mBoundItem = null;
 		}

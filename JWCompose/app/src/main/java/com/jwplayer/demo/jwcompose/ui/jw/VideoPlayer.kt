@@ -1,7 +1,9 @@
 package com.jwplayer.demo.jwcompose.ui.jw
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,7 +51,8 @@ fun VideoPlayer(
     // Tap target above the player. A Modifier.clickable on the AndroidView itself is unreliable:
     // touches go to the embedded JWPlayerView first, and when it consumes them the click never
     // fires. A transparent Compose layer on top always receives the tap. The SDK's own controls
-    // are hidden in this sample, so nothing underneath needs the touch.
+    // are hidden in this sample, so nothing underneath needs the touch. The Compose controls sit
+    // above this layer only while they are visible.
     Box(
       modifier = Modifier
         .fillMaxSize()
@@ -59,21 +62,25 @@ fun VideoPlayer(
         .zIndex(0.5f)
     )
 
-    val alpha by animateFloatAsState(
-      targetValue = if (controlsVisible) 0.7f else 0f,
-      animationSpec = tween(delayMillis = if (controlsVisible) 0 else 750),
-      label = "controlsAlpha"
-    )
-
-    // Controls overlay at the top layer
-    Controls(
+    // Controls overlay at the top layer. AnimatedVisibility removes the controls from
+    // composition once they have faded out, so hidden controls take no touches: a tap anywhere,
+    // including the bottom strip where the bar sits, reaches the tap layer and shows them again.
+    AnimatedVisibility(
+      visible = controlsVisible,
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter)
-        .alpha(alpha)
         .zIndex(1f),
-      playerState = videoState.playerState,
-      onTogglePlayback = onTogglePlayback
-    )
+      enter = fadeIn(),
+      exit = fadeOut(animationSpec = tween(delayMillis = 750))
+    ) {
+      Controls(
+        modifier = Modifier
+          .fillMaxWidth()
+          .alpha(0.7f),
+        playerState = videoState.playerState,
+        onTogglePlayback = onTogglePlayback
+      )
+    }
   }
 }

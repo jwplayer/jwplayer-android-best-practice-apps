@@ -127,11 +127,34 @@ public class VideoActivity extends AppCompatActivity implements
 		container.addView(mPlayerView, new RelativeLayout.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, metrics.widthPixels / 16 * 9));
 
+		requestNotificationPermission();
+
 		NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationWrapper = new NotificationWrapper(notificationManager);
 		mMediaSessionManager = new MediaSessionManager(this,
 													   mPlayerView,
 													   mNotificationWrapper);
+	}
+
+	/**
+	 * Android 13+: ask for POST_NOTIFICATIONS. The media-session notification itself is exempt,
+	 * but requesting it is recommended for an app's other notifications and for OEM builds that
+	 * hide media notifications without it.
+	 */
+	private void requestNotificationPermission() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+				&& ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+				!= PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this,
+					new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATIONS);
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		// Unbinding stops MediaPlaybackService, which releases the session and its notification.
+		doUnbindService();
+		super.onDestroy();
 	}
 
 	private void doBindService() {

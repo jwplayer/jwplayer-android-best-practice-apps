@@ -112,12 +112,15 @@ public class MainActivity extends AppCompatActivity
         });
 
         findViewById(R.id.setup).setOnClickListener(v -> {
+            boolean online = mNetworkTracker.isOnline();
+            // Online playback needs a signed Delivery API URL. Check before showing the player,
+            // so a missing secret doesn't leave an empty player on screen.
+            if (online && !checkApiSecret()) {
+                return;
+            }
             mPlayerView.setVisibility(View.VISIBLE);
             mPlayer = mPlayerView.getPlayer(this);
-            if (mNetworkTracker.isOnline()) {
-                if (!checkApiSecret()) {
-                    return;
-                }
+            if (online) {
                 // we are online, setup with Online DRM using the Delivery API URL
                 Toast.makeText(this, R.string.using_delivery_api, Toast.LENGTH_SHORT)
                      .show();
@@ -271,6 +274,13 @@ public class MainActivity extends AppCompatActivity
             findViewById(R.id.prepare).setVisibility(View.VISIBLE);
             Toast.makeText(this, "Failed to parse JSON response", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onJsonDownloadFailed(String error) {
+        findViewById(R.id.progress).setVisibility(View.GONE);
+        findViewById(R.id.prepare).setVisibility(View.VISIBLE);
+        Toast.makeText(this, "Delivery API request failed: " + error, Toast.LENGTH_LONG).show();
     }
 
     @Override

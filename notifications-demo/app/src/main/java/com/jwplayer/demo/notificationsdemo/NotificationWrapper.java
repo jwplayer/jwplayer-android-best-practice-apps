@@ -47,6 +47,19 @@ public class NotificationWrapper {
 		mNotificationManager.createNotificationChannel(mNotificationChannel);
 	}
 
+	/**
+	 * A minimal notification for the case where the service is started with nothing to play
+	 * (see {@link MediaPlaybackService#onStartCommand}): it must still enter the foreground
+	 * before it can stop.
+	 */
+	public Notification createIdleNotification(Context context) {
+		return new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+				.setSmallIcon(R.drawable.ic_jw_developer)
+				.setContentTitle(context.getString(R.string.app_name))
+				.setSilent(true)
+				.build();
+	}
+
 	public Notification createNotification(Context context,
 										   MediaSessionCompat mediaSession,
 										   long capabilities

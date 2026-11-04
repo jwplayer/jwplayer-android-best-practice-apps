@@ -28,9 +28,10 @@ class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener {
   private lateinit var mPlayerView: JWPlayerView
   private lateinit var mPlayer: JWPlayer
 
-  // Back leaves fullscreen. Enabled only while fullscreen, so otherwise Back behaves normally.
-  // Uses the OnBackPressedDispatcher because onKeyDown(KEYCODE_BACK) is not delivered under
-  // predictive back (Android 16 with targetSdk 36).
+  // Back leaves fullscreen. The JW Player SDK does no Back handling of its own, so the app does it
+  // here. Enabled only while fullscreen (from the FULLSCREEN event), so otherwise Back behaves
+  // normally. The manifest opts out of predictive back (enableOnBackInvokedCallback="false") so
+  // this callback keeps working under targetSdk 36.
   private val exitFullscreenOnBack = object : OnBackPressedCallback(false) {
     override fun handleOnBackPressed() {
       mPlayer.setFullscreen(false, true)

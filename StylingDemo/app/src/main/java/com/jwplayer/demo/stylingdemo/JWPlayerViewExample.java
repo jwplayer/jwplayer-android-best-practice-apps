@@ -25,6 +25,15 @@ import androidx.core.view.WindowInsetsCompat;
 public class JWPlayerViewExample extends AppCompatActivity
 		implements VideoPlayerEvents.OnFullscreenListener {
 
+	// Back leaves fullscreen. Enabled only while the player is fullscreen, so otherwise Back
+	// behaves normally. Uses the OnBackPressedDispatcher rather than onKeyDown(KEYCODE_BACK).
+	private final OnBackPressedCallback mExitFullscreenOnBack = new OnBackPressedCallback(false) {
+		@Override
+		public void handleOnBackPressed() {
+			mPlayer.setFullscreen(false, true);
+		}
+	};
+
 	private JWPlayerView mPlayerView;
 
 	private JWPlayer mPlayer;
@@ -72,18 +81,7 @@ public class JWPlayerViewExample extends AppCompatActivity
 		// No Cast setup is needed here: with the jwplayer-chromecast module on the classpath the SDK
 		// initialises the Cast framework itself, and its cast UI picks up the same style overrides.
 
-		// Exit fullscreen when the user presses Back
-		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-			@Override
-			public void handleOnBackPressed() {
-				if (mPlayer.getFullscreen()) {
-					mPlayer.setFullscreen(false, true);
-				} else {
-					setEnabled(false);
-					getOnBackPressedDispatcher().onBackPressed();
-				}
-			}
-		});
+		getOnBackPressedDispatcher().addCallback(this, mExitFullscreenOnBack);
 	}
 
 
@@ -98,6 +96,7 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 	@Override
 	public void onFullscreen(FullscreenEvent fullscreenEvent) {
+		mExitFullscreenOnBack.setEnabled(fullscreenEvent.getFullscreen());
 		if (mAppBarLayout != null) {
 			if (fullscreenEvent.getFullscreen()) {
 				mAppBarLayout.setVisibility(View.GONE);

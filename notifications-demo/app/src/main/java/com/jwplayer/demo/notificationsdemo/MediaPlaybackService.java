@@ -1,7 +1,9 @@
 package com.jwplayer.demo.notificationsdemo;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -29,9 +31,22 @@ public class MediaPlaybackService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// MEDIA_BUTTON intents from the notification actions arrive here via androidx's
 		// MediaButtonReceiver (declared in the manifest) and are dispatched to the session callback.
-		if (mMediaSessionManager != null) {
-			MediaButtonReceiver.handleIntent(mMediaSessionManager.getMediaSession(), intent);
+		if (mMediaSessionManager == null) {
+			// Started without a session to drive: a media key pressed after the app's process
+			// died can still reach the manifest MediaButtonReceiver, which starts this service
+			// with startForegroundService(). There is nothing to play, but a service started that
+			// way must call startForeground() before it stops, or the app crashes
+			// (ForegroundServiceDidNotStartInTimeException). So enter the foreground briefly,
+			// then leave it and stop.
+			NotificationWrapper wrapper = new NotificationWrapper(
+					(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE));
+			startForeground(NotificationWrapper.NOTIFICATION_ID,
+							wrapper.createIdleNotification(this));
+			stopForeground(true);
+			stopSelf(startId);
+			return START_NOT_STICKY;
 		}
+		MediaButtonReceiver.handleIntent(mMediaSessionManager.getMediaSession(), intent);
 		return START_NOT_STICKY;
 	}
 

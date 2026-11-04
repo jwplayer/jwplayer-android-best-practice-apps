@@ -15,9 +15,14 @@ import java.nio.charset.StandardCharsets;
 public class JsonDownloader extends AsyncTask<String, Void, String> {
 
     private final JsonDownloadListener mListener;
+    /** Set on the background thread when the request fails; read in onPostExecute. */
+    private volatile String mError;
 
     public interface JsonDownloadListener {
         void onJsonDownloadComplete(String playlistJson);
+
+        /** The request failed: {@code error} is the HTTP status or the network error. */
+        void onJsonDownloadFailed(String error);
     }
 
     public JsonDownloader(JsonDownloadListener listener) {
@@ -31,8 +36,11 @@ public class JsonDownloader extends AsyncTask<String, Void, String> {
             connection = (HttpURLConnection) new URL(params[0]).openConnection();
             connection.setConnectTimeout(15000);
             connection.setReadTimeout(15000);
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return "";
+            int code = connection.getResponseCode();
+            if (code != HttpURLConnection.HTTP_OK) {
+                String message = connection.getResponseMessage();
+                mError = "HTTP " + code + (message != null ? " " + message : "");
+                return null;
             }
             StringBuilder body = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(
@@ -45,7 +53,9 @@ public class JsonDownloader extends AsyncTask<String, Void, String> {
             return body.toString();
         } catch (IOException e) {
             e.printStackTrace();
-            return "";
+            mError = e.getClass().getSimpleName()
+                    + (e.getMessage() != null ? ": " + e.getMessage() : "");
+            return null;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -55,7 +65,12 @@ public class JsonDownloader extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        if (mListener != null) {
+        if (mListener == null) {
+            return;
+        }
+        if (mError != null) {
+            mListener.onJsonDownloadFailed(mError);
+        } else {
             mListener.onJsonDownloadComplete(s);
         }
     }

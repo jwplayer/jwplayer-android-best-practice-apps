@@ -9,8 +9,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <!-- enableOnBackInvokedCallback="false": the player's fullscreen mode handles Back through the
-         legacy back path; opting out keeps Back working on Android 16 with targetSdk 36. -->
+    <!-- android:enableOnBackInvokedCallback="false": the JW Player SDK does no Back handling of its
+         own. Opting out of predictive back keeps this app's OnBackPressedCallback and the legacy
+         KEYCODE_BACK path working under targetSdk 36. -->
     <application
         android:enableOnBackInvokedCallback="false"
         android:allowBackup="true"
