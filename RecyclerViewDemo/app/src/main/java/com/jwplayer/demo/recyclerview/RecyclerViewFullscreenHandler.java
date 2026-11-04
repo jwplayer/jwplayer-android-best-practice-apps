@@ -34,6 +34,7 @@ class RecyclerViewFullscreenHandler implements FullscreenHandler {
 	private final JWPlayer mPlayer;
 	private final ViewGroup mWindowContent;
 	private final RecyclerView mRecyclerView;
+	private int mOrientationBeforeFullscreen = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 
 	RecyclerViewFullscreenHandler(MainActivity activity, RecyclerView.ViewHolder viewHolder,
 								  ViewGroup cellContainer, JWPlayerView playerView, JWPlayer player) {
@@ -51,6 +52,7 @@ class RecyclerViewFullscreenHandler implements FullscreenHandler {
 		mViewHolder.setIsRecyclable(false);
 		mRecyclerView.suppressLayout(true);
 		setSystemBarsVisible(false);
+		mOrientationBeforeFullscreen = mActivity.getRequestedOrientation();
 		mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
 		mCellContainer.removeView(mPlayerView);
@@ -62,7 +64,10 @@ class RecyclerViewFullscreenHandler implements FullscreenHandler {
 	@Override
 	public void onFullscreenExitRequested() {
 		setSystemBarsVisible(true);
-		mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+		// UNSPECIFIED alone leaves the screen in landscape when the user has auto-rotate off.
+		// Force portrait first, then hand orientation back to what it was before fullscreen.
+		mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		mRecyclerView.postDelayed(() -> mActivity.setRequestedOrientation(mOrientationBeforeFullscreen), 500);
 
 		mWindowContent.removeView(mPlayerView);
 		mCellContainer.addView(mPlayerView, new ViewGroup.LayoutParams(
