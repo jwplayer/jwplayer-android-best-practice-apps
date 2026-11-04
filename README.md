@@ -6,24 +6,36 @@ Refer to the README in each subdirectory for specific usage instructions.
 
 ## Sample Apps
 
-- **ChromecastDemo** - A simple implementation of our Chromecast module. Allows you to cast to any available Chromecast devices
-- **DemoNativeControls** - A barebones implementation of a native UI utilizing Android `View` elements
-- **BackgroundAudioDemo** - Background audio with the SDK's own media session, notification and lock-screen controls, including custom notification buttons (SDK 4.28.0+). The recommended way to add background audio
-- **LocalAssetPlayback** - Demonstrates the ability of the JW Player SDK to load locally stored assets. In the demo we utilize the built in Android **Assets** folder
-- **RecyclerViewDemo** - Shows you how to use the `JWPlayerView` within a `RecyclerView`, including mutually exclusive playback of the videos
-- **listview-fullscreen** - An older implementation on how you could use the `JWPlayerView` within a `ListView`
-- **movable-player** - A fun tech demo that uses Android's new Additive Animation libraries to smoothly drag a `JWPlayerView` around the screen
-- **conviva-integration** - An application with convivial analytics
+### Getting started
+- **FullscreenWithoutRotationDemo** - A `JWPlayerView` with a custom `FullscreenHandler` that goes fullscreen without rotating the screen
+- **LocalAssetPlayback** - Plays video, poster and captions bundled in the app's `assets` folder
+- **JWCompose** - The player inside Jetpack Compose (`AndroidView`), kept across recomposition and configuration changes
+
+### Player UI
+- **AdvancedPlayerDemo** - Custom native controls (play/pause, seek, playback rate, quality, ad badge and skip) with the SDK UI turned off, plus a VAST pre-roll and mid-roll schedule
+- **CustomUi** - Replacing one of the SDK's UI groups (Next Up) with your own Kotlin view, using the SDK's UI view models
+- **CustomFragmentUi** - A custom player view hosted in a `Fragment`, with a small event log
+- **StylingDemo** - Restyling the player's controls by overriding the SDK's resources (colors, dimensions, styles)
+
+### Ads
+- **ImaAdCompanions** - Google IMA ads with companion ad slots
+- **GoogleDAIDemo** - Google IMA Dynamic Ad Insertion (DAI) for video on demand
+- (VAST schedules are shown in **AdvancedPlayerDemo**)
+
+### Playback features
+- **CaptionsDemo** - Sideloaded and in-manifest captions, caption styling and position (`CaptionsConfig`, `CaptionPosition`) and a track picker
+- **PipDemo** - Picture-in-picture: entering from a button or on Home, the PiP events and warnings, and pausing when the PiP window is closed
+- **RecyclerViewDemo** - Several players in a `RecyclerView`: one plays at a time, players are reused with the views, and fullscreen moves the player out of its cell
+- **ChromecastDemo** - Casting with the JW Player Chromecast module
+
+### Background audio
+- **BackgroundAudioDemo** - Background audio with the SDK's own media session, notification and lock-screen controls, custom notification buttons and the optional SDK audio-focus handling (SDK 4.28.0+). The recommended way to add background audio
 - **notifications-demo** - Background audio with an app-owned media session and `Notification`, for apps that need full control of them
-- **FullscreenWithoutRotationDemo** - An example of how you can setup `JWPlayerView` within a `FullscreenHandler` to control screen behavior avoiding the rotation
-- **CustomFragmentUi** - Demonstrates inflating a custom player view living inside a Fragment
-- **CustomUi** - Demonstrates replacing a UiGroup with a custom view
-- **DrmDemo** - A basic DRM implementation demo
-- **GoogleDAIDemo** - A basic DAI demo application
-- **ImaAdCompanions** - Demonstrates displaying companion ads from IMA
+
+### DRM and offline
+- **DrmDemo** - Online Widevine DRM with a licence URL (`DrmConfig`), or a custom `MediaDrmCallback`
 - **OfflineDownloadsDemo** - Offline downloads, including DRM, managed by the SDK (`OfflineDownloadManager`). The recommended way to add offline playback
 - **OfflineDelegateDemo** - Offline downloads, including DRM, through the app's own Media3 download service and the SDK's `OfflineDelegate` hook
-- **StylingDemo** - Demo app displaying how to override JW styles
 
 ## Usage instructions
 
@@ -35,8 +47,12 @@ In general the following usage instructions apply to most sample projects:
 - Click **OK**
 - Update application to use your license key (use 1 option below).
   - set JWPLAYER_LICENSE_KEY as environment variable  
-  - overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license in the application's main acitivity
+  - overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license in the application's main activity
   - change in app-level build.gradle
 - Click **Run**
 
-For more information about the JW Player SDK for Android, and how to use it, head over to our [Developer Portal](https://developer.jwplayer.com/jwplayer/docs/android-getting-started)
+For more information about the JW Player SDK for Android, and how to use it, head over to our [Developer Portal](https://docs.jwplayer.com/players/docs/android-overview)
+
+## Building all samples
+
+`./buildAll.sh` builds every sample (each folder with its own Gradle wrapper). The same builds run in GitHub Actions on every pull request.

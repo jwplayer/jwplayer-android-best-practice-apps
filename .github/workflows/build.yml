@@ -1,0 +1,36 @@
+name: Build sample apps
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.apps.outputs.apps }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: apps
+        # Every top-level folder with its own Gradle wrapper is a sample app.
+        run: echo "apps=$(for d in */; do [ -x "$d/gradlew" ] && echo "${d%/}"; done | jq -R . | jq -sc .)" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: list
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJson(needs.list.outputs.apps) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build ${{ matrix.app }}
+        working-directory: ${{ matrix.app }}
+        run: ./gradlew assembleDebug
