@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <!-- In PiP the window shows the whole activity, so everything except the player lives in
+         app_ui and is hidden while in PiP. -->
+    <com.jwplayer.pub.view.JWPlayerView
+        android:id="@+id/jwplayer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/app_ui"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="11dp">
+
+        <Button
+            android:id="@+id/enter_pip"
+            style="@style/Text.Buttons.Center"
+            android:text="@string/enter_pip" />
+
+        <CheckBox
+            android:id="@+id/auto_pip"
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/auto_pip" />
+
+        <TextView
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="@string/intro" />
+
+        <TextView
+            android:id="@+id/status"
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:text="@string/status_ready" />
+    </LinearLayout>
+</LinearLayout>
