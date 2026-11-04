@@ -1,5 +1,7 @@
 #!/bin/bash
-# Builds every sample app (each top-level folder with its own Gradle wrapper).
+# Builds every sample app: each top-level folder with its own settings.gradle or
+# settings.gradle.kts is a separate Gradle project with its own wrapper.
+# Builds the debug variant by default.
 # Usage: ./buildAll.sh [gradle task]   (default: assembleDebug)
 # Set JWPLAYER_LICENSE_KEY to bake your license key into the builds.
 set -euo pipefail
@@ -11,9 +13,10 @@ cd "$(dirname "$0")"
 failed=()
 for dir in */; do
   app="${dir%/}"
-  [ -x "$app/gradlew" ] || continue
+  [ -f "$app/settings.gradle" ] || [ -f "$app/settings.gradle.kts" ] || continue
   echo "[Building $app]"
-  if ! (cd "$app" && ./gradlew "$TASK"); then
+  # Run the wrapper through sh so a missing exec bit cannot skip or fail an app.
+  if ! (cd "$app" && sh ./gradlew "$TASK"); then
     failed+=("$app")
   fi
 done

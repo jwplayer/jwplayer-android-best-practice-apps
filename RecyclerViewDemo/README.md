@@ -10,15 +10,17 @@ players in a feed or list.
   creates enough ViewHolders to fill the screen, so the number of players stays bounded no
   matter how long the list is.
 - **Correct recycling.** `onBindViewHolder` only calls `JWPlayer.setup()` when the cell is bound
-  to a different item, and `onViewRecycled` calls `JWPlayer.stop()` so off-screen cells don't
-  keep playing or buffering.
+  to a different item. `onViewDetachedFromWindow` pauses a cell's player as soon as it scrolls
+  off-screen (RecyclerView may keep detached cells in its view cache without recycling them),
+  and `onViewRecycled` calls `JWPlayer.stop()` so recycled cells don't keep buffering.
 - **One video at a time.** A `PLAY` listener pauses every other player, and the screen is kept
   on only while something is playing.
 - **Fullscreen from a list cell.** `RecyclerViewFullscreenHandler` is a custom
   `FullscreenHandler` (set with `JWPlayer.setFullscreenHandler()`) that moves the
   `JWPlayerView` out of its cell into the window's content view, hides the system bars and
   switches to landscape, then puts it back on exit. The ViewHolder is marked non-recyclable
-  while fullscreen. Back exits fullscreen.
+  and the RecyclerView's layout is suppressed while fullscreen, so the rotation can't drop the
+  cell; on exit the cell is scrolled back into view. Back exits fullscreen.
 
 ## SDK APIs
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 // INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
-def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY') ?: ''
 
 android {
     compileSdk 36
@@ -17,6 +17,9 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
+        // Demo only: the V1 API secret used to sign Delivery API URLs on the device (see README).
+        // A real app signs URLs on its backend and never ships this secret.
+        buildConfigField "String", "JWPLAYER_V1_API_SECRET", "\"${System.getenv('JWPLAYER_V1_API_SECRET') ?: ''}\""
     }
 
     buildTypes {
@@ -42,7 +45,6 @@ dependencies {
     implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
     implementation 'com.auth0:java-jwt:3.19.1'
 }

@@ -1,8 +1,6 @@
 package com.jwplayer.demo.advancedplayer;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.View;
@@ -11,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -42,9 +41,8 @@ public class PlayerControlsView extends LinearLayout {
     private final TextView adLabel;
     private final Button skipButton;
 
-    // Player events are delivered on the main thread, but posting UI work through a
-    // main-thread Handler keeps this view safe if it is ever driven from elsewhere.
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    // The SDK delivers every player event on the main thread, so the listeners below
+    // update the views directly.
 
     private JWPlayer player;
     /** True while the user drags the seek bar, so TIME events don't fight the finger. */
@@ -69,7 +67,10 @@ public class PlayerControlsView extends LinearLayout {
 
     /** True between AD_BREAK_START and AD_BREAK_END. */
     private boolean inAdBreak;
-    /** True while an ad is playing (between AD_PLAY and AD_PAUSE). */
+    /**
+     * True while an ad is playing. Set only by AD_PLAY / AD_PAUSE and cleared at AD_BREAK_END.
+     * It stays true between the ads of a pod, because the next ad starts on its own.
+     */
     private boolean adPlaying;
 
     /** Connects the controls to a player. Call once, before {@link JWPlayer#setup}. */
@@ -151,82 +152,96 @@ public class PlayerControlsView extends LinearLayout {
 
     private void listenToPlayer() {
         player.addListener(EventType.PLAY,
-                (VideoPlayerEvents.OnPlayListener) e -> ui(() -> playPauseButton.setText(R.string.pause)));
+                (VideoPlayerEvents.OnPlayListener) e -> playPauseButton.setText(R.string.pause));
         player.addListener(EventType.PAUSE,
-                (VideoPlayerEvents.OnPauseListener) e -> ui(() -> {
+                (VideoPlayerEvents.OnPauseListener) e -> {
                     // Content also reports a pause when an ad break takes over; the ad events
                     // below own the button while the break runs.
                     if (!inAdBreak) playPauseButton.setText(R.string.play);
-                }));
+                });
         player.addListener(EventType.COMPLETE,
-                (VideoPlayerEvents.OnCompleteListener) e -> ui(() -> playPauseButton.setText(R.string.play)));
+                (VideoPlayerEvents.OnCompleteListener) e -> playPauseButton.setText(R.string.play));
 
         // Content progress. Ads report their own time through AD_TIME (below).
         player.addListener(EventType.TIME,
-                (VideoPlayerEvents.OnTimeListener) e -> ui(() -> showProgress(e.getPosition(), e.getDuration())));
+                (VideoPlayerEvents.OnTimeListener) e -> showProgress(e.getPosition(), e.getDuration()));
 
         player.addListener(EventType.PLAYBACK_RATE_CHANGED,
                 (VideoPlayerEvents.OnPlaybackRateChangedListener) e ->
-                        ui(() -> rateButton.setText(formatRate(e.getPlaybackRate()))));
+                        rateButton.setText(formatRate(e.getPlaybackRate())));
 
         // LEVELS fires when a new item's renditions are known; LEVELS_CHANGED when one is picked.
         player.addListener(EventType.LEVELS,
                 (VideoPlayerEvents.OnLevelsListener) e ->
-                        ui(() -> showQuality(e.getLevels(), e.getCurrentQualityIndex())));
+                        showQuality(e.getLevels(), e.getCurrentQualityIndex()));
         player.addListener(EventType.LEVELS_CHANGED,
                 (VideoPlayerEvents.OnLevelsChangedListener) e ->
-                        ui(() -> showQuality(player.getQualityLevels(), e.getCurrentQualityIndex())));
+                        showQuality(player.getQualityLevels(), e.getCurrentQualityIndex()));
+
+        // hideAllControls() also hides the SDK's error screen, so surface errors here.
+        player.addListener(EventType.ERROR,
+                (VideoPlayerEvents.OnErrorListener) e -> showError(e.getMessage()));
+        player.addListener(EventType.SETUP_ERROR,
+                (VideoPlayerEvents.OnSetupErrorListener) e -> showError(e.getMessage()));
 
         listenToAds();
+    }
+
+    private void showError(String message) {
+        playPauseButton.setText(R.string.play);
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void listenToAds() {
         // An ad break is starting: show the "Ad" badge and stop the user seeking the ad.
         player.addListener(EventType.AD_BREAK_START,
-                (AdvertisingEvents.OnAdBreakStartListener) e -> ui(() -> setAdMode(true)));
+                (AdvertisingEvents.OnAdBreakStartListener) e -> {
+                    setAdMode(true);
+                    // AD_PLAY can arrive before AD_BREAK_START, so adPlaying may already be set.
+                    // Otherwise fall back to the player state until AD_PLAY / AD_PAUSE arrive.
+                    boolean playing = adPlaying || player.getState() == PlayerState.PLAYING;
+                    playPauseButton.setText(playing ? R.string.pause : R.string.play);
+                });
         player.addListener(EventType.AD_BREAK_END,
-                (AdvertisingEvents.OnAdBreakEndListener) e -> ui(() -> setAdMode(false)));
+                (AdvertisingEvents.OnAdBreakEndListener) e -> setAdMode(false));
 
         // The impression tells us whether this particular ad can be skipped.
         player.addListener(EventType.AD_IMPRESSION,
-                (AdvertisingEvents.OnAdImpressionListener) e -> ui(() -> {
+                (AdvertisingEvents.OnAdImpressionListener) e -> {
                     Integer offset = e.getSkipOffset();
                     adSkipOffset = (offset != null && offset >= 0) ? offset : null;
                     // Start the countdown at the ad's beginning, so the button never shows an
                     // enabled "Skip" before the first AD_TIME arrives.
                     updateSkipButton(0);
                     skipButton.setVisibility(adSkipOffset != null ? VISIBLE : GONE);
-                }));
+                });
 
         // Ad progress drives the seek bar and the "Skip in N" countdown.
         player.addListener(EventType.AD_TIME,
-                (AdvertisingEvents.OnAdTimeListener) e -> ui(() -> {
+                (AdvertisingEvents.OnAdTimeListener) e -> {
                     showProgress(e.getPosition(), e.getDuration());
                     updateSkipButton(e.getPosition());
-                    // Ad time only advances while the ad plays, so it also keeps the
-                    // play/pause label right if AD_PLAY came before the break started.
-                    if (!adPlaying) {
-                        adPlaying = true;
-                        playPauseButton.setText(R.string.pause);
-                    }
-                }));
+                });
 
         player.addListener(EventType.AD_SKIPPED,
-                (AdvertisingEvents.OnAdSkippedListener) e -> ui(() -> skipButton.setVisibility(GONE)));
+                (AdvertisingEvents.OnAdSkippedListener) e -> skipButton.setVisibility(GONE));
+
+        // Only AD_PLAY and AD_PAUSE decide whether the ad is playing.
         player.addListener(EventType.AD_PLAY,
-                (AdvertisingEvents.OnAdPlayListener) e -> ui(() -> {
+                (AdvertisingEvents.OnAdPlayListener) e -> {
                     adPlaying = true;
                     playPauseButton.setText(R.string.pause);
-                }));
+                });
         player.addListener(EventType.AD_PAUSE,
-                (AdvertisingEvents.OnAdPauseListener) e -> ui(() -> {
+                (AdvertisingEvents.OnAdPauseListener) e -> {
                     adPlaying = false;
                     playPauseButton.setText(R.string.play);
-                }));
+                });
     }
 
     private void setAdMode(boolean inAd) {
         inAdBreak = inAd;
+        // Don't reset adPlaying when the break starts: AD_PLAY may already have arrived.
         if (!inAd) adPlaying = false;
         adLabel.setVisibility(inAd ? VISIBLE : GONE);
         seekBar.setEnabled(!inAd);
@@ -266,10 +281,6 @@ public class PlayerControlsView extends LinearLayout {
         if (hasChoice && currentIndex >= 0 && currentIndex < levels.size()) {
             qualityButton.setText(levels.get(currentIndex).getLabel());
         }
-    }
-
-    private void ui(Runnable action) {
-        mainHandler.post(action);
     }
 
     private static String formatTime(double seconds) {

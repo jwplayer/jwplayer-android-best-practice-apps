@@ -46,14 +46,15 @@ In general the following usage instructions apply to most sample projects:
 - Start up Android Studio choose **Open an Existing Android Studio Project**
 - Navigate to the location of the repository and select the root directory of the app you want to load.
 - Click **OK**
-- Update application to use your license key (use 1 option below).
-  - set JWPLAYER_LICENSE_KEY as environment variable  
-  - overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license in the application's main activity
-  - change in app-level build.gradle
+- Give the app your license key (use one option below). `BuildConfig.JWPLAYER_LICENSE_KEY` is generated at build time, so it cannot be changed from code.
+  - set the `JWPLAYER_LICENSE_KEY` environment variable before building (Android Studio must be started from a shell that has it, or set it in your Gradle run configuration)
+  - put your key in the app's `app/build.gradle` (`app/build.gradle.kts` in **CustomUi**)
+  - pass your key directly to `LicenseUtil().setLicenseKey(context, "<your license key>")` in the app's Activity
+- **OfflineDownloadsDemo** also needs a JW Platform v1 API secret, read from the `JWPLAYER_V1_API_SECRET` environment variable (see its README)
 - Click **Run**
 
 For more information about the JW Player SDK for Android, and how to use it, head over to our [Developer Portal](https://docs.jwplayer.com/players/docs/android-overview)
 
 ## Building all samples
 
-`./buildAll.sh` builds every sample (each folder with its own Gradle wrapper). The same builds run in GitHub Actions on every pull request.
+`./buildAll.sh` builds every sample (each folder with its own `settings.gradle` or `settings.gradle.kts`) with `assembleDebug`; pass another Gradle task to change that, e.g. `./buildAll.sh assembleRelease`. The same debug builds run in GitHub Actions on every pull request.

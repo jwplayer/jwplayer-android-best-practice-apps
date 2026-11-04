@@ -12,11 +12,11 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.view.KeyEvent;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.media.app.NotificationCompat.MediaStyle;
+import androidx.media.session.MediaButtonReceiver;
 
 public class NotificationWrapper {
 
@@ -69,30 +69,30 @@ public class NotificationWrapper {
 								 .setMediaSession(mediaSession.getSessionToken()))
 			   .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 			   .setSmallIcon(R.drawable.ic_jw_developer)
-			   .setDeleteIntent(getActionIntent(context, KeyEvent.KEYCODE_MEDIA_STOP));
+			   .setDeleteIntent(getActionIntent(context, PlaybackStateCompat.ACTION_STOP));
 
 
 		// Attach actions to the notification.
 		if ((capabilities & PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS) != 0) {
 			builder.addAction(R.drawable.ic_previous, "Previous",
 							  getActionIntent(context,
-											  KeyEvent.KEYCODE_MEDIA_PREVIOUS));
+											  PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS));
 		}
 		if ((capabilities & PlaybackStateCompat.ACTION_PAUSE) != 0) {
 			builder.addAction(R.drawable.ic_pause, "Pause",
 							  getActionIntent(context,
-											  KeyEvent.KEYCODE_MEDIA_PAUSE));
+											  PlaybackStateCompat.ACTION_PAUSE));
 		}
 		if ((capabilities & PlaybackStateCompat.ACTION_PLAY) != 0) {
 			builder.addAction(R.drawable.ic_play, "Play",
 							  getActionIntent(context,
-											  KeyEvent.KEYCODE_MEDIA_PLAY)
+											  PlaybackStateCompat.ACTION_PLAY)
 			);
 		}
 		if ((capabilities & PlaybackStateCompat.ACTION_SKIP_TO_NEXT) != 0) {
 			builder.addAction(R.drawable.ic_next, "Next",
 							  getActionIntent(context,
-											  KeyEvent.KEYCODE_MEDIA_NEXT));
+											  PlaybackStateCompat.ACTION_SKIP_TO_NEXT));
 		}
 
 		// We want to resume the existing VideoActivity, over creating a new one.
@@ -108,11 +108,13 @@ public class NotificationWrapper {
 		return notification;
 	}
 
-	private PendingIntent getActionIntent(Context context, int mediaKeyEvent) {
-		Intent intent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-		intent.setPackage(context.getPackageName());
-		intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, mediaKeyEvent));
-		return PendingIntent.getBroadcast(context, mediaKeyEvent, intent, PendingIntent.FLAG_IMMUTABLE);
+	/**
+	 * Builds a MEDIA_BUTTON PendingIntent for the given action. androidx's MediaButtonReceiver
+	 * (declared in the manifest) receives it and forwards it to MediaPlaybackService, which hands it
+	 * to the MediaSession via MediaButtonReceiver.handleIntent().
+	 */
+	private PendingIntent getActionIntent(Context context, @PlaybackStateCompat.MediaKeyAction long action) {
+		return MediaButtonReceiver.buildMediaButtonPendingIntent(context, action);
 	}
 
 	void cancelNotification() {

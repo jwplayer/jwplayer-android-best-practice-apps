@@ -91,9 +91,8 @@ public class FeedActivity extends AppCompatActivity {
 		WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 		setContentView(R.layout.activity_feed);
 
-		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
-		// [OR] change in app-level build.gradle
-		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
+		// The key comes from the JWPLAYER_LICENSE_KEY environment variable at build time
+		// (see app/build.gradle). You can also pass your key here directly.
 		new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
 		buildFeed();
@@ -285,8 +284,6 @@ public class FeedActivity extends AppCompatActivity {
 		final JWPlayerView view;
 		final JWPlayer player;
 		PageHolder page;
-		/** The item this player is set up with, so re-binding the same item skips setup(). */
-		FeedItem setupItem;
 
 		PooledPlayer(JWPlayerView view) {
 			this.view = view;
@@ -298,7 +295,6 @@ public class FeedActivity extends AppCompatActivity {
 		}
 
 		void setup(FeedItem item) {
-			setupItem = item;
 			player.setup(new PlayerConfig.Builder()
 					.playlist(Collections.singletonList(item.playlistItem))
 					// The feed decides what plays (onPageSelected), not the player.
@@ -348,6 +344,15 @@ public class FeedActivity extends AppCompatActivity {
 		@Override
 		public void onViewRecycled(@NonNull PageHolder holder) {
 			holder.unbind();
+		}
+
+		@Override
+		public boolean onFailedToRecycleView(@NonNull PageHolder holder) {
+			// RecyclerView skips onViewRecycled for a view it cannot recycle (for example one
+			// with a running animation). Release the player anyway so it returns to the pool,
+			// then let RecyclerView recycle the holder.
+			holder.unbind();
+			return true;
 		}
 
 		@Override
@@ -407,9 +412,8 @@ public class FeedActivity extends AppCompatActivity {
 			player = mFreePlayers.poll();
 			player.page = this;
 			playerSlot.addView(player.view);
-			if (player.setupItem != item) {
-				player.setup(item);
-			}
+			// releasePlayer() stops the player, so a player taken from the pool always needs setup().
+			player.setup(item);
 		}
 
 		/** Stops this page's player and returns it to the pool. */
@@ -419,7 +423,6 @@ public class FeedActivity extends AppCompatActivity {
 			}
 			// Stop (not just pause) so an off-screen page frees its buffers and decoder.
 			player.player.stop();
-			player.setupItem = null;
 			player.page = null;
 			playerSlot.removeView(player.view);
 			mFreePlayers.add(player);

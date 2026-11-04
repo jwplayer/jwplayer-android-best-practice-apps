@@ -1,5 +1,6 @@
 package com.jwplayer.demo.customfragmentui.player;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.jwplayer.pub.api.JWPlayer;
@@ -103,7 +104,9 @@ public class CustomPlayerViewModel implements VideoPlayerEvents.OnFirstFrameList
     @Override
     public void onAdMeta(AdMetaEvent adMetaEvent) {
         currentSkipOffset = adMetaEvent.getSkipOffset();
-        clickthroughURL = adMetaEvent.getClickThroughUrl();
+        String url = adMetaEvent.getClickThroughUrl();
+        clickthroughURL = url != null ? url : NO_VALUE_STRING;
+        updateAdsUi();
     }
 
     @Override
@@ -228,7 +231,7 @@ public class CustomPlayerViewModel implements VideoPlayerEvents.OnFirstFrameList
     }
 
     private boolean shouldLearnMoreBeVisible() {
-        return isAdPlaying && clickthroughURL.equals(NO_VALUE_STRING);
+        return isAdPlaying && !TextUtils.isEmpty(clickthroughURL);
     }
 
     public void togglePlay() {

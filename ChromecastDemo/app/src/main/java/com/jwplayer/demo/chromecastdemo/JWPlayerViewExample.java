@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.cast.framework.CastContext;
@@ -24,11 +25,10 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -40,6 +40,8 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 	private JWPlayerView mPlayerView;
 	private JWPlayer mPlayer;
+
+	private static final String TAG = "ChromecastDemo";
 
 	private CastContext mCastContext;
 	private AppBarLayout mAppBarLayout;
@@ -65,9 +67,16 @@ public class JWPlayerViewExample extends AppCompatActivity
 		});
 
 		if (isGoogleApiAvailable(this)) {
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-			Task<CastContext> task = CastContext.getSharedInstance(this,executor);
-			task.addOnCompleteListener(task1 -> mCastContext = task1.getResult());
+			// The main executor delivers the result on the UI thread, where mCastContext is read.
+			Task<CastContext> task = CastContext.getSharedInstance(this,
+					ContextCompat.getMainExecutor(this));
+			task.addOnCompleteListener(result -> {
+				if (result.isSuccessful()) {
+					mCastContext = result.getResult();
+				} else {
+					Log.w(TAG, "CastContext unavailable; casting is disabled", result.getException());
+				}
+			});
 		}
 
 		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here

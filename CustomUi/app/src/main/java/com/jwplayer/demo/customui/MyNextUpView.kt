@@ -41,7 +41,8 @@ class MyNextUpView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, d
 
   fun bind(nextUpViewModel: NextUpViewModel, lifecycleOwner: LifecycleOwner?) {
     nextUpViewModel.thumbnailUrl.observe(lifecycleOwner!!) { url: String? ->
-      Picasso.get().load(url).into(poster)
+      // Picasso throws on an empty path, so clear the poster when there is no thumbnail.
+      if (url.isNullOrBlank()) poster?.setImageDrawable(null) else Picasso.get().load(url).into(poster)
     }
     nextUpViewModel.title.observe(lifecycleOwner) { string: String? -> title!!.text = string }
     nextUpViewModel.isUiLayerVisible()

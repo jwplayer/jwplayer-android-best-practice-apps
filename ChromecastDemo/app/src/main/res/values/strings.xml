@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">Chromecast Demo</string>
-    <string name="view_example">JWPlayerView Example</string>
-    <string name="media_route_menu_title">Cast</string>
 </resources>

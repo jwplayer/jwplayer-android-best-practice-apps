@@ -1,7 +1,8 @@
 # Fullscreen Without Rotation Demo
 
-Shows a custom `FullscreenHandler` that makes the player fill the screen **without** rotating the
-device to landscape.
+Shows a custom `FullscreenHandler` that enlarges the player to fill its parent layout **without**
+rotating the device to landscape. The status and navigation bars stay visible, so "fullscreen" here
+means the Activity's content area, not the whole display.
 
 ## What it shows
 
@@ -11,6 +12,9 @@ device to landscape.
   `MATCH_PARENT` × `MATCH_PARENT` on enter and restores the original params on exit.
 - The other `FullscreenHandler` callbacks (`onAllowRotationChanged`, `updateLayoutParams`, ...) are
   intentionally no-ops: this handler never changes orientation.
+- The handler does not hide the system bars. To use the whole display, also hide them on enter (for
+  example with `WindowInsetsControllerCompat.hide(WindowInsetsCompat.Type.systemBars())`) and show
+  them again on exit.
 - Back exits fullscreen.
 
 Use this as a starting point for any custom fullscreen behaviour, e.g. hiding other views, or

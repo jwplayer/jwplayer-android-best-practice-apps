@@ -1,10 +1,13 @@
 package com.jwplayer.demo.notificationsdemo;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
@@ -21,6 +24,8 @@ import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.view.JWPlayerView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,6 +39,8 @@ public class VideoActivity extends AppCompatActivity implements
 	 */
 	private JWPlayerView mPlayerView;
 	private JWPlayer mPlayer;
+
+	private static final int REQUEST_NOTIFICATIONS = 1;
 
 	/**
 	 * Whether we have bound to a {@link MediaPlaybackService}.

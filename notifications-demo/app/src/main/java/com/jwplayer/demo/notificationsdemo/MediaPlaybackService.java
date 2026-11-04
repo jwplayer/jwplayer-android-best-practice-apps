@@ -27,10 +27,12 @@ public class MediaPlaybackService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		// MEDIA_BUTTON intents from the notification actions arrive here via androidx's
+		// MediaButtonReceiver (declared in the manifest) and are dispatched to the session callback.
 		if (mMediaSessionManager != null) {
 			MediaButtonReceiver.handleIntent(mMediaSessionManager.getMediaSession(), intent);
 		}
-		return START_STICKY;
+		return START_NOT_STICKY;
 	}
 
 	@Nullable
@@ -61,7 +63,7 @@ public class MediaPlaybackService extends Service {
 	public void setupMediaSession(MediaSessionManager mediaSessionManager,
 								  NotificationWrapper notificationWrapper) {
 
-		if (mMediaSessionManager != null) {
+		if (mMediaSessionManager != null && mMediaSessionManager != mediaSessionManager) {
 			mMediaSessionManager.release();
 		}
 

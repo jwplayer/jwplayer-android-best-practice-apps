@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OfflineDrmDemo</string>
+    <string name="app_name">Offline Downloads</string>
 
     <string name="not_downloaded">Content Not Downloaded</string>
     <string name="downloaded">Content Downloaded</string>
@@ -14,4 +14,5 @@
     <string name="using_offline_drm">Offline, using downloaded content</string>
     <string name="no_offline_content">Offline, no downloaded content</string>
     <string name="must_select_media">You must select one video and one audio option</string>
+    <string name="missing_api_secret">No V1 API secret: set the JWPLAYER_V1_API_SECRET environment variable and rebuild (see README).</string>
 </resources>

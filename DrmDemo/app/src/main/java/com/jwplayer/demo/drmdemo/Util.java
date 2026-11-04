@@ -34,6 +34,12 @@ public class Util {
                     out.close();
                 }
             }
+            // Fail on a non-2xx response instead of handing an error page to the DRM session,
+            // the same way ExoPlayer's HttpMediaDrmCallback does.
+            int status = urlConnection.getResponseCode();
+            if (status < 200 || status > 299) {
+                throw new IOException("DRM request to " + url + " failed with HTTP " + status);
+            }
             // Read and return the response body.
             InputStream inputStream = urlConnection.getInputStream();
             try {

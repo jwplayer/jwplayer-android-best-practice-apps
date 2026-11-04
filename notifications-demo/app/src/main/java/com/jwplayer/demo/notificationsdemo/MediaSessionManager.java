@@ -82,6 +82,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 	private NotificationWrapper mNotificationWrapper;
 
+	private boolean mReleased;
+
 	/**
 	 * Initializes a new MediaSessionManager.
 	 *
@@ -261,6 +263,11 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	 * Releases this MediaSession.
 	 */
 	public void release() {
+		if (mReleased) {
+			return;
+		}
+		mReleased = true;
+		mMediaSessionCompat.setActive(false);
 		mMediaSessionCompat.release();
 		mPlayer.removeListener(EventType.PLAY, this);
 		mPlayer.removeListener(EventType.PAUSE, this);
@@ -305,8 +312,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 	@Override
 	public void onPlaylistComplete(PlaylistCompleteEvent playlistCompleteEvent) {
+		// Deactivate only: the session is reused if playback restarts. It is released once, in release().
 		mMediaSessionCompat.setActive(false);
-		mMediaSessionCompat.release();
 		mPlaylistIndex = 0;
 	}
 
@@ -352,7 +359,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 		@Override
 		public void onSeekTo(long pos) {
-			mPlayer.seek(pos);
+			// MediaSession positions are in milliseconds; JWPlayer.seek() takes seconds.
+			mPlayer.seek(pos / 1000.0);
 		}
 
 		@Override

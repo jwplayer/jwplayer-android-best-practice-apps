@@ -27,8 +27,8 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity
         implements AdvertisingEvents.OnAdErrorListener {
 
-    JWPlayerView mPlayerView;
-    JWPlayer mPlayer;
+    private JWPlayerView mPlayerView;
+    private JWPlayer mPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

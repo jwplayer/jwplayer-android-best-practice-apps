@@ -10,5 +10,6 @@
     <string name="rewind">Rewind 10 s</string>
     <string name="play_pause">Play / pause</string>
     <string name="audio_focus_status">Audio focus: %1$s</string>
+    <string name="last_pause_reason">Last pause reason: %1$s</string>
     <string name="sdk_audio_focus">Let the SDK handle audio focus (pause for calls, other apps, assistant prompts)</string>
 </resources>

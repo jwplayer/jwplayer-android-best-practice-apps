@@ -57,7 +57,7 @@
         app:layout_constraintBottom_toBottomOf="@id/next_poster"
         app:layout_constraintEnd_toEndOf="@id/next_poster"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_jw_close"
+        android:src="@drawable/ic_next_up_close"
         android:background="#991B1B1B"
         app:shapeAppearance="@style/CircleX"
         android:layout_width="20dp"

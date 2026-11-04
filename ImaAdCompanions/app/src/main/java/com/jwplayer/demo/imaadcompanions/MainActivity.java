@@ -52,9 +52,8 @@ public class MainActivity extends AppCompatActivity implements AdvertisingEvents
             return windowInsets;
         });
 
-        // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
-        // [OR] change in app-level build.gradle
-        // [OR] set JWPLAYER_LICENSE_KEY as environment variable
+        // The key comes from the JWPLAYER_LICENSE_KEY environment variable at build time
+        // (see app/build.gradle). You can also pass your key here directly.
         new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
         JWPlayerView view = findViewById(R.id.player);
 

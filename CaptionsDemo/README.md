@@ -20,7 +20,7 @@ The viewer's caption preferences in **Settings > Accessibility > Captions** (or 
 
 - `CaptionsConfig.OVERRIDE_STRATEGY_VIDEO_OVERRIDE_ONLY` (default, used here): the system choice wins for every property the viewer set; your values fill in the rest. On a device with no caption preferences, all your values apply.
 - `CaptionsConfig.OVERRIDE_STRATEGY_ALWAYS`: your values always win, over both system settings and styling embedded in the track. Use with care, it overrides deliberate accessibility choices.
-- `allowScaling(false)` stops the system caption size scale from being applied on top of `fontSize`.
+- `allowScaling(false)` (used here) stops the system caption size scale from being applied on top of `fontSize`. Remove it to let the viewer's size scale apply.
 
 ## Setup
 

@@ -32,9 +32,8 @@ public class JWPlayerViewExample extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_jwplayerview);
 
-		// INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
-		// [OR] change in app-level build.gradle
-		// [OR] set JWPLAYER_LICENSE_KEY as environment variable
+		// The key comes from the JWPLAYER_LICENSE_KEY environment variable at build time
+		// (see app/build.gradle). You can also pass your key here directly.
 		new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
 		// Handle status bar insets
@@ -49,14 +48,14 @@ public class JWPlayerViewExample extends AppCompatActivity {
 		mPlayer = mPlayerView.getPlayer(this);
 
 		// Replace the default FullscreenHandler (which rotates to landscape) with one that just
-		// resizes the player to fill the screen in the current orientation.
+		// resizes the player to fill its parent in the current orientation (system bars stay visible).
 		mPlayer.setFullscreenHandler(new FullScreenHandler_NoRotation(mPlayerView));
 
 		// Load a media source
 		PlaylistItem pi = new PlaylistItem.Builder()
 				.file("https://cdn.jwplayer.com/manifests/Gihxhhy6.m3u8")
 				.title("Fullscreen without rotation")
-				.description("Tap fullscreen: the player fills the screen in the current orientation.")
+				.description("Tap fullscreen: the player fills the content area in the current orientation.")
 				.build();
 
 		List<PlaylistItem> playlist = new ArrayList<>();

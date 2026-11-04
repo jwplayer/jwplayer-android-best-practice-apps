@@ -41,12 +41,22 @@ fun VideoPlayer(
     Playback(
       modifier = Modifier
         .fillMaxSize()
-        .clickable(onClickLabel = stringResource(id = controlsClickLabel)) {
-          controlsVisible = !controlsVisible
-        }
         .zIndex(0f),
       onPlayerCreated = onPlayerCreated,
       onPlayerDisposed = onPlayerDisposed
+    )
+
+    // Tap target above the player. A Modifier.clickable on the AndroidView itself is unreliable:
+    // touches go to the embedded JWPlayerView first, and when it consumes them the click never
+    // fires. A transparent Compose layer on top always receives the tap. The SDK's own controls
+    // are hidden in this sample, so nothing underneath needs the touch.
+    Box(
+      modifier = Modifier
+        .fillMaxSize()
+        .clickable(onClickLabel = stringResource(id = controlsClickLabel)) {
+          controlsVisible = !controlsVisible
+        }
+        .zIndex(0.5f)
     )
 
     val alpha by animateFloatAsState(

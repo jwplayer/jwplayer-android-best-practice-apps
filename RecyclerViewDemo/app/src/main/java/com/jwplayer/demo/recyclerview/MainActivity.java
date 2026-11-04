@@ -197,6 +197,19 @@ public class MainActivity extends AppCompatActivity {
 		}
 
 		@Override
+		public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+			// A cell scrolled off-screen is first kept in RecyclerView's view cache, un-recycled,
+			// so onViewRecycled may not run for a while. Pause here so it stops playing as soon
+			// as it leaves the screen; scrolling back resumes from the same position.
+			if (holder instanceof VideoViewHolder) {
+				JWPlayer player = ((VideoViewHolder) holder).player;
+				if (player != mFullscreenPlayer) {
+					player.pause();
+				}
+			}
+		}
+
+		@Override
 		public void onViewRecycled(@NonNull RecyclerView.ViewHolder holder) {
 			if (holder instanceof VideoViewHolder) {
 				((VideoViewHolder) holder).unbind();

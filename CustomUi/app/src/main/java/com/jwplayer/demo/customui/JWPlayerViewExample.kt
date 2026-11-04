@@ -2,10 +2,10 @@ package com.jwplayer.demo.customui
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.view.OnApplyWindowInsetsListener
@@ -17,18 +17,25 @@ import com.jwplayer.pub.api.UiGroup
 import com.jwplayer.pub.api.configuration.PlayerConfig
 import com.jwplayer.pub.api.configuration.UiConfig
 import com.jwplayer.pub.api.events.EventType
-import com.jwplayer.pub.api.events.FirstFrameEvent
 import com.jwplayer.pub.api.events.FullscreenEvent
-import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents.OnFirstFrameListener
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents.OnFullscreenListener
 import com.jwplayer.pub.api.license.LicenseUtil
 import com.jwplayer.pub.api.media.playlists.PlaylistItem
 import com.jwplayer.pub.view.JWPlayerView
 
-class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener, OnFirstFrameListener {
+class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener {
 
   private lateinit var mPlayerView: JWPlayerView
   private lateinit var mPlayer: JWPlayer
+
+  // Back leaves fullscreen. Enabled only while fullscreen, so otherwise Back behaves normally.
+  // Uses the OnBackPressedDispatcher because onKeyDown(KEYCODE_BACK) is not delivered under
+  // predictive back (Android 16 with targetSdk 36).
+  private val exitFullscreenOnBack = object : OnBackPressedCallback(false) {
+    override fun handleOnBackPressed() {
+      mPlayer.setFullscreen(false, true)
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,6 +54,7 @@ class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener, OnFirstFr
     // The license key is read from the JWPLAYER_LICENSE_KEY environment variable at build time
     LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY)
     mPlayerView = findViewById(R.id.jwplayer)
+    onBackPressedDispatcher.addCallback(this, exitFullscreenOnBack)
 
     mPlayerView.getPlayerAsync(this, this, PlayerInitializationListener { jwPlayer: JWPlayer? ->
       mPlayer = jwPlayer ?: error("Player should not be null")
@@ -67,21 +75,8 @@ class JWPlayerViewExample : AppCompatActivity(), OnFullscreenListener, OnFirstFr
     }
   }
 
-  override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-    // Exit fullscreen when the user pressed the Back button
-    if (keyCode == KeyEvent.KEYCODE_BACK && ::mPlayer.isInitialized) {
-      if (mPlayer.fullscreen) {
-        mPlayer.setFullscreen(false, true)
-        return false
-      }
-    }
-    return super.onKeyDown(keyCode, event)
-  }
-
-  override fun onFirstFrame(firstFrameEvent: FirstFrameEvent?) {
-  }
-
   override fun onFullscreen(fullscreenEvent: FullscreenEvent) {
+    exitFullscreenOnBack.isEnabled = fullscreenEvent.fullscreen
     val actionBar = supportActionBar
     if (actionBar != null) {
       if (fullscreenEvent.fullscreen) {

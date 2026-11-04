@@ -5,14 +5,17 @@
          mediaPlayback. The SDK declares the service; the app declares these permissions. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <!-- Android 13+: needed to show the media notification (also requested at runtime). -->
+    <!-- Android 13+: recommended (also requested at runtime). Media-session notifications are
+         exempt from the runtime permission, but other app notifications and some OEMs need it. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- enableOnBackInvokedCallback="false": the player's fullscreen mode handles Back through the
+         legacy back path; opting out keeps Back working on Android 16 with targetSdk 36. -->
     <application
+        android:enableOnBackInvokedCallback="false"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
@@ -30,11 +33,6 @@
         <activity
             android:name=".PlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:exported="false" />
-
-        <!-- Receives the taps on the legacy notification actions (LegacyActionsMediaApi). -->
-        <receiver
-            android:name=".LegacyActionsMediaApi$ActionReceiver"
             android:exported="false" />
     </application>
 

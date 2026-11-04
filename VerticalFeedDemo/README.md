@@ -18,8 +18,9 @@ Every `JWPlayerView` is a full player, so pages do **not** each get their own pl
 
 - `setOffscreenPageLimit(1)` keeps the current page plus one neighbour on each side laid out. Pages are plain `RecyclerView.Adapter` ViewHolders, not Fragments.
 - The RecyclerView item cache inside ViewPager2 is set to 0. A page that leaves the window is recycled right away instead of sitting in the cache with a player it doesn't need.
-- When a page is bound it takes a free player from the pool, adds the player's view to its slot, and calls `setup()` with `autostart(false)`. If the same item is bound again without being recycled, `setup()` is not called again.
-- When a page is recycled, its player is `stop()`ped, removed from the page and returned to the pool.
+- When a page is bound it takes a free player from the pool, adds the player's view to its slot, and calls `setup()` with `autostart(false)`. A page that already holds a player keeps it, so binding it again does not set it up again.
+- When a page is recycled (or RecyclerView fails to recycle it, via `onFailedToRecycleView`), its player is `stop()`ped, removed from the page and returned to the pool. Because the player was stopped, the next page that takes it always calls `setup()`.
+- `setOffscreenPageLimit(1)` with a pool of three is intended: the current page and its two neighbours each hold a player. During a swipe ViewPager2 can briefly lay out a fourth page; that page waits without a player, and if it becomes the current page it takes the player from the page furthest away (`stealPlayerFor`).
 - If the current page has no player (for example during a fast swipe), it takes the player from the page furthest away.
 - Players are created with `getPlayer(activity)`, so the SDK releases them when the Activity is destroyed.
 

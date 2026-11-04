@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.jwplayer.pub.api.JWPlayer;
@@ -14,8 +13,6 @@ import com.jwplayer.pub.api.events.FullscreenEvent;
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.view.JWPlayerView;
-
-import java.util.concurrent.Executors;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,9 +69,8 @@ public class JWPlayerViewExample extends AppCompatActivity
 
 		mPlayer.setup(config);
 
-		// Initialise the Cast framework so the player's cast button is available
-		// (the casting UI is styled by the same resource overrides).
-		CastContext.getSharedInstance(this, Executors.newSingleThreadExecutor());
+		// No Cast setup is needed here: with the jwplayer-chromecast module on the classpath the SDK
+		// initialises the Cast framework itself, and its cast UI picks up the same style overrides.
 
 		// Exit fullscreen when the user presses Back
 		getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

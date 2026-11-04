@@ -44,9 +44,7 @@ public class NetworkTracker {
                 super.onAvailable(network);
                 if (!mIsOnline) {
                     mIsOnline = true;
-                    mMainHandler.post(() -> {
-                        mListener.get().onNetworkStatusChanged(mIsOnline);
-                    });
+                    mMainHandler.post(NetworkTracker.this::notifyListener);
                 }
             }
 
@@ -55,9 +53,7 @@ public class NetworkTracker {
                 super.onLost(network);
                 if (mIsOnline) {
                     mIsOnline = false;
-                    mMainHandler.post(() -> {
-                        mListener.get().onNetworkStatusChanged(mIsOnline);
-                    });
+                    mMainHandler.post(NetworkTracker.this::notifyListener);
                 }
             }
 
@@ -69,7 +65,15 @@ public class NetworkTracker {
         };
         mConnectivityManager.requestNetwork(networkRequest, mNetworkCallback);
         mIsOnline = mConnectivityManager.getActiveNetworkInfo() != null;
-        mListener.get().onNetworkStatusChanged(mIsOnline);
+        notifyListener();
+    }
+
+    /** The listener is held weakly: it may already have been garbage collected. */
+    private void notifyListener() {
+        NetworkStatusChangedListener listener = mListener.get();
+        if (listener != null) {
+            listener.onNetworkStatusChanged(mIsOnline);
+        }
     }
 
     public boolean isOnline() {

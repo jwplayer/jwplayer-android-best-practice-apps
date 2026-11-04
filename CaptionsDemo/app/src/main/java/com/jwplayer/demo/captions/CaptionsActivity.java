@@ -44,9 +44,8 @@ public class CaptionsActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_captions);
 
-        // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
-        // [OR] change in app-level build.gradle
-        // [OR] set JWPLAYER_LICENSE_KEY as environment variable
+        // The key comes from the JWPLAYER_LICENSE_KEY environment variable at build time
+        // (see app/build.gradle). You can also pass your key here directly.
         new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
 
         picker = findViewById(R.id.track_picker);
@@ -96,14 +95,17 @@ public class CaptionsActivity extends AppCompatActivity implements
         pickerAdapter.clear();
         pickerAdapter.addAll(labels);
         pickerAdapter.notifyDataSetChanged();
-        picker.setSelection(event.getCurrentCaptionIndex(), false);
+        // Post the selection so it lands after the Spinner has laid out the new entries.
+        int current = event.getCurrentCaptionIndex();
+        picker.post(() -> picker.setSelection(current, false));
     }
 
     @Override
     public void onCaptionsChanged(CaptionsChangedEvent event) {
         int index = event.getCurrentTrack();
         if (index >= 0 && index < pickerAdapter.getCount()) {
-            picker.setSelection(index, false);
+            // Posted like onCaptionsList, so the two keep their order.
+            picker.post(() -> picker.setSelection(index, false));
         }
     }
 
@@ -127,6 +129,9 @@ public class CaptionsActivity extends AppCompatActivity implements
                 .edgeStyle(CaptionsConfig.EDGE_STYLE_DROP_SHADOW)
                 .position(position)
                 .overrideStrategy(CaptionsConfig.OVERRIDE_STRATEGY_VIDEO_OVERRIDE_ONLY)
+                // Use fontSize as given instead of multiplying it by the system caption
+                // size scale. Leave this out (default true) to honour the viewer's scale.
+                .allowScaling(false)
                 .build();
     }
 

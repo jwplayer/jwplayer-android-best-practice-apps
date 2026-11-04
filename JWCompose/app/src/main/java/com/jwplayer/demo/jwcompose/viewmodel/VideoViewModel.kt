@@ -6,6 +6,7 @@ import com.jwplayer.pub.api.JWPlayer
 import com.jwplayer.pub.api.PlayerState
 import com.jwplayer.pub.api.configuration.PlayerConfig
 import com.jwplayer.pub.api.configuration.UiConfig
+import com.jwplayer.pub.api.events.CompleteEvent
 import com.jwplayer.pub.api.events.ErrorEvent
 import com.jwplayer.pub.api.events.EventType
 import com.jwplayer.pub.api.events.IdleEvent
@@ -29,6 +30,7 @@ class VideoViewModel : ViewModel(),
   VideoPlayerEvents.OnReadyListener,
   VideoPlayerEvents.OnPauseListener,
   VideoPlayerEvents.OnIdleListener,
+  VideoPlayerEvents.OnCompleteListener,
   VideoPlayerEvents.OnErrorListener,
   VideoPlayerEvents.OnSetupErrorListener {
 
@@ -77,13 +79,16 @@ class VideoViewModel : ViewModel(),
   override fun onPlay(event: PlayEvent) = update(PlayerState.PLAYING)
   override fun onPause(event: PauseEvent) = update(PlayerState.PAUSED)
   override fun onIdle(event: IdleEvent) = update(PlayerState.IDLE)
+  // When an item completes there is no PAUSE; show the play icon. If the playlist advances, the
+  // next PLAY switches it back, so after the last item it correctly stays on play.
+  override fun onComplete(event: CompleteEvent) = update(PlayerState.IDLE)
   override fun onError(event: ErrorEvent) = update(PlayerState.ERROR)
   override fun onSetupError(event: SetupErrorEvent?) = update(PlayerState.ERROR)
 
   private companion object {
     val EVENTS = arrayOf(
       EventType.READY, EventType.PLAY, EventType.PAUSE,
-      EventType.IDLE, EventType.ERROR, EventType.SETUP_ERROR
+      EventType.IDLE, EventType.COMPLETE, EventType.ERROR, EventType.SETUP_ERROR
     )
   }
 }

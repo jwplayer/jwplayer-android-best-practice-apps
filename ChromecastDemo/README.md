@@ -31,4 +31,4 @@ Casting from a `JWPlayerView` with the JW Player SDK's Chromecast module.
    ```
 3. Run on a device with Google Play services, on the same Wi-Fi network as a Cast device.
 
-For more information, see the [JW Player Android developer guide](https://developer.jwplayer.com/sdk/android/docs/developer-guide/).
+For more information, see the [JW Player Android developer guide](https://docs.jwplayer.com/players/docs/android-overview).

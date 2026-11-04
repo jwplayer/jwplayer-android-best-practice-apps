@@ -1,11 +1,16 @@
 package com.jwplayer.offlinedelegate;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.RenderersFactory;
 import androidx.media3.exoplayer.offline.Download;
@@ -93,7 +98,14 @@ import java.util.ArrayList;
         mContentStatus = findViewById(R.id.content_status);
         mPlayerView = findViewById(R.id.player);
 
-        // TODO ask for user permissions or manually approve post notifications
+        // Android 13+: downloads still run without this, but their progress notification is
+        // not shown.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+        }
 
         new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
@@ -193,8 +205,10 @@ import java.util.ArrayList;
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mNetworkTracker.destroy();
+        // DownloadTracker is a process-wide singleton: stop it calling back into this activity.
+        downloadTracker.removeListener(this);
+        super.onDestroy();
     }
 
     @Override
