@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Background Audio Demo</string>
+    <string name="intro">Start playback, then press Home or lock the screen to see the media notification and lock-screen controls.</string>
+    <string name="mode_buttons">Notification buttons (Like / Bookmark)</string>
+    <string name="mode_legacy">Legacy notification actions</string>
+    <string name="mode_default">Default notification</string>
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="rewind">Rewind 10 s</string>
+    <string name="play_pause">Play / pause</string>
+</resources>

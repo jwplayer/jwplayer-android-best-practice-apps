@@ -18,8 +18,8 @@ echo "[Building DemoNativeControls]"
 cd DemoNativeControls
 ./gradlew assembleRelease
 cd ..
-echo "[Building FullBackgroundAudio]"
-cd FullBackgroundAudio
+echo "[Building BackgroundAudioDemo]"
+cd BackgroundAudioDemo
 ./gradlew assembleRelease
 cd ..
 echo "[Building GoogleDAIDemo]"
