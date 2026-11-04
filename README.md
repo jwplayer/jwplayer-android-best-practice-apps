@@ -57,4 +57,4 @@ For more information about the JW Player SDK for Android, and how to use it, hea
 
 ## Building all samples
 
-`./buildAll.sh` builds every sample (each folder with its own `settings.gradle` or `settings.gradle.kts`) with `assembleDebug`; pass another Gradle task to change that, e.g. `./buildAll.sh assembleRelease`. The same debug builds run in GitHub Actions on every pull request.
+`./buildAll.sh` builds every sample (each folder with its own `settings.gradle` or `settings.gradle.kts`) with `assembleDebug`; pass another Gradle task to change that, e.g. `./buildAll.sh assembleRelease`.
