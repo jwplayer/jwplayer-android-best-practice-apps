@@ -1,17 +1,34 @@
 # JW Player SDK for Android - Chromecast Demo
 
-This application contains an example implementation of Chromecast using the JW Player SDK for Android.
+Casting from a `JWPlayerView` with the JW Player SDK's Chromecast module.
 
-#### Usage instructions:
+## What it shows
 
-- Clone the repository - `git@github.com:jwplayer/jwplayer-android-best-practice-apps.git`
-- Open Android Studio and select: `Open an existing Android Studio project`
-- Navigate to the `jwplayer-android-best-practice-apps` directory and select the `ChromecastDemo` folder
-- Update application to use your license key (use 1 option below).
-  - set JWPLAYER_LICENSE_KEY as environment variable  
-  - overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license in the application's main acitivity
-  - change in app-level build.gradle
+- Adding `com.jwplayer:jwplayer-chromecast` is what enables casting: the player shows a cast
+  button in its controls once a Cast device is found on the network.
+- `CastOptionsProvider` (registered in `AndroidManifest.xml` via
+  `com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME`) configures the Cast
+  framework — here the Default Media Receiver and the media notification actions.
+- `CastContext.getSharedInstance(...)` is initialised only when Google Play services are
+  available, since casting doesn't work without them.
+- The app bar is hidden in fullscreen (unless a cast session is connected), rotating to landscape
+  enters fullscreen, and Back exits fullscreen.
 
-The demo application should now build and run. For more information on how to use our SDK refer to our developer guide:
+## SDK APIs
 
-[https://developer.jwplayer.com/sdk/android/docs/developer-guide/](https://developer.jwplayer.com/sdk/android/docs/developer-guide/)
+`jwplayer-chromecast` module, `JWPlayerView.getPlayer(LifecycleOwner)`, `PlayerConfig.Builder`,
+`EventType.FULLSCREEN`, `JWPlayer.setFullscreen(...)`.
+
+## Setup
+
+1. Open the `ChromecastDemo` folder in Android Studio.
+2. Set your JW Player license key as an environment variable before building; Gradle writes it
+   into `BuildConfig.JWPLAYER_LICENSE_KEY`:
+
+   ```
+   export JWPLAYER_LICENSE_KEY=<your license key>
+   ./gradlew :app:installDebug
+   ```
+3. Run on a device with Google Play services, on the same Wi-Fi network as a Cast device.
+
+For more information, see the [JW Player Android developer guide](https://developer.jwplayer.com/sdk/android/docs/developer-guide/).

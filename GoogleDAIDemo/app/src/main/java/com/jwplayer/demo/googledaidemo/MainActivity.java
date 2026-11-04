@@ -1,0 +1,99 @@
+package com.jwplayer.demo.googledaidemo;
+
+import android.os.Bundle;
+import android.util.Log;
+
+import com.google.android.material.appbar.MaterialToolbar;
+import com.jwplayer.pub.api.JWPlayer;
+import com.jwplayer.pub.api.configuration.PlayerConfig;
+import com.jwplayer.pub.api.events.AdErrorEvent;
+import com.jwplayer.pub.api.events.EventType;
+import com.jwplayer.pub.api.events.listeners.AdvertisingEvents;
+import com.jwplayer.pub.api.license.LicenseUtil;
+import com.jwplayer.pub.api.media.ads.dai.ImaDaiSettings;
+import com.jwplayer.pub.api.media.playlists.PlaylistItem;
+import com.jwplayer.pub.view.JWPlayerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+public class MainActivity extends AppCompatActivity
+        implements AdvertisingEvents.OnAdErrorListener {
+
+    JWPlayerView mPlayerView;
+    JWPlayer mPlayer;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        setContentView(R.layout.activity_main);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // Handle status bar insets
+        ViewCompat.setOnApplyWindowInsetsListener(getWindow().getDecorView(), (v, windowInsets) -> {
+            Insets statusBars = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+            Insets navBar = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            v.setPadding(0, statusBars.top, 0, navBar.bottom);
+            return windowInsets;
+        });
+
+        // INFO: Overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license here
+        // [OR] change in app-level build.gradle
+        // [OR] set JWPLAYER_LICENSE_KEY as environment variable
+        new LicenseUtil().setLicenseKey(this, BuildConfig.JWPLAYER_LICENSE_KEY);
+
+        mPlayerView = findViewById(R.id.jwplayer);
+        mPlayer = mPlayerView.getPlayer(this);
+        mPlayer.addListener(EventType.AD_ERROR, this);
+
+        List<PlaylistItem> playlist = new ArrayList<>();
+        //videoId: Identifier of the DAI video to be displayed, used for video on demand
+        //cmsId: Content management system ID of the video, used for video on demand
+        String videoId = "tears-of-steel";
+        String cmsId = "2548831";
+        //streamType: Defines the type of stream to use
+        ImaDaiSettings.StreamType streamType = ImaDaiSettings.StreamType.HLS;
+        ImaDaiSettings imaDaiSettings = new ImaDaiSettings(videoId, cmsId, streamType, null);
+        //fallbackUrl: played automatically if the DAI stream request fails
+        String fallbackUrl = "https://cdn.jwplayer.com/manifests/Gihxhhy6.m3u8";
+        PlaylistItem playlistItem = new PlaylistItem.Builder()
+                .file(fallbackUrl)
+                .imaDaiSettings(imaDaiSettings)
+                .title("Google DAI Demo")
+                .description("A video player testing video.")
+                .build();
+
+        playlist.add(playlistItem);
+        PlayerConfig config = new PlayerConfig.Builder().playlist(playlist).build();
+
+        mPlayer.setup(config);
+
+        // Exit fullscreen when the user presses Back
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mPlayer.getFullscreen()) {
+                    mPlayer.setFullscreen(false, true);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onAdError(AdErrorEvent adErrorEvent) {
+        Log.e("DaiAdError", adErrorEvent.getMessage());
+    }
+}

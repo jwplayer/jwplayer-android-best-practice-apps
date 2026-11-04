@@ -16,7 +16,7 @@ android {
 		targetSdkVersion 36
 		versionCode 1
 		versionName "1.0"
-		applicationId "com.jwplayer.localplayback"
+		applicationId "com.jwplayer.demo.localassetplayback"
 		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
 	}
 	compileOptions {
@@ -43,19 +43,14 @@ android {
 			}
 		}
 	}
-    namespace 'com.jwplayer.localplayback'
+    namespace 'com.jwplayer.demo.localassetplayback'
 }
 
 dependencies {
 	def sdkVersion = '4.28.0'
 	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
-	implementation ("com.jwplayer:jwplayer-common:${sdkVersion}")
+	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 
-	def lifecycle_version = "2.6.2"
-	implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
-	implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-	implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-	implementation('com.google.android.material:material:1.9.0')
-
-  implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+	implementation 'com.google.android.material:material:1.9.0'
 }

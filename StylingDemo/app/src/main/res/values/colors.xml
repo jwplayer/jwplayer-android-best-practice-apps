@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gray">#606060</color>
-    <color name="white">#ffffff</color>
-<!--    <color name="transparent_black_fill">#B5830000</color>-->
-<!--    <color name="seek_bar_progress">#B50ED100</color>-->
-<!--    <color name="seek_bar_progress">#B50ED100</color>-->
     <color name="jw_surface_secondary">#0f2216</color>
     <color name="jw_seekbar_secondary_progress">#992B4D34</color>
     <color name="jw_seekbar_progress">#547c5a</color>
