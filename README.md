@@ -25,6 +25,7 @@ Refer to the README in each subdirectory for specific usage instructions.
 ### Playback features
 - **CaptionsDemo** - Sideloaded and in-manifest captions, caption styling and position (`CaptionsConfig`, `CaptionPosition`) and a track picker
 - **PipDemo** - Picture-in-picture: entering from a button or on Home, the PiP events and warnings, and pausing when the PiP window is closed
+- **VerticalFeedDemo** - A full-screen vertical video feed (swipe up / down, one video per page) built on `ViewPager2` with a fixed pool of three players; the README explains the limits of running several players at once
 - **RecyclerViewDemo** - Several players in a `RecyclerView`: one plays at a time, players are reused with the views, and fullscreen moves the player out of its cell
 - **ChromecastDemo** - Casting with the JW Player Chromecast module
 

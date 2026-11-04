@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">JW Vertical Feed Demo</string>
+    <string name="mute">Mute</string>
+    <string name="unmute">Unmute</string>
+</resources>
