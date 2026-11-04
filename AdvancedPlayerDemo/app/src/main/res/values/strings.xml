@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Advanced Player</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="live">LIVE</string>
+    <string name="quality">Quality</string>
+    <string name="ad">Ad</string>
+    <string name="skip">Skip</string>
+    <string name="skip_in">Skip in %d</string>
+</resources>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <com.jwplayer.customui.MyNextUpView
+    <com.jwplayer.demo.customui.MyNextUpView
         android:id="@+id/my_next_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
