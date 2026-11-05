@@ -4,7 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- android:enableOnBackInvokedCallback="false": the JW Player SDK does no Back handling of its
+         own. Opting out of predictive back keeps this app's OnBackPressedCallback and the legacy
+         KEYCODE_BACK path working under targetSdk 36. -->
     <application
+        android:enableOnBackInvokedCallback="false"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

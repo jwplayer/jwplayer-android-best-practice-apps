@@ -1,0 +1,40 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Background audio runs in the SDK's MediaService, a foreground service of type
+         mediaPlayback. The SDK declares the service; the app declares these permissions. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <!-- Android 13+: recommended (also requested at runtime). Media-session notifications are
+         exempt from the runtime permission, but other app notifications and some OEMs need it. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- android:enableOnBackInvokedCallback="false": the JW Player SDK does no Back handling of its
+         own. Opting out of predictive back keeps this app's OnBackPressedCallback and the legacy
+         KEYCODE_BACK path working under targetSdk 36. -->
+    <application
+        android:enableOnBackInvokedCallback="false"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".PlayerActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:exported="false" />
+    </application>
+
+</manifest>

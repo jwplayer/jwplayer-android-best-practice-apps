@@ -1,15 +1,36 @@
-# Fullscreen without rotation Demo
+# Fullscreen Without Rotation Demo
 
-The player will use a new `FullscreenHandler` that fullscreens without rotating the application
+Shows a custom `FullscreenHandler` that enlarges the player to fill its parent layout **without**
+rotating the device to landscape. The status and navigation bars stay visible, so "fullscreen" here
+means the Activity's content area, not the whole display.
 
-#### Usage instructions:
+## What it shows
 
-- Clone the repository into your Android Studio workspace, `git clone git@github.com:jwplayer/jwplayer-sdk-android-demo.git`
-- Update application to use your license key (use 1 option below).
-  - set JWPLAYER_LICENSE_KEY as environment variable  
-  - overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license in the application's main acitivity
-  - change in app-level build.gradle
+- By default, entering fullscreen switches the Activity to landscape. Here,
+  `JWPlayer.setFullscreenHandler(...)` replaces the default handler with
+  `FullScreenHandler_NoRotation`, which only swaps the `JWPlayerView`'s layout params to
+  `MATCH_PARENT` × `MATCH_PARENT` on enter and restores the original params on exit.
+- The other `FullscreenHandler` callbacks (`onAllowRotationChanged`, `updateLayoutParams`, ...) are
+  intentionally no-ops: this handler never changes orientation.
+- The handler does not hide the system bars. To use the whole display, also hide them on enter (for
+  example with `WindowInsetsControllerCompat.hide(WindowInsetsCompat.Type.systemBars())`) and show
+  them again on exit.
+- Back exits fullscreen.
 
-The demo application should now build and run. For more information on how to use our SDK refer to our developer guide:
+Use this as a starting point for any custom fullscreen behaviour, e.g. hiding other views, or
+moving the player into another container (see the RecyclerView demo for that).
 
-[https://developer.jwplayer.com/sdk/android/docs/developer-guide/](https://developer.jwplayer.com/sdk/android/docs/developer-guide/)
+## SDK APIs
+
+`FullscreenHandler`, `JWPlayer.setFullscreenHandler(FullscreenHandler)`,
+`JWPlayer.setFullscreen(boolean, boolean)`, `JWPlayer.getFullscreen()`.
+
+## Setup
+
+Set your JW Player license key as an environment variable before building; Gradle writes it into
+`BuildConfig.JWPLAYER_LICENSE_KEY`:
+
+```
+export JWPLAYER_LICENSE_KEY=<your license key>
+./gradlew :app:installDebug
+```

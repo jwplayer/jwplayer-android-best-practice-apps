@@ -1,28 +1,63 @@
 # JW Player SDK for Android - DRM Demo
 
-This application contains an example implementation of DRM using the JW Player SDK for Android.
+Plays Widevine DRM-protected content with the JW Player SDK for Android.
 
-#### Application Usage instructions:
+## What it shows
 
-- Confirm the [requirements](https://docs.jwplayer.com/players/docs/android-get-started#requirements) are met to use the JW Android SDK.
-- Clone the repository - `git@github.com:jwplayer/jwplayer-android-best-practice-apps.git`
-- Open Android Studio and select: `Open an existing Android Studio project`
-- Navigate to the `jwplayer-android-best-practice-apps` directory and select the `DrmDemo` folder
-- Update application to use your license key.
-  - Replace `YOUR_LICENSE_KEY` with your license key in MainActivity.java `new LicenseUtil().setLicenseKey(this, YOUR_LICENSE_KEY);`
-- Replace placeholders or add values to map(s) in MainActivity.java to configure the player
-  - Stream and License URL for Studio DRM could be attained [here](https://docs.jwplayer.com/platform/reference/get_v2-media-media-id-drm-policy-id)
-  - **streamURL** The DRM protected media URL you intend to play
-  - **licenseURL** The DRM license URL passed into the callback to unlock the protected content
-  - **requestProperties** Additional properties to pass to your DRM License server via Map (add your values as needed)
-  - **httpHeaders** For self hosted content requiring [header authorization](https://docs.jwplayer.com/players/docs/android-add-custom-http-headers) via Map (add your values as needed)
-- Select a device to run this application on that has [secure decoders](https://docs.jwplayer.com/players/docs/android-play-drm-protected-content#supported-drm-provider)
+The simplest correct path, used by default:
 
-The demo application should now [build and run](https://developer.android.com/studio/run).
+```java
+new PlaylistItem.Builder()
+        .file(streamURL)
+        .drmConfig(new DrmConfig.Builder()
+                .licenseUri(licenseURL)
+                .build())
+        .build();
+```
 
-#### Important links
+With a `DrmConfig`, the SDK requests the Widevine licence itself. JW Player Studio DRM content
+needs nothing more: you do **not** need a custom `MediaDrmCallback`.
 
-- JW Deliver API documentation can be found [here](https://docs.jwplayer.com/platform/reference/delivery-api-getting-started)
-- JW Studio DRM documentation can be found [here](https://docs.jwplayer.com/platform/reference/studio-drm-standalone-getting-started)
-- Android DRM documentation can be found [here](https://docs.jwplayer.com/players/docs/android-apply-studio-drm-with-jw-platform)
-- JW Android SDK documentation can be found [here](https://docs.jwplayer.com/players/docs/android-overview)
+`MainActivity.buildItemWithCustomCallback(...)` keeps an optional alternative: a custom
+`MediaDrmCallback` (`WidevineCallback`) for licence servers that need extra request headers or a
+custom request/response format. Set `USE_CUSTOM_CALLBACK = true` in `MainActivity` to use it. If a
+`PlaylistItem` has both, the callback wins.
+
+## SDK APIs
+
+`PlaylistItem.Builder.drmConfig(DrmConfig)`, `DrmConfig.Builder.licenseUri(...)`,
+`PlaylistItem.Builder.mediaDrmCallback(MediaDrmCallback)` (optional),
+`PlaylistItem.Builder.httpHeaders(...)`, `JWPlayerView.getPlayerAsync(...)`.
+
+## Setup
+
+1. Check the [requirements](https://docs.jwplayer.com/players/docs/android-get-started#requirements)
+   for the JW Player Android SDK.
+2. Set your JW Player license key as an environment variable before building; Gradle writes it
+   into `BuildConfig.JWPLAYER_LICENSE_KEY`:
+
+   ```
+   export JWPLAYER_LICENSE_KEY=<your license key>
+   ```
+3. Fill in the two placeholders in `MainActivity.java`. The app shows
+   "Stream and license URL are required" until you do.
+   - **streamURL** — the DRM-protected media URL (for Widevine, usually a DASH `.mpd`).
+   - **licenseURL** — the Widevine licence server URL for that media.
+
+   For content hosted on JW Player with Studio DRM, request the media from the Delivery API with
+   your DRM policy ([`/v2/media/{media_id}/drm/{policy_id}`](https://docs.jwplayer.com/platform/reference/get_v2-media-media-id-drm-policy-id),
+   signed as described in the [Studio DRM docs](https://docs.jwplayer.com/platform/reference/studio-drm-standalone-getting-started)).
+   In the response, use the Widevine source's `file` as **streamURL** and its
+   `drm.widevine.url` as **licenseURL**.
+
+   Alternatively, pass that signed Delivery API URL straight to
+   `PlayerConfig.Builder().playlistUrl(...)`: the SDK reads the `drm.widevine.url` from the
+   response and builds the `DrmConfig` for you.
+4. Run on a device with Widevine [secure decoders](https://docs.jwplayer.com/players/docs/android-play-drm-protected-content#supported-drm-provider)
+   (emulators usually can't play DRM content).
+
+## More information
+
+- [Android: apply Studio DRM with JW Platform](https://docs.jwplayer.com/players/docs/android-apply-studio-drm-with-jw-platform)
+- [Add custom HTTP headers](https://docs.jwplayer.com/players/docs/android-add-custom-http-headers)
+- [JW Delivery API](https://docs.jwplayer.com/platform/reference/delivery-api-getting-started)

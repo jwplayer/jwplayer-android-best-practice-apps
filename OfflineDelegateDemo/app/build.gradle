@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.application'
+}
+
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY') ?: ''
+
+android {
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.jwplayer.offlinedelegate"
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'com.jwplayer.offlinedelegate'
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    def sdkVersion = '4.28.0'
+    implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
+    implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+
+    // Pinned explicitly to match the SDK's own media3 version: this module imports
+    // androidx.media3.exoplayer.* directly (DownloadTracker.java) rather than only
+    // through JW Player's public API, so it must not drift silently if the SDK's
+    // transitive media3 pin ever changes.
+    def media3Version = '1.10.1'
+    implementation "androidx.media3:media3-exoplayer:${media3Version}"
+}

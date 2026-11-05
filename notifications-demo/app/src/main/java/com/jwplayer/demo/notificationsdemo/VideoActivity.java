@@ -1,10 +1,13 @@
 package com.jwplayer.demo.notificationsdemo;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
@@ -21,6 +24,8 @@ import com.jwplayer.pub.api.license.LicenseUtil;
 import com.jwplayer.pub.view.JWPlayerView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,6 +39,8 @@ public class VideoActivity extends AppCompatActivity implements
 	 */
 	private JWPlayerView mPlayerView;
 	private JWPlayer mPlayer;
+
+	private static final int REQUEST_NOTIFICATIONS = 1;
 
 	/**
 	 * Whether we have bound to a {@link MediaPlaybackService}.
@@ -120,11 +127,34 @@ public class VideoActivity extends AppCompatActivity implements
 		container.addView(mPlayerView, new RelativeLayout.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, metrics.widthPixels / 16 * 9));
 
+		requestNotificationPermission();
+
 		NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		mNotificationWrapper = new NotificationWrapper(notificationManager);
 		mMediaSessionManager = new MediaSessionManager(this,
 													   mPlayerView,
 													   mNotificationWrapper);
+	}
+
+	/**
+	 * Android 13+: ask for POST_NOTIFICATIONS. The media-session notification itself is exempt,
+	 * but requesting it is recommended for an app's other notifications and for OEM builds that
+	 * hide media notifications without it.
+	 */
+	private void requestNotificationPermission() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+				&& ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+				!= PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this,
+					new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQUEST_NOTIFICATIONS);
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		// Unbinding stops MediaPlaybackService, which releases the session and its notification.
+		doUnbindService();
+		super.onDestroy();
 	}
 
 	private void doBindService() {

@@ -1,8 +1,5 @@
 # JW Player SDK for Android - Local Asset Playback
 
-
-[![Join the chat at https://gitter.im/jwplayer/jwplayer-sdk-android-demo](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jwplayer/jwplayer-sdk-android-demo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 This application contains an example implementation of loading local video assets into the JW Player SDK for Android.
 
 ## Usage instructions:
@@ -10,18 +7,26 @@ This application contains an example implementation of loading local video asset
 - Clone the repository into your Android Studio workspace: `git clone git@github.com:jwplayer/jwplayer-android-best-practice-apps.git`
 - Open Android Studio and select: `Open an existing Android Studio project`
 - Navigate to the `jwplayer-android-best-practice-apps` directory and select the `LocalAssetPlayback` folder
-- Update application to use your license key (use 1 option below).
-  - set JWPLAYER_LICENSE_KEY as environment variable  
-  - overwrite BuildConfig.JWPLAYER_LICENSE_KEY with your license in the application's main acitivity
-  - change in app-level build.gradle
+- Set your license key as the `JWPLAYER_LICENSE_KEY` environment variable before building
+  (`export JWPLAYER_LICENSE_KEY=<your license key>`); Gradle writes it into
+  `BuildConfig.JWPLAYER_LICENSE_KEY`. You can also hard-code it in the app-level `build.gradle`.
 
 The demo application should now build and run. For more information on how to use our SDK refer to our developer guide:
 
-[https://developer.jwplayer.com/sdk/android/docs/developer-guide/](https://developer.jwplayer.com/sdk/android/docs/developer-guide/)
+[Android SDK overview](https://docs.jwplayer.com/players/docs/android-overview)
 
-## Things to note:
+## What it shows
 
-This demo loads files from the Android Assets folder. This is an easy way to show support for local **Video Playback** along with support for local **Poster Images** and **Captions**.
+This demo loads files from the Android Assets folder (`app/src/main/assets`) using
+`file:///android_asset/...` URLs:
+
+- `PlaylistItem.Builder().file(...)` — the local `.mp4` video
+- `PlaylistItem.Builder().image(...)` — the local poster image
+- `Caption.Builder().file(...)` — a local WebVTT captions track
+
+## Things to note
+
+This is an easy way to show support for local **Video Playback** along with support for local **Poster Images** and **Captions**.
 
 When implementing this on your own, you may want to use the Android [Download Manager](https://developer.android.com/reference/android/app/DownloadManager) to download the video from the open web.
 

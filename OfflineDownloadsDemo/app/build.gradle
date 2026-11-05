@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+// INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY') ?: ''
+// Escaped so a backslash or quote in the secret can't break the generated BuildConfig.java.
+def apiSecret = (System.getenv('JWPLAYER_V1_API_SECRET') ?: '')
+        .replace('\\', '\\\\').replace('"', '\\"')
+
+android {
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.jwplayer.offlinedrmdemo"
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
+        // Demo only: the V1 API secret used to sign Delivery API URLs on the device (see README).
+        // A real app signs URLs on its backend and never ships this secret.
+        buildConfigField "String", "JWPLAYER_V1_API_SECRET", "\"${apiSecret}\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'com.jwplayer.offlinedrmdemo'
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    def sdkVersion = '4.28.0'
+    implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
+    implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+
+    implementation 'com.auth0:java-jwt:3.19.1'
+}
