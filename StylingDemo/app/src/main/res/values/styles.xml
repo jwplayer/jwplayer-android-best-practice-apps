@@ -45,7 +45,7 @@
     </style>
     <style name="JWText">
         <item name="android:textColor">@color/jw_labels_primary</item> <!-- All text is jw_labels_primary unless specified otherwise -->
-        <item name="android:fontFamily">@font/console</item> <!-- All text is roboto unless specified otherwise -->
+        <item name="android:fontFamily">@font/console</item> <!-- All text uses the bundled "console" font unless specified otherwise -->
         <item name="android:lines">1</item> <!-- All text is single line unless specified otherwise -->
         <item name="android:ellipsize">end</item> <!-- All text is ellipsized unless specified otherwise -->
         <item name="android:textSize">@dimen/jw_text_medium</item>

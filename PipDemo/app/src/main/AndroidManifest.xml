@@ -1,0 +1,37 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- android:enableOnBackInvokedCallback="false": the JW Player SDK does no Back handling of its
+         own. Opting out of predictive back keeps this app's OnBackPressedCallback and the legacy
+         KEYCODE_BACK path working under targetSdk 36. -->
+    <application
+        android:enableOnBackInvokedCallback="false"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <!-- supportsPictureInPicture opts the activity in to PiP.
+             configChanges stops the system recreating the activity (and the player) when the
+             window shrinks into PiP and grows back: the same player must keep playing.
+             resizeableActivity is required for PiP on multi-window capable devices.
+             launchMode singleTask keeps one instance, so tapping the PiP window to expand it
+             returns to this activity instead of starting a second copy. -->
+        <activity
+            android:name=".PipActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboard|keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            tools:targetApi="n">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

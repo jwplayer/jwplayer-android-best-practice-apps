@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">JW Captions Demo</string>
+    <string name="track_label">Caption track</string>
+    <string name="intro">Item 1 and 2 use sideloaded caption tracks, item 3 uses subtitles from the HLS manifest. Use the player\'s next button or the playlist to switch items. The picker below lists the tracks of the current item.</string>
+</resources>

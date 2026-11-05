@@ -1,67 +1,41 @@
 apply plugin: 'com.android.application'
 // INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
-def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
-// Detect if build is on Jenkins
-def isJenkinsBuild = System.getenv("BUILD_NUMBER") != null
-def props = new Properties()
-if (isJenkinsBuild) {
-    def propsFile = rootProject.file("/etc/android_sdk/keystore.properties")
-    props.load(new FileInputStream(propsFile))
-}
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY') ?: ''
 android {
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.jwplayer.googledai"
+        applicationId "com.jwplayer.demo.googledaidemo"
         minSdkVersion 26
         targetSdkVersion 36
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
+        buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
         coreLibraryDesugaringEnabled true  // ⚠️ MANDATORY for IMA
     }
-            signingConfigs {
-                release {
-                    // Only attempt to read keystore.properties for Jenkins builds
-                    if (isJenkinsBuild) {
-                        storeFile = file(props['storeFile'])
-                        storePassword = props['storePassword']
-                        keyAlias = props['keyAlias']
-                        keyPassword = props['keyPassword']
-            }
-        }
-    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (isJenkinsBuild) {
-                signingConfig signingConfigs.release
-            }
         }
     }
-    namespace 'com.jwplayer.googledai'
+    namespace 'com.jwplayer.demo.googledaidemo'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     def sdkVersion = '4.28.0'
-	  implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
-  	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
+    implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
+    implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
     implementation "com.jwplayer:jwplayer-ima:${sdkVersion}"
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
-    
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
-    implementation'com.google.android.material:material:1.9.0'
 
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+    implementation 'com.google.android.material:material:1.9.0'
 }

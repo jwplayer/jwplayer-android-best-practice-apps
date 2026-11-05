@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.CheckBox;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -26,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.mode_legacy).setOnClickListener(v -> open(PlayerActivity.MODE_LEGACY));
         findViewById(R.id.mode_default).setOnClickListener(v -> open(PlayerActivity.MODE_DEFAULT));
 
-        // Android 13+: without this permission background playback still works, but the media
-        // notification and lock-screen controls are not shown.
+        // Android 13+: recommended. The SDK's media-session notification is exempt from the
+        // runtime permission, but other app notifications need it and some OEM builds hide media
+        // notifications without it. Background playback works either way.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -37,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void open(String mode) {
-        startActivity(new Intent(this, PlayerActivity.class).putExtra(PlayerActivity.EXTRA_MODE, mode));
+        boolean sdkAudioFocus = ((CheckBox) findViewById(R.id.sdk_audio_focus)).isChecked();
+        startActivity(new Intent(this, PlayerActivity.class)
+                .putExtra(PlayerActivity.EXTRA_MODE, mode)
+                .putExtra(PlayerActivity.EXTRA_SDK_AUDIO_FOCUS, sdkAudioFocus));
     }
 }

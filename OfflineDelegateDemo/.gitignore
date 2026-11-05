@@ -13,8 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
-/gradle
-gradlew
-gradlew.bat
 /app/libs
 

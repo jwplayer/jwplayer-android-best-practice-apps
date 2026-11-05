@@ -20,6 +20,7 @@ import com.jwplayer.pub.api.events.PlayEvent;
 import com.jwplayer.pub.api.events.PlaylistCompleteEvent;
 import com.jwplayer.pub.api.events.PlaylistEvent;
 import com.jwplayer.pub.api.events.PlaylistItemEvent;
+import com.jwplayer.pub.api.events.SeekedEvent;
 import com.jwplayer.pub.api.events.listeners.AdvertisingEvents;
 import com.jwplayer.pub.api.events.listeners.VideoPlayerEvents;
 import com.jwplayer.pub.api.media.playlists.PlaylistItem;
@@ -41,6 +42,7 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 											AdvertisingEvents.OnAdErrorListener,
 											AdvertisingEvents.OnAdSkippedListener,
 											AdvertisingEvents.OnAdCompleteListener,
+											VideoPlayerEvents.OnSeekedListener,
 											DownloadImageTask.ImageDownloadListener {
 
 	/**
@@ -82,6 +84,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 	private NotificationWrapper mNotificationWrapper;
 
+	private boolean mReleased;
+
 	/**
 	 * Initializes a new MediaSessionManager.
 	 *
@@ -100,6 +104,13 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 													 MediaSessionManager.class.getSimpleName());
 		mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
 											 | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+		// MediaSessionCompat registers the manifest's MediaButtonReceiver as the session's media
+		// button receiver, and the system remembers it as the "last media app". After this process
+		// dies, a headset/Bluetooth play key would then cold-start MediaPlaybackService with no
+		// session to handle it, and the foreground-service start would crash the app. Clearing it
+		// means media keys only reach the session while it exists. The manifest receiver is still
+		// needed: the notification's action PendingIntents target it directly.
+		mMediaSessionCompat.setMediaButtonReceiver(null);
 		mMediaSessionCompat.setCallback(new MediaSessionCallback(mPlayer));
 
 		// Register listeners.
@@ -114,6 +125,7 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		mPlayer.addListener(EventType.AD_ERROR, this);
 		mPlayer.addListener(EventType.AD_SKIPPED, this);
 		mPlayer.addListener(EventType.AD_COMPLETE, this);
+		mPlayer.addListener(EventType.SEEKED, this);
 	}
 
 	public @PlaybackStateCompat.Actions
@@ -195,7 +207,10 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 				break;
 		}
 
-		newPlaybackState.setState(playbackStateCompat, (long)mPlayer.getPosition(), PLAYBACK_RATE);
+		// MediaSession positions are in milliseconds; JWPlayer.getPosition() is in seconds.
+		newPlaybackState.setState(playbackStateCompat, (long)(mPlayer.getPosition() * 1000),
+								  PLAYBACK_RATE);
+		updateDuration();
 		mMediaSessionCompat.setPlaybackState(newPlaybackState.build());
 		mNotificationWrapper
 				.createNotification(mPlayerView.getContext(), mMediaSessionCompat, capabilities);
@@ -225,6 +240,35 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		mDownloadImageTask.execute(playlistItem.getImage());
 	}
 
+
+	/**
+	 * The notification's seek bar needs the duration (in milliseconds) in the session metadata.
+	 * The duration isn't known when the playlist item loads, so it is filled in on the first
+	 * playback state update that has one. Live streams report no positive duration, so they get
+	 * no seek bar.
+	 */
+	private void updateDuration() {
+		long durationMs = (long)(mPlayer.getDuration() * 1000);
+		if (durationMs <= 0) {
+			return;
+		}
+		MediaMetadataCompat current = mMediaSessionCompat.getController().getMetadata();
+		if (current != null
+				&& current.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) == durationMs) {
+			return;
+		}
+		MediaMetadataCompat.Builder builder = current == null
+				? new MediaMetadataCompat.Builder()
+				: new MediaMetadataCompat.Builder(current);
+		mMediaSessionCompat.setMetadata(
+				builder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, durationMs).build());
+	}
+
+	@Override
+	public void onSeeked(SeekedEvent seekedEvent) {
+		// Report the new position so the notification's seek bar jumps to where playback landed.
+		updatePlaybackState(mPlayer.getState());
+	}
 
 	@Override
 	public void onError(ErrorEvent errorEvent) {
@@ -261,6 +305,11 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 	 * Releases this MediaSession.
 	 */
 	public void release() {
+		if (mReleased) {
+			return;
+		}
+		mReleased = true;
+		mMediaSessionCompat.setActive(false);
 		mMediaSessionCompat.release();
 		mPlayer.removeListener(EventType.PLAY, this);
 		mPlayer.removeListener(EventType.PAUSE, this);
@@ -273,6 +322,7 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 		mPlayer.removeListener(EventType.AD_ERROR, this);
 		mPlayer.removeListener(EventType.AD_SKIPPED, this);
 		mPlayer.removeListener(EventType.AD_COMPLETE, this);
+		mPlayer.removeListener(EventType.SEEKED, this);
 
 		// Remove any notifications
 		mNotificationWrapper.cancelNotification();
@@ -305,8 +355,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 	@Override
 	public void onPlaylistComplete(PlaylistCompleteEvent playlistCompleteEvent) {
+		// Deactivate only: the session is reused if playback restarts. It is released once, in release().
 		mMediaSessionCompat.setActive(false);
-		mMediaSessionCompat.release();
 		mPlaylistIndex = 0;
 	}
 
@@ -352,7 +402,8 @@ public class MediaSessionManager implements VideoPlayerEvents.OnPlayListener,
 
 		@Override
 		public void onSeekTo(long pos) {
-			mPlayer.seek(pos);
+			// MediaSession positions are in milliseconds; JWPlayer.seek() takes seconds.
+			mPlayer.seek(pos / 1000.0);
 		}
 
 		@Override

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">JW PiP Demo</string>
+    <string name="enter_pip">Enter PiP</string>
+    <string name="auto_pip">Enter PiP automatically on Home</string>
+    <string name="intro">Tap Enter PiP, or press Home while the video is playing. Closing the PiP window pauses playback.</string>
+    <string name="status_ready">Status: ready</string>
+</resources>

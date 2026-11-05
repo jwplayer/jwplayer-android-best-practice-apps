@@ -8,7 +8,7 @@
     <com.jwplayer.pub.view.JWPlayerView
         android:id="@+id/jwplayer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="240dp" />
 
     <TextView
         android:id="@+id/status"
@@ -17,4 +17,12 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:text="@string/intro" />
+
+    <TextView
+        android:id="@+id/events"
+        style="@style/Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp" />
 </LinearLayout>

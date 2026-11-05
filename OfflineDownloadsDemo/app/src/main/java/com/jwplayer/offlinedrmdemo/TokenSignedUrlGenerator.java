@@ -9,10 +9,14 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * This is only for demo purposes, in a real production environment you would get a signed URL from your backend API
+ * Signs a Delivery API URL on the device. FOR DEMONSTRATION ONLY: shipping the API secret in an
+ * app exposes it to anyone who unpacks the APK. A real app asks its own backend for the signed URL.
+ *
+ * <p>The secret is your property's V1 API secret, read at build time from the
+ * {@code JWPLAYER_V1_API_SECRET} environment variable (see app/build.gradle and the README).
  */
 public class TokenSignedUrlGenerator {
-    private final static String API_SECRET = YOUR_V1_API_SECRET;
+    private final static String API_SECRET = BuildConfig.JWPLAYER_V1_API_SECRET;
 
     private static final String DELIVERY_API_DOMAIN = "https://cdn.jwplayer.com";
 
@@ -21,6 +25,11 @@ public class TokenSignedUrlGenerator {
 
     private static final String RESOURCE_KEY = "resource";
     private static final String EXPIRATION_KEY = "exp";
+
+    /** Whether a V1 API secret was provided at build time. */
+    public static boolean hasApiSecret() {
+        return !API_SECRET.isEmpty();
+    }
 
     public static String get(String mediaId, String policyId) {
         String resource = String.format(Locale.US, RESOURCE_TEMPLATE, mediaId, policyId);

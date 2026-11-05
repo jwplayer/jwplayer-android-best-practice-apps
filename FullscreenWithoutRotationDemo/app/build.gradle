@@ -1,13 +1,6 @@
 apply plugin: 'com.android.application'
 // INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
-def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
-// Detect if build is on Jenkins
-def isJenkinsBuild = System.getenv("BUILD_NUMBER") != null
-def props = new Properties()
-if (isJenkinsBuild) {
-    def propsFile = rootProject.file("/etc/android_sdk/keystore.properties")
-    props.load(new FileInputStream(propsFile))
-}
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY') ?: ''
 android {
 	compileSdk 36
 	defaultConfig {
@@ -15,47 +8,28 @@ android {
 		targetSdkVersion 36
 		versionCode 1
 		versionName "1.0"
-		applicationId "com.jwplayer.opensourcedemo"
+		applicationId "com.jwplayer.demo.fullscreenwithoutrotationdemo"
 		buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
 	}
 	compileOptions {
 		sourceCompatibility 1.8
 		targetCompatibility 1.8
 	}
-	signingConfigs {
-		release {
-			// Only attempt to read keystore.properties for Jenkins builds
-			if (isJenkinsBuild) {
-				storeFile = file(props['storeFile'])
-				storePassword = props['storePassword']
-				keyAlias = props['keyAlias']
-				keyPassword = props['keyPassword']
-			}
-		}
-	}
 	buildTypes {
 		release {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-			if (isJenkinsBuild) {
-				signingConfig signingConfigs.release
-			}
 		}
 	}
-    namespace 'com.jwplayer.opensourcedemo'
+    namespace 'com.jwplayer.demo.fullscreenwithoutrotationdemo'
 }
 
 dependencies {
-	def lifecycle_version = "2.6.2"
-	implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
-	implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-	implementation'androidx.appcompat:appcompat:1.6.1'
-	implementation'com.google.android.material:material:1.9.0'
+	implementation 'androidx.appcompat:appcompat:1.6.1'
+	implementation 'com.google.android.material:material:1.9.0'
 	implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    def sdkVersion = '4.28.0'
-  	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
-  	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
-
-	implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+	def sdkVersion = '4.28.0'
+	implementation "com.jwplayer:jwplayer-core:${sdkVersion}"
+	implementation "com.jwplayer:jwplayer-common:${sdkVersion}"
 }

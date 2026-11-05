@@ -11,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,8 +28,6 @@ import com.jwplayer.pub.view.JWPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity
         implements MediaDownloadResultListener,
@@ -80,13 +79,18 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Get the OfflineDownloadManager
-        mOfflineDownloadManager = OfflineDownloadFactory.getOfflineDownloadManager(this);
+        // Use the application context: the manager outlives this activity.
+        mOfflineDownloadManager =
+                OfflineDownloadFactory.getOfflineDownloadManager(getApplicationContext());
         mOfflineDownloadManager.setMediaDownloadResultListener(this);
-        mOfflineDownloadManager.startService(this);
+        mOfflineDownloadManager.startService(getApplicationContext());
 
         mNetworkTracker = new NetworkTracker(getApplicationContext(), this);
 
         findViewById(R.id.prepare).setOnClickListener(v -> {
+            if (!checkApiSecret()) {
+                return;
+            }
             // If we are offline, we can't prepare downloads of Offline DRM content
             if (!mNetworkTracker.isOnline()) {
                 Toast.makeText(this, R.string.offline, Toast.LENGTH_SHORT).show();
@@ -102,15 +106,21 @@ public class MainActivity extends AppCompatActivity
                 findViewById(R.id.prepare).setVisibility(View.GONE);
                 findViewById(R.id.progress).setVisibility(View.VISIBLE);
                 Toast.makeText(this, R.string.preparing_download, Toast.LENGTH_LONG).show();
-                new JsonDownloader(this, new OkHttpClient())
+                new JsonDownloader(this)
                         .execute(TokenSignedUrlGenerator.get(MEDIA_ID, POLICY_ID));
             }
         });
 
         findViewById(R.id.setup).setOnClickListener(v -> {
+            boolean online = mNetworkTracker.isOnline();
+            // Online playback needs a signed Delivery API URL. Check before showing the player,
+            // so a missing secret doesn't leave an empty player on screen.
+            if (online && !checkApiSecret()) {
+                return;
+            }
             mPlayerView.setVisibility(View.VISIBLE);
             mPlayer = mPlayerView.getPlayer(this);
-            if (mNetworkTracker.isOnline()) {
+            if (online) {
                 // we are online, setup with Online DRM using the Delivery API URL
                 Toast.makeText(this, R.string.using_delivery_api, Toast.LENGTH_SHORT)
                      .show();
@@ -181,15 +191,36 @@ public class MainActivity extends AppCompatActivity
         mDownloaded.setText(mOfflineDownloadManager.isDownloaded(MEDIA_ID) ? R.string.downloaded : R.string.not_downloaded);
     }
 
+    /** Shows a clear message, instead of a failed request, when no V1 API secret was built in. */
+    private boolean checkApiSecret() {
+        if (TokenSignedUrlGenerator.hasApiSecret()) {
+            return true;
+        }
+        Toast.makeText(this, R.string.missing_api_secret, Toast.LENGTH_LONG).show();
+        return false;
+    }
+
     @Override
-    public void onMediaDownloadFailed(Exception exception) {
+    public void onMediaDownloadFailed(@Nullable String mediaId, Exception exception) {
         // Something went wrong when downloading. The exception describes the cause, e.g. a
-        // failed segment request or a DRM item with no way to fetch its licence.
+        // failed segment request or a DRM item with no way to fetch its licence. mediaId is null
+        // when the failure happened before a particular download was identified.
         Toast.makeText(this, getString(R.string.download_failed) + ": " + exception.getMessage(),
                 Toast.LENGTH_LONG).show();
         exception.printStackTrace();
         mDownloaded.setText(R.string.not_downloaded);
+        findViewById(R.id.progress).setVisibility(View.GONE);
         findViewById(R.id.prepare).setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Still abstract in the interface, so it must be implemented. The SDK calls the
+     * {@code (String, Exception)} overload above instead, so this is only a fallback.
+     */
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onMediaDownloadFailed(Exception exception) {
+        onMediaDownloadFailed(null, exception);
     }
 
     @Override
@@ -246,10 +277,20 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onJsonDownloadFailed(String error) {
+        findViewById(R.id.progress).setVisibility(View.GONE);
+        findViewById(R.id.prepare).setVisibility(View.VISIBLE);
+        Toast.makeText(this, "Delivery API request failed: " + error, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     protected void onDestroy() {
-        super.onDestroy();
         mNetworkTracker.destroy();
-        // When the activity is destroyed you must release all Offline DRM resources
+        // The manager is a process-wide singleton: stop it calling back into this activity.
+        mOfflineDownloadManager.setMediaDownloadResultListener(null);
+        // Releases the SDK's offline resources. It is a no-op while downloads are still active,
+        // so those downloads keep running in the SDK's download service.
         OfflineDownloadFactory.destroyAll();
+        super.onDestroy();
     }
 }

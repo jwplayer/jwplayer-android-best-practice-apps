@@ -1,26 +1,23 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 // INFO: insert your license here or set JWPLAYER_LICENSE_KEY as environment variable
-def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY')
+def licenseKey = System.getenv('JWPLAYER_LICENSE_KEY') ?: ''
 
 android {
     compileSdk 36
-    namespace = "com.jwplayer.compose"
+    namespace = "com.jwplayer.demo.jwcompose"
 
     defaultConfig {
-        applicationId "com.jwplayer.compose"
+        applicationId "com.jwplayer.demo.jwcompose"
         minSdk 24
         targetSdk 36
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
         buildConfigField "String", "JWPLAYER_LICENSE_KEY", """\"${licenseKey}\""""
     }
 
@@ -41,11 +38,7 @@ android {
         compose true
         buildConfig true
     }
-    composeOptions {
-        // Compose compiler 1.5.14 pairs with Kotlin 1.9.24 (set in the root build).
-        kotlinCompilerExtensionVersion '1.5.14'
-    }
-    packagingOptions {
+    packaging {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
@@ -53,32 +46,23 @@ android {
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.7'
+    implementation 'androidx.activity:activity-compose:1.9.3'
+    // The Activity theme is a Material Components (AppCompat-based) theme; JWPlayerView's views need it.
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.6'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6'
-    implementation 'androidx.activity:activity-compose:1.9.2'
 
     // Jetpack Compose via the BOM so all Compose artifacts stay on one aligned version.
-    implementation platform('androidx.compose:compose-bom:2024.09.02')
+    implementation platform('androidx.compose:compose-bom:2025.01.01')
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.ui:ui-viewbinding'
-    implementation 'androidx.compose.material:material'
     implementation 'androidx.compose.material3:material3'
     implementation 'androidx.compose.material:material-icons-extended'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
 
-    // JW Player SDK — provides media3-based playback transitively (no direct ExoPlayer/media3 dep needed).
+    // JW Player SDK
     def sdkVersion = '4.28.0'
     implementation "com.jwplayer:jwplayer-core:$sdkVersion"
     implementation "com.jwplayer:jwplayer-common:$sdkVersion"
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    androidTestImplementation platform('androidx.compose:compose-bom:2024.09.02')
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
 }
